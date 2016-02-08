@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WarGame</string>
+    <string name="title_activity_map">Map</string>
+    <string name="google_maps_key">AIzaSyB1Ev9ISLJ162MM-2J2efl_DDsgu4rRTiU</string>
+</resources>
