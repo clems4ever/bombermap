@@ -26,3 +26,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
 }
+
+apply plugin: 'com.google.gms.google-services'

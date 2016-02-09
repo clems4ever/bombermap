@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_id": "wargame-b1eca",
+    "project_number": "1018216322435",
+    "name": "WarGame"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018216322435:android:27d689d63f1b7a06",
+        "client_id": "android:com.google.samples.quickstart.signin",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.google.samples.quickstart.signin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018216322435-07cp8dutfoerjhmm5fk86mij68apdpqs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.google.samples.quickstart.signin",
+            "certificate_hash": "37D3224FA23FF40BED997D9687DC07A77A576B56"
+          }
+        },
+        {
+          "client_id": "1018216322435-5lihmkgqdc996hdb34tsoe65klt8u78l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018216322435:android:7902e1499398f668",
+        "client_id": "android:com.game.wargame",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.game.wargame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018216322435-5ieubnc1ron1ngcodluud3ve339bjcav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.game.wargame",
+            "certificate_hash": "37D3224FA23FF40BED997D9687DC07A77A576B56"
+          }
+        },
+        {
+          "client_id": "1018216322435-5lihmkgqdc996hdb34tsoe65klt8u78l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
