@@ -46,12 +46,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     protected void onStart() {
         super.onStart();
 
-        mSocket.on("player_feed", new OnPlayerFeedListener(this));
+        mSocket.on("data_down", new OnPlayerFeedListener(this));
         mSocket.connect();
 
         mLocationRetriever.start(new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                String position = String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude());
+                mSocket.emit("data_up", position);
+
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16);
                 mMap.animateCamera(cameraUpdate);
