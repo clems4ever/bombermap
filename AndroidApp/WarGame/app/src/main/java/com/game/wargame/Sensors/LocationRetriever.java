@@ -1,4 +1,4 @@
-package com.game.wargame;
+package com.game.wargame.Sensors;
 
 import android.content.Context;
 import android.location.Location;
@@ -24,22 +24,22 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
     protected static final String TAG = "location-updates-sample";
 
 
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    LocationRetriever(Context context) {
+    public LocationRetriever(Context context) {
         mContext = context;
 
         buildGoogleApiClient();
     }
 
-    void start(LocationListener onLocationChanged) {
+    public void start(LocationListener onLocationChanged) {
         mOnLocationChangedListener = onLocationChanged;
         mGoogleApiClient.connect();
     }
 
-    void stop() {
+    public void stop() {
         mGoogleApiClient.disconnect();
     }
 

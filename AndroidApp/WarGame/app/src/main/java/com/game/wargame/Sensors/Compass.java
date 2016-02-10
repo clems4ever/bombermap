@@ -1,11 +1,10 @@
-package com.game.wargame;
+package com.game.wargame.Sensors;
 
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.widget.Toast;
 
 /**
  * Created by clement on 10/02/16.
