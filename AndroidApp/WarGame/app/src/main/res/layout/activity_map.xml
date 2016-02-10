@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Fire"
-        android:id="@+id/button"
+        android:id="@+id/fire_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#c8ffffff" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="100%"
-        android:id="@+id/textView"
+        android:id="@+id/health_level_text"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
