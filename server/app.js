@@ -88,6 +88,10 @@ function onMove(data)
 {
     console.log("OnMove event");
 	var game = gamesByClient[this.id];
+	
+	if(game === undefined)
+	    return;
+	
 	game.players[this.id].x = data.x;
 	game.players[this.id].y = data.y;
 	game.players[this.id].rotation = data.rotation;
@@ -95,7 +99,8 @@ function onMove(data)
 	var player = game.players[this.id];
 	console.log("Move received and re-emitted: " + this.id + " - " + player);
 	
+	var socket = clients[this.id];
 	var move = { id:this.id, x:player.x, y:player.y, rotation:player.rotation };
-    io.to(game.gameId).emit("m", move);
+    socket.broadcast.to(game.gameId).emit("m", move);
 }
 
