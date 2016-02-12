@@ -73,7 +73,11 @@ function onJoinGame(data, fn)
     games[game_id].players[this.id] = {username: username, x: 0, y: 0, rotation:0 };
     gamesByClient[this.id] = games[game_id];
     
-    fn(undefined, {});
+    // Send player_joined to other players
+    var socket = clients[this.id];
+    socket.broadcast.to(game.gameId).emit("player_joined", {player_id: this.id, username: username});
+    
+    fn({player_id: this.id, username: username});
 }
 
 function onStartGame()

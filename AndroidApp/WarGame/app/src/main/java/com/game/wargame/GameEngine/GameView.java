@@ -28,7 +28,7 @@ public class GameView implements OnMapReadyCallback {
 
     private View.OnClickListener mFireButtonClickedListener;
 
-    private Map<Integer, Marker> mPlayerLocations;
+    private Map<String, Marker> mPlayerLocations;
 
     public GameView(Activity activity) {
         mActivity = activity;

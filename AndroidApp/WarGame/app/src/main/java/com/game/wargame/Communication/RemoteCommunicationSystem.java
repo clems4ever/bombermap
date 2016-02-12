@@ -17,14 +17,22 @@ import java.net.URISyntaxException;
  */
 public class RemoteCommunicationSystem {
 
-    private RemoteCommunicationSocket mSocket;
+    private IRemoteCommunicationSocket mSocket;
 
     public RemoteCommunicationSystem() {
         mSocket = new RemoteCommunicationSocket();
     }
 
+    public RemoteCommunicationSystem(IRemoteCommunicationSocket remoteCommunicationSocket) {
+        mSocket = remoteCommunicationSocket;
+    }
+
     public void connect() {
         mSocket.connect();
+    }
+
+    public boolean isConnected() {
+        return mSocket.isConnected();
     }
 
     public void disconnect() {
@@ -37,13 +45,13 @@ public class RemoteCommunicationSystem {
             public void call(Object... args) {
                 String gameId = (String) args[0];
 
-                Log.d("RemoteCommunicati", "Received " + gameId);
+                Log.d("RemoteCommunication", "Received " + gameId);
                 onGameCreatedListener.onGameCreated(gameId);
             }
         });
     }
 
-    public void joinGame(String gameId, String username, final OnGameJoinedListener onGameJoinedListener) {
+    public void joinGame(String gameId, final String username, final OnPlayerJoinedListener onPlayerJoinedListener) {
         JSONObject data = new JSONObject();
         try {
             data.put("game_id", gameId);
@@ -52,7 +60,14 @@ public class RemoteCommunicationSystem {
             mSocket.emit("join_game", data, new Ack() {
                 @Override
                 public void call(Object... args) {
-                    onGameJoinedListener.onGameJoined();
+                    JSONObject reply = (JSONObject) args[0];
+                    try {
+                        String playerId = reply.getString("player_id");
+                        String name = reply.getString("username");
+                        onPlayerJoinedListener.onPlayerJoined(playerId, name);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         } catch (JSONException e) {
@@ -109,8 +124,8 @@ public class RemoteCommunicationSystem {
             public void onRemoteEventReceived(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    Integer playerId = data.getInt("player_id");
-                    String name = data.getString("name");
+                    String playerId = data.getString("player_id");
+                    String name = data.getString("username");
                     onPlayerJoinedListener.onPlayerJoined(playerId, name);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -125,7 +140,7 @@ public class RemoteCommunicationSystem {
             public void onRemoteEventReceived(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    int playerId = data.getInt("player_id");
+                    String playerId = data.getString("player_id");
                     onPlayerLeftListener.onPlayerLeft(playerId);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -150,15 +165,11 @@ public class RemoteCommunicationSystem {
     }
 
     public interface OnPlayerJoinedListener {
-        public void onPlayerJoined(int playerId, String name);
-    }
-
-    public interface OnGameJoinedListener {
-        public void onGameJoined();
+        public void onPlayerJoined(String playerId, String name);
     }
 
     public interface OnPlayerLeftListener {
-        public void onPlayerLeft(int playerId);
+        public void onPlayerLeft(String playerId);
     }
 
     public interface OnGameCreatedListener {

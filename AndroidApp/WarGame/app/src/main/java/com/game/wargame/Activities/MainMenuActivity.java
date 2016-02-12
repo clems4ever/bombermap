@@ -66,10 +66,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
                             final String username = userNameEditText.getText().toString();
 
-                            mConnection.getService().getRemoteCommunicationSystem().joinGame(gameId, username, new RemoteCommunicationSystem.OnGameJoinedListener() {
+                            mConnection.getService().getRemoteCommunicationSystem().joinGame(gameId, username, new RemoteCommunicationSystem.OnPlayerJoinedListener() {
                                 @Override
-                                public void onGameJoined() {
+                                public void onPlayerJoined(String playerId, String name) {
                                     Intent intent = new Intent(mContext, RoomActivity.class);
+                                    intent.putExtra("username", name);
+                                    intent.putExtra("player_id",playerId);
                                     startActivity(intent);
                                 }
                             });
@@ -84,10 +86,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
                     final String username = userNameEditText.getText().toString();
 
-                    mConnection.getService().getRemoteCommunicationSystem().joinGame("0", username, new RemoteCommunicationSystem.OnGameJoinedListener() {
+                    mConnection.getService().getRemoteCommunicationSystem().joinGame("0", username, new RemoteCommunicationSystem.OnPlayerJoinedListener() {
                         @Override
-                        public void onGameJoined() {
+                        public void onPlayerJoined(String playerId, String name) {
                             Intent intent = new Intent(mContext, RoomActivity.class);
+                            intent.putExtra("username", name);
+                            intent.putExtra("player_id",playerId);
                             startActivity(intent);
                         }
                     });

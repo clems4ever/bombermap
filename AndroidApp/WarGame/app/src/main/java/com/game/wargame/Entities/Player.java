@@ -8,14 +8,14 @@ import com.google.android.gms.maps.model.LatLng;
 public class Player {
 
 
-    private int mPlayerId;
+    private String mPlayerId;
     private String mPlayerName;
     private int mHealth = 100;
 
     private LatLng mPosition;
     private float mRotation;
 
-    public Player(Integer playerId, String playerName) {
+    public Player(String playerId, String playerName) {
         mPlayerId = playerId;
         mPlayerName = playerName;
 
@@ -23,11 +23,11 @@ public class Player {
         mRotation = 0;
     }
 
-    public void setPlayerId(int playerId) {
+    public void setPlayerId(String playerId) {
         mPlayerId = playerId;
     }
 
-    public int getPlayerId() {
+    public String getPlayerId() {
         return mPlayerId;
     }
 

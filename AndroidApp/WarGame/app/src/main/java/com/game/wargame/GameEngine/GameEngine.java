@@ -81,14 +81,6 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
     }
 
     /**
-     * @brief Create the current user
-     */
-    private void createCurrentPlayer() {
-        mCurrentPlayer = new Player(0, "CURRENT PLAYER");
-        addPlayer(mCurrentPlayer);
-    }
-
-    /**
      * @brief Initialize the view
      */
     private void initializeView() {
@@ -104,7 +96,6 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 startSensors();
-                createCurrentPlayer();
             }
         });
     }
