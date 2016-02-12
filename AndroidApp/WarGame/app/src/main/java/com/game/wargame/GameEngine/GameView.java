@@ -90,7 +90,9 @@ public class GameView implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mOnMapReadyCallback.onMapReady(googleMap);
+        if(mOnMapReadyCallback != null) {
+            mOnMapReadyCallback.onMapReady(googleMap);
+        }
     }
 
     public void setOnMapReadyListener(OnMapReadyCallback onMapReadyListener) {

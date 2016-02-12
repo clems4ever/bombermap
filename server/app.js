@@ -31,31 +31,57 @@ function setEventHandlers() {
 	
 	    client.on("new_game", onNewGame);
 	    client.on("join_game", onJoinGame);
+	    client.on("start_game", onStartGame);
 		client.on("move", onMove);
 	});
 };
 
-function onNewGame()
+function onNewGame(fn)
 {
     console.log("OnNewGame event");
+    
+    var gameId = game_count.toString();
+    
     // Create a game
     games[game_count] = { 
-        gameId: game_count, 
+        gameId: gameId, 
         players: {}, 
         configuration: {} 
     }
     
     game_count = game_count + 1;
+    
+    fn(gameId);
 }
 
-function onJoinGame(gameId)
+function onJoinGame(data, fn)
 {
     console.log("OnJoinGame event");
     
+    var game_id = data.game_id;
+    var username = data.username;
+    
+    var game = games[game_id];
+    if(game === undefined)
+    {
+        var err = "Error while joining the game.";
+        fn(err);
+    }
+    
     // Join a room to which we can broadcast the messages
-    this.join(gameId);
-    games[gameId].players[this.id] = {x: 0, y: 0, rotation:0 };
-    gamesByClient[this.id] = games[gameId];
+    this.join(game_id);
+    games[game_id].players[this.id] = {username: username, x: 0, y: 0, rotation:0 };
+    gamesByClient[this.id] = games[game_id];
+    
+    fn(undefined, {});
+}
+
+function onStartGame()
+{
+    console.log("OnGameStarted event");
+    
+    var game = gamesByClient[this.id];
+    io.to(game.gameId).emit("game_started");
 }
 
 function onMove(data)
