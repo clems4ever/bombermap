@@ -13,13 +13,15 @@ import com.game.wargame.Communication.RemoteCommunicationServiceConnection;
 import com.game.wargame.GameEngine.GameEngine;
 import com.game.wargame.GameEngine.GameView;
 import com.game.wargame.R;
+import com.game.wargame.WarGameApplication;
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class MapActivity extends FragmentActivity {
 
     private Context mContext;
+    private WarGameApplication mApplication;
+
     private GameView mGameView;
-    private GameEngine mGameEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class MapActivity extends FragmentActivity {
 
         mContext = this;
 
+        mApplication = (WarGameApplication) mContext.getApplicationContext();
         mGameView = new GameView(this);
     }
 
@@ -42,7 +45,7 @@ public class MapActivity extends FragmentActivity {
 
     @Override
     protected void onStop() {
-        mGameEngine.stop();
+        mApplication.getGameEngine().stop();
 
         if (mConnection.getBound()) {
             unbindService(mConnection);
@@ -55,12 +58,10 @@ public class MapActivity extends FragmentActivity {
         @Override
         public void onServiceConnectedListener() {
 
-            mGameEngine = new GameEngine(mContext, mGameView, mConnection.getService().getRemoteCommunicationSystem());
-
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             mapFragment.getMapAsync(mGameView);
 
-            mGameEngine.start();
+            mApplication.getGameEngine().start(mGameView);
         }
     });
 }

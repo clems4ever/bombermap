@@ -1,5 +1,6 @@
 package com.game.wargame.Activities;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.game.wargame.Communication.RemoteCommunicationSystem;
 import com.game.wargame.Entities.Player;
 import com.game.wargame.Model.PlayerListAdapter;
 import com.game.wargame.R;
+import com.game.wargame.WarGameApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.List;
 public class RoomActivity extends AppCompatActivity {
 
     private Context mContext;
+    private WarGameApplication mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         mContext = this;
+        mApplication = (WarGameApplication) mContext.getApplicationContext();
     }
 
     @Override
@@ -76,6 +80,14 @@ public class RoomActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
+                    int playersCount = playerListView.getCount();
+                    for (int i = 0; i < playersCount; ++i) {
+                        Player player = (Player) playerListView.getItemAtPosition(i);
+                        mApplication.getGameEngine().addPlayer(player);
+                        if(i == 0) {
+                            mApplication.getGameEngine().setCurrentPlayer(player);
+                        }
+                    }
                     mConnection.getService().getRemoteCommunicationSystem().startGame();
                 }
             });

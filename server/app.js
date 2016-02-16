@@ -44,7 +44,7 @@ function onNewGame(fn)
     
     // Create a game
     games[game_count] = { 
-        gameId: gameId, 
+        game_id: gameId, 
         players: {}, 
         configuration: {} 
     }
@@ -75,7 +75,7 @@ function onJoinGame(data, fn)
     
     // Send player_joined to other players
     var socket = clients[this.id];
-    socket.broadcast.to(game.gameId).emit("player_joined", {player_id: this.id, username: username});
+    socket.broadcast.to(game.game_id).emit("player_joined", {player_id: this.id, username: username});
     
     fn({player_id: this.id, username: username});
 }
@@ -85,7 +85,7 @@ function onStartGame()
     console.log("OnGameStarted event");
     
     var game = gamesByClient[this.id];
-    io.to(game.gameId).emit("game_started");
+    io.to(game.game_id).emit("game_started");
 }
 
 function onMove(data)
@@ -105,6 +105,6 @@ function onMove(data)
 	
 	var socket = clients[this.id];
 	var move = { id:this.id, x:player.x, y:player.y, rotation:player.rotation };
-    socket.broadcast.to(game.gameId).emit("m", move);
+    socket.broadcast.to(game.game_id).emit("m", move);
 }
 

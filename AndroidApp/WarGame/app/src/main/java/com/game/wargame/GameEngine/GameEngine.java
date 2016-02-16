@@ -1,7 +1,9 @@
 package com.game.wargame.GameEngine;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Location;
+import android.util.Log;
 import android.view.View;
 
 import com.game.wargame.Communication.RemoteCommunicationSystem;
@@ -13,15 +15,19 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
-public class GameEngine implements LocationListener, Compass.OnCompassChangedListener  {
+public class GameEngine implements LocationListener  {
+
+    private static final int WEAPON_TIME = 10000;
 
     private Context mContext;
     private List<Player> mPlayers;
@@ -29,7 +35,7 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
 
     private GameView mGameView;
 
-    private Compass mCompass;
+    //private Compass mCompass;
     private LocationRetriever mLocationRetriever;
 
     private RemoteCommunicationSystem mRemoteCommunicationSystem;
@@ -37,14 +43,12 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
     /**
      * @brief Constructor
      * @param context
-     * @param gameView
      */
-    public GameEngine(Context context, GameView gameView, RemoteCommunicationSystem remoteCommunicationSystem) {
+    public GameEngine(Context context, RemoteCommunicationSystem remoteCommunicationSystem) {
         mContext = context;
-        mGameView = gameView;
         mRemoteCommunicationSystem = remoteCommunicationSystem;
 
-        mCompass = new Compass(mContext);
+        //mCompass = new Compass(mContext);
         mLocationRetriever = new LocationRetriever(mContext);
 
         mPlayers = new ArrayList<>();
@@ -53,7 +57,8 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
     /**
      * @brief Starts the game engine
      */
-    public void start() {
+    public void start(GameView gameView) {
+        mGameView = gameView;
         initializeView();
     }
 
@@ -68,7 +73,7 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
      * @brief Starts the sensors and listen to events
      */
     private void startSensors() {
-        mCompass.start(this);
+        //mCompass.start(this);
         mLocationRetriever.start(this);
     }
 
@@ -76,7 +81,7 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
      * @brief Stops listening to the sensors
      */
     private void stopSensors() {
-        mCompass.stop();
+        //mCompass.stop();
         mLocationRetriever.stop();
     }
 
@@ -84,11 +89,24 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
      * @brief Initialize the view
      */
     private void initializeView() {
-        mGameView.setFireButtonClickedListener(new View.OnClickListener() {
+        mGameView.setCurrentPlayerId(mCurrentPlayer.getPlayerId());
+        mGameView.setOnWeaponTargetDefinedListener(new GameView.OnWeaponTargetDefinedListener() {
             @Override
-            public void onClick(View view) {
-                // TODO, the user clicked on fire
-                // Trigger fire event
+            public void onWeaponTargetDefined(float x, float y) {
+                Point targetPositionInScreenCoordinates = new Point();
+                targetPositionInScreenCoordinates.set((int)x, (int)y);
+
+                Projection projection = mGameView.getMapProjection();
+                LatLng currentPlayerPosition = mCurrentPlayer.getPosition();
+                LatLng targetPosition = projection.fromScreenLocation(targetPositionInScreenCoordinates);
+
+                float[] results = new float[1];
+                Location.distanceBetween(currentPlayerPosition.latitude, currentPlayerPosition.longitude, targetPosition.latitude, targetPosition.longitude, results);
+
+                float distanceInMeters = results[0];
+                Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
+
+                mRemoteCommunicationSystem.fire(currentPlayerPosition.latitude, currentPlayerPosition.longitude, targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
             }
         });
 
@@ -96,6 +114,12 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 startSensors();
+
+                Iterator<Player> playerIt = mPlayers.iterator();
+                while(playerIt.hasNext()) {
+                    Player player = playerIt.next();
+                    mGameView.addPlayer(player);
+                }
             }
         });
     }
@@ -106,7 +130,14 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
      */
     public void addPlayer(Player player) {
         mPlayers.add(player);
-        mGameView.addPlayer(player);
+    }
+
+    /**
+     * @brief Set current player
+     * @param player
+     */
+    public void setCurrentPlayer(Player player) {
+        mCurrentPlayer = player;
     }
 
     /**
@@ -120,18 +151,6 @@ public class GameEngine implements LocationListener, Compass.OnCompassChangedLis
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(mCurrentPlayer.getPosition());
         mGameView.animateCamera(cameraUpdate);
         mGameView.movePlayer(mCurrentPlayer);
-
-        try {
-            sendMoveEventToServer();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onCompassChanged(float yaw, float roll, float pitch) {
-        mCurrentPlayer.setRotation(yaw);
-        mGameView.rotatePlayer(mCurrentPlayer);
 
         try {
             sendMoveEventToServer();

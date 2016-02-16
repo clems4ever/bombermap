@@ -94,6 +94,25 @@ public class RemoteCommunicationSystem {
         }
     }
 
+    public void fire(double startX, double startY, double endX, double endY, int time) {
+        JSONObject fireJsonObject = new JSONObject();
+
+        try {
+            fireJsonObject.put("start_x", startX);
+            fireJsonObject.put("start_y", startY);
+
+            fireJsonObject.put("end_x", startX);
+            fireJsonObject.put("end_y", startY);
+
+            fireJsonObject.put("time", time);
+
+            mSocket.emit("fire", fireJsonObject);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setOnPositionUpdatedListener(final OnPositionUpdatedListener onPositionUpdatedListener) {
         mSocket.on("m", new RemoteCommunicationSocket.OnRemoteEventReceivedListener() {
             @Override

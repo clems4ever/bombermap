@@ -13,11 +13,16 @@ import android.widget.EditText;
 import com.game.wargame.Communication.RemoteCommunicationService;
 import com.game.wargame.Communication.RemoteCommunicationServiceConnection;
 import com.game.wargame.Communication.RemoteCommunicationSystem;
+import com.game.wargame.GameEngine.GameEngine;
+import com.game.wargame.GameEngine.GameView;
 import com.game.wargame.R;
+import com.game.wargame.WarGameApplication;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class MainMenuActivity extends AppCompatActivity {
 
     private Context mContext;
+    private WarGameApplication mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,8 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         mContext = this;
+
+        mApplication = (WarGameApplication) mContext.getApplicationContext();
     }
 
     @Override
@@ -49,6 +56,8 @@ public class MainMenuActivity extends AppCompatActivity {
     private RemoteCommunicationServiceConnection mConnection = new RemoteCommunicationServiceConnection(new RemoteCommunicationServiceConnection.OnServiceConnectedListener() {
         @Override
         public void onServiceConnectedListener() {
+            GameEngine gameEngine = new GameEngine(mContext, mConnection.getService().getRemoteCommunicationSystem());
+            mApplication.setGameEngine(gameEngine);
 
             Button createGameButton = (Button) findViewById(R.id.new_game_button);
             Button joinGameButton = (Button) findViewById(R.id.join_button);
