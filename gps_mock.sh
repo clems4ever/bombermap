@@ -1,8 +1,10 @@
 #!/bin/bash
 
-latitude=$1
-longitude=$2
+port=$1
+latitude=$2
+longitude=$3
 
+# 5554
 # 2.3228797 48.8870407
 
-echo "geo fix $latitude $longitude" | telnet localhost 5554
+echo "geo fix $latitude $longitude" | telnet localhost $port 
