@@ -25,8 +25,8 @@ public class RabbitMQSocket implements IEventSocket {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setAutomaticRecoveryEnabled(false);
         factory.setHost(mHost);
-        //factory.setHandshakeTimeout(0);
-        factory.setRequestedHeartbeat(60);
+        factory.setHandshakeTimeout(600000);
+        factory.setRequestedHeartbeat(240);
 
         mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, gameRoom);
 

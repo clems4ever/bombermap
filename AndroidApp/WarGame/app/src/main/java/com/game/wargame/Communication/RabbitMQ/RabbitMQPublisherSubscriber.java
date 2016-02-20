@@ -88,6 +88,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
     private void setupConsumer(Channel channel) {
         try {
             String queueName = channel.queueDeclare().getQueue();
+            channel.queueBind(queueName, mExchangeName, "");
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,

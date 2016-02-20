@@ -3,6 +3,7 @@ package com.game.wargame;
 import android.content.Context;
 
 import com.game.wargame.Communication.GameEngineSocket;
+import com.game.wargame.Communication.IEventSocket;
 import com.game.wargame.Communication.PlayerSocket;
 import com.game.wargame.Entities.LocalPlayerModel;
 import com.game.wargame.GameEngine.GameEngine;
@@ -39,6 +40,9 @@ public class GameEnginePlayerJoinedTest {
     @Mock
     private PlayerSocket mMockPlayerSocket;
 
+    @Mock
+    private IEventSocket mMockEventSocket;
+
     private GameEngine mGameEngine;
 
     @Before
@@ -57,12 +61,12 @@ public class GameEnginePlayerJoinedTest {
     @Test
     public void testIfPlayersAreCorrectlyAddedWhenJoiningTheGame() {
 
-        PlayerSocket playerSocket1 = new PlayerSocket("player_1", null);
+        PlayerSocket playerSocket1 = new PlayerSocket("player_1", mMockEventSocket);
         mGameEngine.onPlayerJoined(playerSocket1);
 
         assertEquals(2, mGameEngine.getPlayersCount());
 
-        PlayerSocket playerSocket2 = new PlayerSocket("player_2", null);
+        PlayerSocket playerSocket2 = new PlayerSocket("player_2", mMockEventSocket);
         mGameEngine.onPlayerJoined(playerSocket2);
 
         assertEquals(3, mGameEngine.getPlayersCount());

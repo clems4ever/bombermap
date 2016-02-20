@@ -34,7 +34,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private static final int WEAPON_TIME = 10000;
 
-    private Context mContext;
     private List<PlayerModel> mPlayers;
     private LocalPlayerModel mCurrentPlayer;
 
@@ -50,8 +49,9 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @param context
      */
     public GameEngine(Context context, GameEngineSocket gameEngineSocket, LocationRetriever locationRetriever) {
-        mContext = context;
+        //mContext = context;
         mGameEngineSocket = gameEngineSocket;
+        mGameEngineSocket.setOnPlayerJoinedListener(this);
 
         //mCompass = new Compass(mContext);
         mLocationRetriever = locationRetriever;

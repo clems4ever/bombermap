@@ -59,22 +59,26 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
     }
 
-    public void movePlayer(Player player) {
+    public void movePlayer(final Player player) {
         if(mMap == null) return;
 
-        Marker marker = mPlayerLocations.get(player.getPlayerId());
-
-        if(marker != null) {
-            marker.setPosition(player.getPosition());
-        }
-        else {
-            Marker playerMarker = mMap.addMarker(new MarkerOptions()
-                    .position(player.getPosition())
-                    .anchor(0.5f, 0.35f)
-                    .flat(true)
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
-            mPlayerLocations.put(player.getPlayerId(), playerMarker);
-        }
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Marker marker = mPlayerLocations.get(player.getPlayerId());
+                if(marker != null) {
+                    marker.setPosition(player.getPosition());
+                }
+                else {
+                    Marker playerMarker = mMap.addMarker(new MarkerOptions()
+                            .position(player.getPosition())
+                            .anchor(0.5f, 0.35f)
+                            .flat(true)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+                    mPlayerLocations.put(player.getPlayerId(), playerMarker);
+                }
+            }
+        });
     }
 
     public void animateCamera(CameraUpdate cameraUpdate) {

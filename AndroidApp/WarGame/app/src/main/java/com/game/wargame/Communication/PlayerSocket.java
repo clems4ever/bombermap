@@ -42,8 +42,8 @@ public class PlayerSocket {
     public void move(double latitude, double longitude) {
         try {
             JSONObject moveJsonObject = buildClientJson();
-            moveJsonObject.put("x", latitude);
-            moveJsonObject.put("y", longitude);
+            moveJsonObject.put("latitude", latitude);
+            moveJsonObject.put("longitude", longitude);
 
             mSocket.emit("move", moveJsonObject);
 
@@ -54,6 +54,23 @@ public class PlayerSocket {
 
     public void setOnMoveEventListener(OnMoveEventListener onMoveEventListener) {
         mOnMoveEventListener = onMoveEventListener;
+
+        mSocket.on("move", new IEventSocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) {
+                if(mOnMoveEventListener != null) {
+                    try {
+                        double latitude = message.getDouble("latitude");
+                        double longitude = message.getDouble("longitude");
+                        if(mOnMoveEventListener != null) {
+                            mOnMoveEventListener.onMoveEvent(latitude, longitude);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     public void fire(double latitude, double longitude, double velocity) {
@@ -74,6 +91,23 @@ public class PlayerSocket {
 
     public void setOnFireEventListener(OnFireEventListener onFireEventListener) {
         mOnFireEventListener = onFireEventListener;
+
+        mSocket.on("fire", new IEventSocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) {
+                try {
+                    double latitude = message.getDouble("latitude");
+                    double longitude = message.getDouble("longitude");
+                    double speed = message.getDouble("speed");
+
+                    if(mOnFireEventListener != null) {
+                        mOnFireEventListener.onFireEvent(latitude, longitude, speed);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public void joinGame(String gameId, final String username) {
