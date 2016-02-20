@@ -1,8 +1,7 @@
 package com.game.wargame;
 
 import com.game.wargame.Communication.IRemoteCommunicationSocket;
-import com.game.wargame.Communication.RemoteCommunicationSocket;
-import com.game.wargame.Communication.RemoteCommunicationSystem;
+import com.game.wargame.Communication.GameEngineSocket;
 import com.github.nkzawa.socketio.client.Ack;
 
 import org.junit.Before;
@@ -23,24 +22,24 @@ public class RemoteCommunicationSystemTest {
     private IRemoteCommunicationSocket mRemoteCommunicationSocketMock;
 
     @Mock
-    private RemoteCommunicationSystem.OnGameCreatedListener mOnGameCreatedListenerMock;
+    private GameEngineSocket.OnGameCreatedListener mOnGameCreatedListenerMock;
 
-    private RemoteCommunicationSystem mRemoteCommunicationSystem;
+    private GameEngineSocket mGameEngineSocket;
 
     @Before
     public void setUp() {
-        mRemoteCommunicationSystem = new RemoteCommunicationSystem(mRemoteCommunicationSocketMock);
+        mGameEngineSocket = new GameEngineSocket(mRemoteCommunicationSocketMock);
     }
 
     @Test
     public void testConnectFromSocketIsCalled() {
-        mRemoteCommunicationSystem.connect();
+        mGameEngineSocket.connect();
         verify(mRemoteCommunicationSocketMock, times(1)).connect();
     }
 
     @Test
     public void testDisconnectFromSocketIsCalled() {
-        mRemoteCommunicationSystem.disconnect();
+        mGameEngineSocket.disconnect();
         verify(mRemoteCommunicationSocketMock, times(1)).disconnect();
     }
 
@@ -48,28 +47,28 @@ public class RemoteCommunicationSystemTest {
     public void testIsConnectedFromSocket() {
         when(mRemoteCommunicationSocketMock.isConnected()).thenReturn(true);
 
-        assertTrue("isConnected must return true", mRemoteCommunicationSystem.isConnected());
+        assertTrue("isConnected must return true", mGameEngineSocket.isConnected());
     }
 
     @Test
     public void testIsNotConnectedFromSocket() {
         when(mRemoteCommunicationSocketMock.isConnected()).thenReturn(false);
 
-        assertTrue("isConnected must return false", !mRemoteCommunicationSystem.isConnected());
+        assertTrue("isConnected must return false", !mGameEngineSocket.isConnected());
     }
 
     @Test
     public void testCreateGameMustRegisterAcknowledgement() {
         String channel = "new_game";
 
-        RemoteCommunicationSystem.OnGameCreatedListener listener = new RemoteCommunicationSystem.OnGameCreatedListener() {
+        GameEngineSocket.OnGameCreatedListener listener = new GameEngineSocket.OnGameCreatedListener() {
             @Override
             public void onGameCreated(String gameId) {
 
             }
         };
 
-        mRemoteCommunicationSystem.createGame(listener);
+        mGameEngineSocket.createGame(listener);
         verify(mRemoteCommunicationSocketMock, times(1)).emit(Matchers.eq(channel), Matchers.<Ack>any());
     }
 }

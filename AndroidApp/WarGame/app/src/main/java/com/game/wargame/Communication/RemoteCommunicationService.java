@@ -4,7 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+
+import com.game.wargame.Communication.RabbitMQ.RabbitMQSocket;
 
 /**
  * Created by clement on 11/02/16.
@@ -13,7 +14,13 @@ public class RemoteCommunicationService extends Service {
 
     private final RemoteCommunicationServiceBinder mRemoteCommunicationServiceBinder = new RemoteCommunicationServiceBinder();
 
-    private RemoteCommunicationSystem mRemoteCommunicationSystem = new RemoteCommunicationSystem();
+    private GameEngineSocket mGameEngineSocket;
+
+    public RemoteCommunicationService() {
+
+        RabbitMQSocket rabbitMqSocket = new RabbitMQSocket("10.0.2.2");
+        mGameEngineSocket = new GameEngineSocket(rabbitMqSocket);
+    }
 
     public class RemoteCommunicationServiceBinder extends Binder {
         public RemoteCommunicationService getService() {
@@ -26,7 +33,7 @@ public class RemoteCommunicationService extends Service {
         return mRemoteCommunicationServiceBinder;
     }
 
-    public RemoteCommunicationSystem getRemoteCommunicationSystem() {
-        return mRemoteCommunicationSystem;
+    public GameEngineSocket getGameEngineSocket() {
+        return mGameEngineSocket;
     }
 }

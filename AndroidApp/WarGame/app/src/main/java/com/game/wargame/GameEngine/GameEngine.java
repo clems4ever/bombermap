@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.Location;
 import android.util.Log;
-import android.view.View;
 
-import com.game.wargame.Communication.RemoteCommunicationSystem;
+import com.game.wargame.Communication.GameEngineSocket;
+import com.game.wargame.Entities.LocalPlayerModel;
+import com.game.wargame.Entities.OnPlayerPositionChangedListener;
+import com.game.wargame.Entities.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Entities.Player;
-import com.game.wargame.Sensors.Compass;
+import com.game.wargame.Entities.PlayerModel;
 import com.game.wargame.Sensors.LocationRetriever;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -25,28 +27,28 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GameEngine implements LocationListener  {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener {
 
     private static final int WEAPON_TIME = 10000;
 
     private Context mContext;
-    private List<Player> mPlayers;
-    private Player mCurrentPlayer;
+    private List<PlayerModel> mPlayers;
+    private LocalPlayerModel mCurrentPlayer;
 
     private GameView mGameView;
 
     //private Compass mCompass;
     private LocationRetriever mLocationRetriever;
 
-    private RemoteCommunicationSystem mRemoteCommunicationSystem;
+    private GameEngineSocket mGameEngineSocket;
 
     /**
      * @brief Constructor
      * @param context
      */
-    public GameEngine(Context context, RemoteCommunicationSystem remoteCommunicationSystem) {
+    public GameEngine(Context context, GameEngineSocket gameEngineSocket) {
         mContext = context;
-        mRemoteCommunicationSystem = remoteCommunicationSystem;
+        mGameEngineSocket = gameEngineSocket;
 
         //mCompass = new Compass(mContext);
         mLocationRetriever = new LocationRetriever(mContext);
@@ -57,8 +59,10 @@ public class GameEngine implements LocationListener  {
     /**
      * @brief Starts the game engine
      */
-    public void start(GameView gameView) {
+    public void start(GameView gameView, LocalPlayerModel localPlayerModel) {
         mGameView = gameView;
+        mCurrentPlayer = localPlayerModel;
+        addPlayer(mCurrentPlayer);
         initializeView();
     }
 
@@ -74,7 +78,7 @@ public class GameEngine implements LocationListener  {
      */
     private void startSensors() {
         //mCompass.start(this);
-        mLocationRetriever.start(this);
+        mLocationRetriever.start(mCurrentPlayer);
     }
 
     /**
@@ -89,12 +93,11 @@ public class GameEngine implements LocationListener  {
      * @brief Initialize the view
      */
     private void initializeView() {
-        mGameView.setCurrentPlayerId(mCurrentPlayer.getPlayerId());
         mGameView.setOnWeaponTargetDefinedListener(new GameView.OnWeaponTargetDefinedListener() {
             @Override
             public void onWeaponTargetDefined(float x, float y) {
                 Point targetPositionInScreenCoordinates = new Point();
-                targetPositionInScreenCoordinates.set((int)x, (int)y);
+                targetPositionInScreenCoordinates.set((int) x, (int) y);
 
                 Projection projection = mGameView.getMapProjection();
                 LatLng currentPlayerPosition = mCurrentPlayer.getPosition();
@@ -106,7 +109,7 @@ public class GameEngine implements LocationListener  {
                 float distanceInMeters = results[0];
                 Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
 
-                mRemoteCommunicationSystem.fire(currentPlayerPosition.latitude, currentPlayerPosition.longitude, targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
+                mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
             }
         });
 
@@ -115,9 +118,9 @@ public class GameEngine implements LocationListener  {
             public void onMapReady(GoogleMap googleMap) {
                 startSensors();
 
-                Iterator<Player> playerIt = mPlayers.iterator();
-                while(playerIt.hasNext()) {
-                    Player player = playerIt.next();
+                Iterator<PlayerModel> playerIt = mPlayers.iterator();
+                while (playerIt.hasNext()) {
+                    PlayerModel player = playerIt.next();
                     mGameView.addPlayer(player);
                 }
             }
@@ -128,38 +131,22 @@ public class GameEngine implements LocationListener  {
      * @brief Adding a player to the game
      * @param player
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(PlayerModel player) {
+        player.setOnPlayerPositionChangedListener(this);
+        player.setOnPlayerWeaponTriggeredListener(this);
         mPlayers.add(player);
     }
 
-    /**
-     * @brief Set current player
-     * @param player
-     */
-    public void setCurrentPlayer(Player player) {
-        mCurrentPlayer = player;
-    }
-
-    /**
-     * @brief Callback called when the GPS location has changed
-     * @param location
-     */
     @Override
-    public void onLocationChanged(Location location) {
-        mCurrentPlayer.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(mCurrentPlayer.getPosition());
-        mGameView.animateCamera(cameraUpdate);
-        mGameView.movePlayer(mCurrentPlayer);
-
-        try {
-            sendMoveEventToServer();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void onPlayerPositionChanged(PlayerModel player) {
+        mGameView.movePlayer(player);
     }
 
-    private void sendMoveEventToServer() throws JSONException {
-        mRemoteCommunicationSystem.move(mCurrentPlayer.getPosition().latitude, mCurrentPlayer.getPosition().longitude, mCurrentPlayer.getRotation());
+    @Override
+    public void onPlayerWeaponTriggeredListener(PlayerModel player, double latitude, double longitude, double speed) {
+        LatLng source = player.getPosition();
+        LatLng destination = new LatLng(latitude, longitude);
+
+        mGameView.triggerWeapon(source, destination, speed);
     }
 }

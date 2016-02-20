@@ -1,19 +1,18 @@
 package com.game.wargame.Entities;
 
+import com.game.wargame.OnLocationUpdatedListener;
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by clement on 09/02/16.
- */
+
 public class Player {
 
 
-    private String mPlayerId;
-    private String mPlayerName;
-    private int mHealth = 100;
+    protected String mPlayerId;
+    protected String mPlayerName;
+    protected int mHealth = 100;
 
-    private LatLng mPosition;
-    private float mRotation;
+    protected LatLng mPosition;
+    protected float mRotation;
 
     public Player(String playerId, String playerName) {
         mPlayerId = playerId;
@@ -62,5 +61,4 @@ public class Player {
     public float getRotation() {
         return mRotation;
     }
-
 }

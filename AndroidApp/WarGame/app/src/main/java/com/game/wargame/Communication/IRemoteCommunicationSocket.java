@@ -2,6 +2,8 @@ package com.game.wargame.Communication;
 
 import com.github.nkzawa.socketio.client.Ack;
 
+import org.json.JSONObject;
+
 import java.util.Objects;
 
 /**
@@ -9,19 +11,18 @@ import java.util.Objects;
  */
 public interface IRemoteCommunicationSocket {
 
-    public void connect();
+    public void connect(String gameRoom);
     public void disconnect();
 
     public boolean isConnected();
 
     public void emit(String channel);
-    public void emit(String channel, Ack ackListener);
-    public void emit(String channel, Object data);
-    public void emit(String channel, Object data, Ack ackListener);
+    public void emit(String channel, JSONObject data);
 
     public void on(String channel, IRemoteCommunicationSocket.OnRemoteEventReceivedListener listener);
+    public void off(String channel);
 
     public interface OnRemoteEventReceivedListener {
-        public void onRemoteEventReceived(Object... args);
+        public void onRemoteEventReceived(JSONObject message);
     }
 }

@@ -10,12 +10,13 @@ import android.widget.RelativeLayout;
 import com.game.wargame.Entities.Player;
 import com.game.wargame.R;
 import com.game.wargame.WeaponControllers.AbstractWeaponControllerView;
-import com.game.wargame.WeaponControllers.DroneControllerView;
+import com.game.wargame.WeaponControllers.RocketControllerView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -36,7 +37,6 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
     private Map<String, Marker> mPlayerLocations;
-    private String mCurrentPlayerId;
 
     public GameView(final Activity activity) {
         mActivity = activity;
@@ -48,7 +48,7 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                that.setWeaponController(new DroneControllerView(activity));
+                that.setWeaponController(new RocketControllerView(activity));
             }
         });
 
@@ -70,10 +70,6 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
 
         mPlayerLocations.put(player.getPlayerId(), playerMarker);
-    }
-
-    public void setCurrentPlayerId(String playerId) {
-        mCurrentPlayerId = playerId;
     }
 
     public void movePlayer(Player player) {
@@ -154,6 +150,10 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
             mWeaponControllerInterface = null;
             mFireButton.setSelected(false);
         }
+    }
+
+    public void triggerWeapon(LatLng source, LatLng destination, double speed) {
+
     }
 
     public Projection getMapProjection() {

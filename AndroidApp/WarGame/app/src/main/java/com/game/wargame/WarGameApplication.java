@@ -2,6 +2,7 @@ package com.game.wargame;
 
 import android.app.Application;
 
+import com.game.wargame.Communication.GameEngineSocket;
 import com.game.wargame.GameEngine.GameEngine;
 import com.google.android.gms.games.Game;
 
@@ -11,6 +12,7 @@ import com.google.android.gms.games.Game;
 public class WarGameApplication extends Application {
 
     private GameEngine mGameEngine;
+    private GameEngineSocket mGameEngineSocket;
 
 
     public void setGameEngine(GameEngine gameEngine) {

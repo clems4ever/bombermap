@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.game.wargame.OnLocationUpdatedListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -19,7 +20,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     private Location mCurrentLocation;
-    private LocationListener mOnLocationChangedListener;
+    private OnLocationUpdatedListener mOnLocationUpdatedListener;
 
     protected static final String TAG = "location-updates-sample";
 
@@ -34,8 +35,8 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         buildGoogleApiClient();
     }
 
-    public void start(LocationListener onLocationChanged) {
-        mOnLocationChangedListener = onLocationChanged;
+    public void start(OnLocationUpdatedListener onLocationUpdatedListener) {
+        mOnLocationUpdatedListener = onLocationUpdatedListener;
         mGoogleApiClient.connect();
     }
 
@@ -73,7 +74,14 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
 
     protected void startListeningLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, mOnLocationChangedListener);
+                mGoogleApiClient, mLocationRequest, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        if(mOnLocationUpdatedListener != null) {
+                            mOnLocationUpdatedListener.onLocationUpdated(location.getLatitude(), location.getLongitude());
+                        }
+                    }
+                });
     }
 
     @Override

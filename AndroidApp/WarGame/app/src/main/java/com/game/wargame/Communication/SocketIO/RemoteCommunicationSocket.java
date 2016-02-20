@@ -1,5 +1,6 @@
-package com.game.wargame.Communication;
+package com.game.wargame.Communication.SocketIO;
 
+import com.game.wargame.Communication.IRemoteCommunicationSocket;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Ack;
 import com.github.nkzawa.socketio.client.IO;
@@ -27,7 +28,7 @@ public class RemoteCommunicationSocket implements IRemoteCommunicationSocket {
     }
 
     @Override
-    public void connect() {
+    public void connect(String gameRoom) {
         mSocket.connect();
     }
 
@@ -48,18 +49,8 @@ public class RemoteCommunicationSocket implements IRemoteCommunicationSocket {
     }
 
     @Override
-    public void emit(String channel, Ack ackListener) {
-        mSocket.emit(channel, null, ackListener);
-    }
-
-    @Override
-    public void emit(String channel, Object data) {
+    public void emit(String channel, JSONObject data) {
         mSocket.emit(channel, data);
-    }
-
-    @Override
-    public void emit(String channel, Object data, Ack ack) {
-        mSocket.emit(channel, data, ack);
     }
 
     @Override
@@ -67,8 +58,14 @@ public class RemoteCommunicationSocket implements IRemoteCommunicationSocket {
         mSocket.on(channel, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                onRemoteEventReceivedListener.onRemoteEventReceived(args);
+                JSONObject d = (JSONObject) args[0];
+                onRemoteEventReceivedListener.onRemoteEventReceived(d);
             }
         });
+    }
+
+    @Override
+    public void off(String channel) {
+        mSocket.off(channel);
     }
 }

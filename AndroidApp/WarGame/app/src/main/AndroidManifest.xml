@@ -25,7 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.MapActivity" />
-        <activity android:name=".Activities.RoomActivity"></activity>
 
         <service android:name=".Communication.RemoteCommunicationService" />
     </application>

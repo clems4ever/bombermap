@@ -12,6 +12,7 @@ public class RemoteCommunicationServiceConnection implements ServiceConnection {
     RemoteCommunicationService mService;
     boolean mBound = false;
 
+    String mRoom;
     OnServiceConnectedListener mOnServiceConnectedListener;
 
     public RemoteCommunicationServiceConnection(OnServiceConnectedListener onServiceConnectedListener) {
@@ -24,8 +25,6 @@ public class RemoteCommunicationServiceConnection implements ServiceConnection {
         mService = binder.getService();
         mBound = true;
 
-        mService.getRemoteCommunicationSystem().connect();
-
         if(mOnServiceConnectedListener != null) {
             mOnServiceConnectedListener.onServiceConnectedListener();
         }
@@ -33,7 +32,6 @@ public class RemoteCommunicationServiceConnection implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName arg0) {
-        mService.getRemoteCommunicationSystem().disconnect();
         mService = null;
         mBound = false;
     }
