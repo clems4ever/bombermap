@@ -12,18 +12,18 @@ import java.util.UUID;
  */
 public class GameEngineSocket {
 
-    private IRemoteCommunicationSocket mSocket;
+    private IEventSocket mSocket;
     private PlayerSocket mLocalPlayerSocket;
 
     public GameEngineSocket() {
         init(new RemoteCommunicationSocket());
     }
 
-    public GameEngineSocket(IRemoteCommunicationSocket remoteCommunicationSocket) {
+    public GameEngineSocket(IEventSocket remoteCommunicationSocket) {
         init(remoteCommunicationSocket);
     }
 
-    private void init(IRemoteCommunicationSocket remoteCommunicationSocket) {
+    private void init(IEventSocket remoteCommunicationSocket) {
         mSocket = remoteCommunicationSocket;
 
         UUID playerUUID = UUID.randomUUID();

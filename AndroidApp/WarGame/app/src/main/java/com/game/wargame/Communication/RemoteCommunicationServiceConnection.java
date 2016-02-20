@@ -12,7 +12,6 @@ public class RemoteCommunicationServiceConnection implements ServiceConnection {
     RemoteCommunicationService mService;
     boolean mBound = false;
 
-    String mRoom;
     OnServiceConnectedListener mOnServiceConnectedListener;
 
     public RemoteCommunicationServiceConnection(OnServiceConnectedListener onServiceConnectedListener) {

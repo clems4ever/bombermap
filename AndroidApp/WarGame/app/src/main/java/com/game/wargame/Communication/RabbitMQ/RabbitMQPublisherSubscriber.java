@@ -1,6 +1,6 @@
 package com.game.wargame.Communication.RabbitMQ;
 
-import com.game.wargame.Communication.IRemoteCommunicationSocket;
+import com.game.wargame.Communication.IEventSocket;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -15,10 +15,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitMQPublisherSubscriber extends Thread {
@@ -30,7 +29,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
 
     private boolean mStopThreadFlag = false;
 
-    private Map<String, IRemoteCommunicationSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
+    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
 
     public RabbitMQPublisherSubscriber(ConnectionFactory connectionFactory, String exchangeName) {
@@ -48,7 +47,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         try {
             connection = mConnectionFactory.newConnection();
             channel = connection.createChannel();
-            channel.exchangeDeclare(mExchangeName, "fanout");
+            channel.exchangeDeclare(mExchangeName, "fanout", false, true, false, null);
 
             setupConsumer(channel);
         } catch (IOException e) {
@@ -62,8 +61,10 @@ public class RabbitMQPublisherSubscriber extends Thread {
         JSONObject message;
         while (!mStopThreadFlag && !error) {
             try {
-                message = mQueue.take();
-                channel.basicPublish(mExchangeName, "", null, message.toString().getBytes());
+                message = mQueue.poll(2000, TimeUnit.MILLISECONDS);
+                if(message != null) {
+                    channel.basicPublish(mExchangeName, "", null, message.toString().getBytes());
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -73,6 +74,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
 
         if (!error) {
             try {
+                channel.exchangeDelete(mExchangeName, true);
                 channel.close();
                 connection.close();
             } catch (IOException e) {
@@ -97,7 +99,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
                         String channel = messageJson.optString(RabbitMQSocket.CHANNEL_TAG);
                         JSONObject content = messageJson.optJSONObject(RabbitMQSocket.CONTENT_TAG);
 
-                        IRemoteCommunicationSocket.OnRemoteEventReceivedListener listener = mListenerByChannel.get(channel);
+                        IEventSocket.OnRemoteEventReceivedListener listener = mListenerByChannel.get(channel);
                         if(listener != null) {
                             listener.onRemoteEventReceived(content);
                         }
@@ -124,7 +126,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
     }
 
-    public void subscribe(String channel, IRemoteCommunicationSocket.OnRemoteEventReceivedListener listener) {
+    public void subscribe(String channel, IEventSocket.OnRemoteEventReceivedListener listener) {
         mListenerByChannel.put(channel, listener);
     }
 

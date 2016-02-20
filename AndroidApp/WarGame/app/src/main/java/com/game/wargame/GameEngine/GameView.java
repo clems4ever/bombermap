@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,7 +29,6 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
 
     private Activity mActivity;
     private GoogleMap mMap;
-    private OnMapReadyCallback mOnMapReadyCallback;
 
     private RelativeLayout mMapLayout;
     private AbstractWeaponControllerView mWeaponControllerInterface;
@@ -55,21 +55,8 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
         mMapLayout = (RelativeLayout) activity.findViewById(R.id.map_layout);
     }
 
-    public void setOnWeaponTargetDefinedListener(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener) {
+    public void initialize(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener) {
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
-    }
-
-    public void addPlayer(Player player) {
-
-        if(mMap == null) return;
-
-        Marker playerMarker = mMap.addMarker(new MarkerOptions()
-                .position(player.getPosition())
-                .anchor(0.5f, 0.35f)
-                .flat(true)
-                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
-
-        mPlayerLocations.put(player.getPlayerId(), playerMarker);
     }
 
     public void movePlayer(Player player) {
@@ -80,15 +67,13 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
         if(marker != null) {
             marker.setPosition(player.getPosition());
         }
-    }
-
-    public void rotatePlayer(Player player) {
-        if(mMap == null) return;
-
-        Marker marker = mPlayerLocations.get(player.getPlayerId());
-
-        if(marker != null) {
-            marker.setRotation(player.getRotation());
+        else {
+            Marker playerMarker = mMap.addMarker(new MarkerOptions()
+                    .position(player.getPosition())
+                    .anchor(0.5f, 0.35f)
+                    .flat(true)
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+            mPlayerLocations.put(player.getPlayerId(), playerMarker);
         }
     }
 
@@ -99,13 +84,9 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if(mOnMapReadyCallback != null) {
-            mOnMapReadyCallback.onMapReady(googleMap);
-        }
-    }
+        UiSettings uiSettings = mMap.getUiSettings();
 
-    public void setOnMapReadyListener(OnMapReadyCallback onMapReadyListener) {
-        mOnMapReadyCallback = onMapReadyListener;
+        uiSettings.setZoomControlsEnabled(true);
     }
 
     public void setWeaponController(AbstractWeaponControllerView weaponController) {

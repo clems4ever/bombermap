@@ -6,11 +6,14 @@ import android.location.Location;
 import android.util.Log;
 
 import com.game.wargame.Communication.GameEngineSocket;
+import com.game.wargame.Communication.PlayerSocket;
 import com.game.wargame.Entities.LocalPlayerModel;
 import com.game.wargame.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Entities.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Entities.Player;
 import com.game.wargame.Entities.PlayerModel;
+import com.game.wargame.Entities.RemotePlayerModel;
+import com.game.wargame.OnLocationUpdatedListener;
 import com.game.wargame.Sensors.LocationRetriever;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -27,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameEngineSocket.OnPlayerJoinedListener {
 
     private static final int WEAPON_TIME = 10000;
 
@@ -46,12 +49,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Constructor
      * @param context
      */
-    public GameEngine(Context context, GameEngineSocket gameEngineSocket) {
+    public GameEngine(Context context, GameEngineSocket gameEngineSocket, LocationRetriever locationRetriever) {
         mContext = context;
         mGameEngineSocket = gameEngineSocket;
 
         //mCompass = new Compass(mContext);
-        mLocationRetriever = new LocationRetriever(mContext);
+        mLocationRetriever = locationRetriever;
 
         mPlayers = new ArrayList<>();
     }
@@ -63,6 +66,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mGameView = gameView;
         mCurrentPlayer = localPlayerModel;
         addPlayer(mCurrentPlayer);
+        startSensors();
         initializeView();
     }
 
@@ -93,7 +97,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Initialize the view
      */
     private void initializeView() {
-        mGameView.setOnWeaponTargetDefinedListener(new GameView.OnWeaponTargetDefinedListener() {
+        mGameView.initialize(new GameView.OnWeaponTargetDefinedListener() {
             @Override
             public void onWeaponTargetDefined(float x, float y) {
                 Point targetPositionInScreenCoordinates = new Point();
@@ -109,19 +113,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 float distanceInMeters = results[0];
                 Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
 
-                mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
-            }
-        });
-
-        mGameView.setOnMapReadyListener(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                startSensors();
-
-                Iterator<PlayerModel> playerIt = mPlayers.iterator();
-                while (playerIt.hasNext()) {
-                    PlayerModel player = playerIt.next();
-                    mGameView.addPlayer(player);
+                if(distanceInMeters < 1000) {
+                    onPlayerWeaponTriggeredListener(mCurrentPlayer, targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
+                    mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
+                }
+                else {
+                    Log.d("GameEngine", "The target is out of range");
                 }
             }
         });
@@ -148,5 +145,19 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         LatLng destination = new LatLng(latitude, longitude);
 
         mGameView.triggerWeapon(source, destination, speed);
+    }
+
+    public LocalPlayerModel getLocalPlayer() {
+        return mCurrentPlayer;
+    }
+
+    public int getPlayersCount() {
+        return mPlayers.size();
+    }
+
+    @Override
+    public void onPlayerJoined(PlayerSocket playerSocket) {
+        RemotePlayerModel player = new RemotePlayerModel("name", playerSocket);
+        addPlayer(player);
     }
 }

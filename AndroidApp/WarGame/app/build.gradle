@@ -10,6 +10,10 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+
+        defaultConfig {
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
     }
     buildTypes {
         release {
@@ -21,17 +25,31 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.google.android.gms:play-services:8.4.0'
+
+    // Socket.io
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    // RabbitMQ
     compile files('libs/commons-cli-1.1.jar')
     compile files('libs/commons-io-1.2.jar')
     compile files('libs/hamcrest-core.jar')
     compile files('libs/junit.jar')
     compile files('libs/rabbitmq-client.jar')
     compile files('libs/rabbitmq-client-tests.jar')
+
+    // Unit tests
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
+    // Instrumented tests
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support:support-annotations:23.0.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

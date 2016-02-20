@@ -38,7 +38,10 @@ public class Player {
         return mPlayerName;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(int health) throws PlayerException {
+        if(health < 0 || health > 100) {
+            throw new PlayerException("Health out of bound");
+        }
         mHealth = health;
     }
 
@@ -55,7 +58,7 @@ public class Player {
     }
 
     public void setRotation(float rotation) {
-        mRotation = rotation;
+        mRotation = rotation % 360;
     }
 
     public float getRotation() {

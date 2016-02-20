@@ -29,7 +29,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/username_edittext"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true" />
 
     <Button
         android:layout_width="fill_parent"

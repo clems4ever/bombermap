@@ -17,9 +17,10 @@ public class RemoteCommunicationService extends Service {
     private GameEngineSocket mGameEngineSocket;
 
     public RemoteCommunicationService() {
+    }
 
-        RabbitMQSocket rabbitMqSocket = new RabbitMQSocket("10.0.2.2");
-        mGameEngineSocket = new GameEngineSocket(rabbitMqSocket);
+    public void initialize(IEventSocket eventSocket) {
+        mGameEngineSocket = new GameEngineSocket(eventSocket);
     }
 
     public class RemoteCommunicationServiceBinder extends Binder {

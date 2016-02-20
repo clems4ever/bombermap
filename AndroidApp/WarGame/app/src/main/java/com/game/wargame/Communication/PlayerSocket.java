@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class PlayerSocket {
 
-    private IRemoteCommunicationSocket mSocket;
+    private IEventSocket mSocket;
     private String mPlayerId;
 
     // Listeners
@@ -20,10 +20,10 @@ public class PlayerSocket {
     /**
      *
      * @param playerId
-     * @param remoteCommunicationSocket
+     * @param eventSocket
      */
-    public PlayerSocket(String playerId, IRemoteCommunicationSocket remoteCommunicationSocket) {
-        mSocket = remoteCommunicationSocket;
+    public PlayerSocket(String playerId, IEventSocket eventSocket) {
+        mSocket = eventSocket;
         mPlayerId = playerId;
     }
 

@@ -12,8 +12,8 @@ import com.google.android.gms.games.Game;
 public class WarGameApplication extends Application {
 
     private GameEngine mGameEngine;
-    private GameEngineSocket mGameEngineSocket;
 
+    private boolean mDebugMode = false;
 
     public void setGameEngine(GameEngine gameEngine) {
         mGameEngine = gameEngine;

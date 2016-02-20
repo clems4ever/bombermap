@@ -1,20 +1,17 @@
 package com.game.wargame.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.game.wargame.Communication.RemoteCommunicationService;
-import com.game.wargame.Communication.RemoteCommunicationServiceConnection;
-import com.game.wargame.Communication.GameEngineSocket;
-import com.game.wargame.GameEngine.GameEngine;
 import com.game.wargame.R;
-import com.game.wargame.WarGameApplication;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -38,10 +35,11 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String username = userNameEditText.getText().toString();
 
-                Intent intent = new Intent(mContext, MapActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("type", "create");
-                startActivity(intent);
+                if (!username.isEmpty()) {
+                    startGame(username, "create");
+                } else {
+                    displayAlertDialog();
+                }
             }
         });
 
@@ -49,12 +47,37 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String username = userNameEditText.getText().toString();
-                Intent intent = new Intent(mContext, MapActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("type", "join");
-                startActivity(intent);
+
+                if (!username.isEmpty()) {
+                    startGame(username, "join");
+                } else {
+                    displayAlertDialog();
+                }
             }
         });
+    }
+
+    private void startGame(String username, String type) {
+        Intent intent = new Intent(mContext, MapActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("type", type);
+        startActivity(intent);
+    }
+
+    private void displayAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+
+        alertDialog.setTitle("Wrong username");
+        alertDialog.setMessage("Please type a valid user name.");
+
+        alertDialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        alertDialog.show();
     }
 
     @Override

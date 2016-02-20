@@ -1,8 +1,7 @@
 package com.game.wargame.Communication.SocketIO;
 
-import com.game.wargame.Communication.IRemoteCommunicationSocket;
+import com.game.wargame.Communication.IEventSocket;
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Ack;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -13,7 +12,7 @@ import java.net.URISyntaxException;
 /**
  * Created by clement on 11/02/16.
  */
-public class RemoteCommunicationSocket implements IRemoteCommunicationSocket {
+public class RemoteCommunicationSocket implements IEventSocket {
 
     private final String SERVER_URI = "http://10.0.2.2:3001";
 
@@ -54,7 +53,7 @@ public class RemoteCommunicationSocket implements IRemoteCommunicationSocket {
     }
 
     @Override
-    public void on(String channel, final IRemoteCommunicationSocket.OnRemoteEventReceivedListener onRemoteEventReceivedListener) {
+    public void on(String channel, final IEventSocket.OnRemoteEventReceivedListener onRemoteEventReceivedListener) {
         mSocket.on(channel, new Emitter.Listener() {
             @Override
             public void call(Object... args) {

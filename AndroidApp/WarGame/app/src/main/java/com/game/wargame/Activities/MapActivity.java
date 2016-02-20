@@ -1,20 +1,21 @@
 package com.game.wargame.Activities;
 
+
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Communication.GameEngineSocket;
 import com.game.wargame.Communication.PlayerSocket;
+import com.game.wargame.Communication.RabbitMQ.RabbitMQSocket;
 import com.game.wargame.Communication.RemoteCommunicationService;
 import com.game.wargame.Communication.RemoteCommunicationServiceConnection;
 import com.game.wargame.Entities.LocalPlayerModel;
-import com.game.wargame.Entities.Player;
 import com.game.wargame.GameEngine.GameEngine;
 import com.game.wargame.GameEngine.GameView;
 import com.game.wargame.R;
+import com.game.wargame.Sensors.LocationRetriever;
 import com.game.wargame.WarGameApplication;
 import com.google.android.gms.maps.SupportMapFragment;
 
@@ -36,6 +37,9 @@ public class MapActivity extends FragmentActivity {
 
         mApplication = (WarGameApplication) mContext.getApplicationContext();
         mGameView = new GameView(this);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(mGameView);
     }
 
     @Override
@@ -69,10 +73,14 @@ public class MapActivity extends FragmentActivity {
             String type = myIntent.getStringExtra("type");
 
             UUID gameRoomUUID = UUID.randomUUID();
+
+            RabbitMQSocket rabbitMqSocket = new RabbitMQSocket("10.0.2.2");
+            mConnection.getService().initialize(rabbitMqSocket);
+
             GameEngineSocket gameEngineSocket = mConnection.getService().getGameEngineSocket();
             gameEngineSocket.connect("game_room_" + gameRoomUUID.toString());
 
-            GameEngine gameEngine = new GameEngine(mContext, gameEngineSocket);
+            GameEngine gameEngine = new GameEngine(mContext, gameEngineSocket, new LocationRetriever(mContext));
             mApplication.setGameEngine(gameEngine);
 
             PlayerSocket localPlayerSocket = mConnection.getService().getGameEngineSocket().getLocalPlayerSocket();
@@ -85,9 +93,6 @@ public class MapActivity extends FragmentActivity {
             }
 
             gameEngineSocket.joinGame(localPlayer.getPlayerId(), localPlayer.getPlayerName());
-
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-            mapFragment.getMapAsync(mGameView);
 
             mApplication.getGameEngine().start(mGameView, localPlayer);
         }

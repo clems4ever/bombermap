@@ -7,19 +7,13 @@ import com.game.wargame.OnLocationUpdatedListener;
 /**
  * Created by clement on 19/02/16.
  */
-public abstract class PlayerModel extends Player implements OnLocationUpdatedListener, PlayerSocket.OnFireEventListener {
-
-    protected PlayerSocket mPlayerSocket;
+public abstract class PlayerModel extends Player {
 
     protected OnPlayerPositionChangedListener mOnPlayerPositionChangedListener;
     protected OnPlayerWeaponTriggeredListener mOnPlayerWeaponTriggeredListener;
 
-    public PlayerModel(String playerName, PlayerSocket playerSocket) {
-        super(playerSocket.getPlayerId(), playerName);
-
-        mPlayerSocket = playerSocket;
-
-        mPlayerSocket.setOnFireEventListener(this);
+    public PlayerModel(String playerId, String playerName) {
+        super(playerId, playerName);
     }
 
     public void setOnPlayerWeaponTriggeredListener(OnPlayerWeaponTriggeredListener onPlayerWeaponTriggeredListener) {

@@ -1,12 +1,12 @@
 package com.game.wargame.Communication.RabbitMQ;
 
-import com.game.wargame.Communication.IRemoteCommunicationSocket;
+import com.game.wargame.Communication.IEventSocket;
 import com.rabbitmq.client.ConnectionFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RabbitMQSocket implements IRemoteCommunicationSocket {
+public class RabbitMQSocket implements IEventSocket {
 
     public static final String CHANNEL_TAG = "ch";
     public static final String CONTENT_TAG = "co";
@@ -25,7 +25,8 @@ public class RabbitMQSocket implements IRemoteCommunicationSocket {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setAutomaticRecoveryEnabled(false);
         factory.setHost(mHost);
-        factory.setHandshakeTimeout(0);
+        //factory.setHandshakeTimeout(0);
+        factory.setRequestedHeartbeat(60);
 
         mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, gameRoom);
 
