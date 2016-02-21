@@ -80,7 +80,7 @@ public class PlayerSocket {
 
             fireJsonObject.put("latitude", latitude);
             fireJsonObject.put("longitude", longitude);
-            fireJsonObject.put("velocity", velocity);
+            fireJsonObject.put("speed", velocity);
 
             mSocket.emit("fire", fireJsonObject);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.location.Location;
 import android.util.Log;
+import android.view.View;
 
 import com.game.wargame.Communication.GameEngineSocket;
 import com.game.wargame.Communication.PlayerSocket;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
@@ -32,7 +34,7 @@ import java.util.List;
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameEngineSocket.OnPlayerJoinedListener {
 
-    private static final int WEAPON_TIME = 10000;
+    private static final int WEAPON_TIME = 100;
 
     private List<PlayerModel> mPlayers;
     private LocalPlayerModel mCurrentPlayer;
@@ -119,7 +121,15 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 }
                 else {
                     Log.d("GameEngine", "The target is out of range");
+                    mGameView.onActionFinished();
                 }
+            }
+        });
+
+        mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 4);
             }
         });
     }

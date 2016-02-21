@@ -1,49 +1,41 @@
 package com.game.wargame.GameEngine;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.game.wargame.BulletAnimation;
 import com.game.wargame.Entities.Player;
 import com.game.wargame.R;
 import com.game.wargame.WeaponControllers.AbstractWeaponControllerView;
 import com.game.wargame.WeaponControllers.RocketControllerView;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
-public class GameView implements OnMapReadyCallback, AbstractWeaponControllerView.OnActionFinishedListener {
+public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
 
-    private Activity mActivity;
-    private GoogleMap mMap;
+    private FragmentActivity mActivity;
+    private MapView mMapView;
 
     private RelativeLayout mMapLayout;
     private AbstractWeaponControllerView mWeaponControllerInterface;
     private Button mFireButton;
+    private ImageButton mGpsButton;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
-    private Map<String, Marker> mPlayerLocations;
-
-    public GameView(final Activity activity) {
+    public GameView(final FragmentActivity activity) {
         mActivity = activity;
-        mPlayerLocations = new HashMap<>();
+        mMapView = new MapView(mActivity);
         final GameView that = this;
 
         mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
+        mGpsButton = (ImageButton) mActivity.findViewById(R.id.gps_button);
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,45 +52,24 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
     }
 
     public void movePlayer(final Player player) {
-        if(mMap == null) return;
-
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Marker marker = mPlayerLocations.get(player.getPlayerId());
-                if(marker != null) {
-                    marker.setPosition(player.getPosition());
-                }
-                else {
-                    Marker playerMarker = mMap.addMarker(new MarkerOptions()
-                            .position(player.getPosition())
-                            .anchor(0.5f, 0.35f)
-                            .flat(true)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
-                    mPlayerLocations.put(player.getPlayerId(), playerMarker);
-                }
-            }
-        });
+        mMapView.movePlayerTo(player.getPlayerId(), player.getPosition());
     }
 
-    public void animateCamera(CameraUpdate cameraUpdate) {
-        mMap.animateCamera(cameraUpdate);
+    public void moveCameraTo(LatLng position) {
+        mMapView.moveCameraTo(position);
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        UiSettings uiSettings = mMap.getUiSettings();
-
-        uiSettings.setZoomControlsEnabled(true);
+    public void moveCameraTo(LatLng position, float zoom) {
+        mMapView.moveCameraTo(position, zoom);
     }
 
     public void setWeaponController(AbstractWeaponControllerView weaponController) {
-        mWeaponControllerInterface = weaponController;
+
+        if(mWeaponControllerInterface == null) {
+            mWeaponControllerInterface = weaponController;
+        }
 
         if(mWeaponControllerInterface != null) {
-            mFireButton.setSelected(true);
-
             mWeaponControllerInterface.initialize();
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -133,16 +104,20 @@ public class GameView implements OnMapReadyCallback, AbstractWeaponControllerVie
             mMapLayout.removeView(mWeaponControllerInterface);
             mMapLayout.invalidate();
             mWeaponControllerInterface = null;
-            mFireButton.setSelected(false);
         }
     }
 
     public void triggerWeapon(LatLng source, LatLng destination, double speed) {
+        BulletAnimation bulletAnimation = new BulletAnimation(source, destination, speed);
+        mMapView.startAnimation(bulletAnimation);
+    }
 
+    public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {
+        mGpsButton.setOnClickListener(onGpsButtonClickedListener);
     }
 
     public Projection getMapProjection() {
-        return mMap.getProjection();
+        return mMapView.getMapProjection();
     }
 
     public interface OnWeaponTargetDefinedListener {

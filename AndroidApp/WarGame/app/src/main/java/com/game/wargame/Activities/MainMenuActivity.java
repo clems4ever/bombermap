@@ -1,5 +1,6 @@
 package com.game.wargame.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,7 @@ import android.widget.EditText;
 
 import com.game.wargame.R;
 
-public class MainMenuActivity extends AppCompatActivity {
+public class MainMenuActivity extends Activity {
 
     private Context mContext;
 

@@ -17,9 +17,6 @@ import com.game.wargame.GameEngine.GameView;
 import com.game.wargame.R;
 import com.game.wargame.Sensors.LocationRetriever;
 import com.game.wargame.WarGameApplication;
-import com.google.android.gms.maps.SupportMapFragment;
-
-import java.util.UUID;
 
 public class MapActivity extends FragmentActivity {
 
@@ -37,9 +34,6 @@ public class MapActivity extends FragmentActivity {
 
         mApplication = (WarGameApplication) mContext.getApplicationContext();
         mGameView = new GameView(this);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(mGameView);
     }
 
     @Override
