@@ -17,10 +17,10 @@ amqp.connect(rabbitmq_uri, function(err, conn) {
         ch.assertExchange(room_exchange, 'direct', {durable: false, autoDelete: true});    
 
         // JOIN RPC queue
-        var q = game_id + '_join';
+        var join_queue_name = game_id + '_join';
 
         // declare join_queue
-        ch.assertQueue(q, {durable: false, autoDelete: true});
+        ch.assertQueue(join_queue_name, {durable: false, autoDelete: true});
 
         console.log(' [x] Awaiting new players');
         ch.consume(q, function reply(msg) {
@@ -29,7 +29,7 @@ amqp.connect(rabbitmq_uri, function(err, conn) {
             var player_id = uuid.v4();
             console.log(' [x] New player coming with ID ' + player_id);
             
-            ch.bindQueue(q.queue, room_exchange, player_id );
+            ch.bindQueue(q.queue, room_exchange, player_id);
 
             ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'player_id': player_id})), {correlationId: msg.properties.correlationId});
             ch.ack(msg);
