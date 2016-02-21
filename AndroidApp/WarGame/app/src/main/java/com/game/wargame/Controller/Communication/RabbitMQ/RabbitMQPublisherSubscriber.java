@@ -8,6 +8,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.QueueingConsumer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,12 @@ public class RabbitMQPublisherSubscriber extends Thread {
     private ConnectionFactory mConnectionFactory;
     private String mExchangeName;
 
-    private BlockingQueue<JSONObject> mQueue;
+    private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
+    private BlockingQueue<JSONObject> mRpcReplies = new LinkedBlockingQueue<>();
+
+    private Channel mRpcChannel;
+    private String mRpcReplyQueueName;
+    private QueueingConsumer mRpcConsumer;
 
     private boolean mStopThreadFlag = false;
 
@@ -34,8 +40,6 @@ public class RabbitMQPublisherSubscriber extends Thread {
 
     public RabbitMQPublisherSubscriber(ConnectionFactory connectionFactory, String exchangeName) {
         mConnectionFactory = connectionFactory;
-        mQueue = new LinkedBlockingQueue<>();
-
         mExchangeName = exchangeName;
     }
 
@@ -47,7 +51,13 @@ public class RabbitMQPublisherSubscriber extends Thread {
         try {
             connection = mConnectionFactory.newConnection();
             channel = connection.createChannel();
-            channel.exchangeDeclare(mExchangeName, "fanout", false, true, false, null);
+            channel.exchangeDeclare(mExchangeName, "direct", false, true, false, null);
+
+            // declare the rpc reply queue
+            mRpcChannel = connection.createChannel();
+            mRpcReplyQueueName = mRpcChannel.queueDeclare().getQueue();
+            mRpcConsumer = new QueueingConsumer(mRpcChannel);
+            mRpcChannel.basicConsume(mRpcReplyQueueName, true, mRpcConsumer);
 
             setupConsumer(channel);
         } catch (IOException e) {
@@ -58,16 +68,40 @@ public class RabbitMQPublisherSubscriber extends Thread {
             e.printStackTrace();
         }
 
-        JSONObject message;
+        RabbitMQMessage message;
         while (!mStopThreadFlag && !error) {
             try {
-                message = mQueue.poll(2000, TimeUnit.MILLISECONDS);
+                message = mQueue.poll(3000, TimeUnit.MILLISECONDS);
+
                 if(message != null) {
-                    channel.basicPublish(mExchangeName, "", null, message.toString().getBytes());
+                    if(message.mRpc) {
+                        AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
+                                .correlationId(message.mCorrelationId)
+                                .replyTo(mRpcReplyQueueName)
+                                .build();
+
+                        mRpcChannel.basicPublish("", message.mRpcMethod, props, message.mContent.toString().getBytes());
+
+                        JSONObject response;
+                        while (true) {
+                            QueueingConsumer.Delivery delivery = mRpcConsumer.nextDelivery();
+                            if (delivery.getProperties().getCorrelationId().equals(message.mCorrelationId)) {
+                                String responseStr = new String(delivery.getBody());
+                                response = new JSONObject(responseStr);
+                                mRpcReplies.add(response);
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        channel.basicPublish(mExchangeName, "", null, message.toString().getBytes());
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -119,12 +153,34 @@ public class RabbitMQPublisherSubscriber extends Thread {
         mStopThreadFlag = true;
     }
 
-    public void publish(JSONObject message) {
+    public void publish(JSONObject data) {
         try {
+            RabbitMQMessage message = new RabbitMQMessage();
+            message.mContent = data;
+            message.mRpc = false;
+
             mQueue.put(message);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public JSONObject call(String method, JSONObject args) throws IOException, InterruptedException, JSONException {
+        JSONObject response = null;
+
+        String corrId = java.util.UUID.randomUUID().toString();
+
+        RabbitMQMessage message = new RabbitMQMessage();
+
+        message.mContent = args;
+        message.mCorrelationId = corrId;
+        message.mRpc = true;
+        message.mRpcMethod = method;
+
+        mQueue.add(message);
+        response = mRpcReplies.poll(5000, TimeUnit.MILLISECONDS);
+        return response;
     }
 
     public void subscribe(String channel, IEventSocket.OnRemoteEventReceivedListener listener) {

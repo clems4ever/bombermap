@@ -3,6 +3,7 @@ package com.game.wargame.Controller.Communication;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class GameEngineSocket {
@@ -22,8 +23,8 @@ public class GameEngineSocket {
         mLocalPlayerSocket = new PlayerSocket(playerId, remoteCommunicationSocket);
     }
 
-    public void connect(String gameRoom) {
-        mSocket.connect(gameRoom);
+    public void connect() {
+        mSocket.connect();
     }
 
     public boolean isConnected() {
@@ -34,15 +35,25 @@ public class GameEngineSocket {
         mSocket.disconnect();
     }
 
-    public void joinGame(String playerId, String username) {
+    public String joinGame(String username) {
         JSONObject message = new JSONObject();
+        String playerId = null;
         try {
-            message.put("player_id", playerId);
             message.put("username", username);
-            mSocket.emit("player_join", message);
+            JSONObject retValue = mSocket.call("join", message);
+
+            if(retValue != null) {
+                playerId = retValue.getString("player_id");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return playerId;
     }
 
     public void setOnPlayerJoinedListener(final OnPlayerJoinedListener onPlayerJoinedListener) {

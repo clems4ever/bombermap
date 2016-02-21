@@ -20,7 +20,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Views.Views.Activities.MainMenuActivity">
+            android:name=".Views.Activities.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +28,7 @@
         </activity>
         <activity android:name=".Views.Activities.MapActivity" />
 
-        <service android:name=".Controller.Communication.Communication.Communication.RemoteCommunicationService" />
+        <service android:name=".Controller.Communication.RemoteCommunicationService" />
     </application>
 
 </manifest>

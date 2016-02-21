@@ -66,28 +66,24 @@ public class MapActivity extends FragmentActivity {
             String username = myIntent.getStringExtra("username");
             String type = myIntent.getStringExtra("type");
 
-            //UUID gameRoomUUID = UUID.randomUUID();
-            String gameRoomId = "my_game";
+            String gameRoomId = "abc";
 
-            RabbitMQSocket rabbitMqSocket = new RabbitMQSocket("10.0.2.2");
+            RabbitMQSocket rabbitMqSocket = new RabbitMQSocket("10.0.2.2", gameRoomId);
             mConnection.getService().initialize(rabbitMqSocket);
 
             GameEngineSocket gameEngineSocket = mConnection.getService().getGameEngineSocket();
-            gameEngineSocket.connect("game_room_" + gameRoomId);
+            gameEngineSocket.connect();
 
             GameEngine gameEngine = new GameEngine(mContext, gameEngineSocket, new LocationRetriever(mContext));
             mApplication.setGameEngine(gameEngine);
 
+            if(type.equals("create")) {
+
+            }
+
+            String playerId = gameEngineSocket.joinGame(username);
             PlayerSocket localPlayerSocket = mConnection.getService().getGameEngineSocket().getLocalPlayerSocket();
             LocalPlayerModel localPlayer = new LocalPlayerModel(username, localPlayerSocket);
-
-            if(type == "create") {
-
-            }
-            else if(type == "join") {
-            }
-
-            gameEngineSocket.joinGame(localPlayer.getPlayerId(), localPlayer.getPlayerName());
 
             mApplication.getGameEngine().start(mGameView, localPlayer);
         }
