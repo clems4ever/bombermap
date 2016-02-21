@@ -1,4 +1,4 @@
-package com.game.wargame.Controller.Communication.Communication.Communication;
+package com.game.wargame.Controller;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -6,6 +6,8 @@ import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
+import com.game.wargame.Controller.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;

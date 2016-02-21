@@ -1,10 +1,7 @@
-package com.game.wargame.Controller.Communication.Communication.Communication;
+package com.game.wargame.Controller.Communication;
 
 import org.json.JSONObject;
 
-/**
- * Created by clement on 12/02/16.
- */
 public interface IEventSocket {
 
     public void connect(String gameRoom);

@@ -6,16 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.RabbitMQ.RabbitMQSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.RemoteCommunicationService;
-import com.game.wargame.Controller.Communication.Communication.Communication.RemoteCommunicationServiceConnection;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngine;
-import com.game.wargame.Views.GameView;
-import com.game.wargame.R;
+import com.game.wargame.Controller.GameEngine;
+import com.game.wargame.Controller.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQSocket;
+import com.game.wargame.Controller.Communication.RemoteCommunicationService;
+import com.game.wargame.Controller.Communication.RemoteCommunicationServiceConnection;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Model.Entities.LocalPlayerModel;
+import com.game.wargame.R;
+import com.game.wargame.Views.GameView;
 import com.game.wargame.WarGameApplication;
 
 public class MapActivity extends FragmentActivity {

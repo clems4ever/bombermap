@@ -1,6 +1,6 @@
 package com.game.wargame;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;

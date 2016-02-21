@@ -1,6 +1,4 @@
-package com.game.wargame.Controller.Communication.Communication.Communication;
-
-import com.game.wargame.Controller.Communication.Communication.Communication.SocketIO.RemoteCommunicationSocket;
+package com.game.wargame.Controller.Communication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,7 +121,7 @@ public class PlayerSocket {
     }
 
     public void setOnPlayerLeftListener(final OnPlayerLeftListener onPlayerLeftListener) {
-        mSocket.on("player_left", new RemoteCommunicationSocket.OnRemoteEventReceivedListener() {
+        mSocket.on("player_left", new IEventSocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject data) {
                 try {

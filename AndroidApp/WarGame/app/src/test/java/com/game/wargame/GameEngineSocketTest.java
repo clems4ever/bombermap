@@ -1,7 +1,7 @@
 package com.game.wargame;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.GameEngineSocket;
 
 import org.junit.Before;
 import org.junit.Test;

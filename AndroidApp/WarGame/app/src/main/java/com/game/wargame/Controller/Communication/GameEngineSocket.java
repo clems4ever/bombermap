@@ -1,23 +1,14 @@
-package com.game.wargame.Controller.Communication.Communication.Communication;
-
-import com.game.wargame.Controller.Communication.Communication.Communication.SocketIO.RemoteCommunicationSocket;
+package com.game.wargame.Controller.Communication;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
 
-/**
- * Created by clement on 11/02/16.
- */
 public class GameEngineSocket {
 
     private IEventSocket mSocket;
     private PlayerSocket mLocalPlayerSocket;
-
-    public GameEngineSocket() {
-        init(new RemoteCommunicationSocket());
-    }
 
     public GameEngineSocket(IEventSocket remoteCommunicationSocket) {
         init(remoteCommunicationSocket);

@@ -2,10 +2,10 @@ package com.game.wargame;
 
 import android.content.Context;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngine;
+import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 

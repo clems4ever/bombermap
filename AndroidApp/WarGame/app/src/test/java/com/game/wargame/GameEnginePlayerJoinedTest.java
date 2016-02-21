@@ -2,13 +2,13 @@ package com.game.wargame;
 
 import android.content.Context;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Controller.Communication.Communication.Communication.GameEngine;
-import com.game.wargame.Views.GameView;
+import com.game.wargame.Controller.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Model.Entities.LocalPlayerModel;
+import com.game.wargame.Views.GameView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

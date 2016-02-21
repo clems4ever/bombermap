@@ -1,6 +1,6 @@
-package com.game.wargame.Controller.Communication.Communication.Communication.RabbitMQ;
+package com.game.wargame.Controller.Communication.RabbitMQ;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.IEventSocket;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

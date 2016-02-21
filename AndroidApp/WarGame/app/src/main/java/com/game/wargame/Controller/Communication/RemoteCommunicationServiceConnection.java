@@ -1,4 +1,4 @@
-package com.game.wargame.Controller.Communication.Communication.Communication;
+package com.game.wargame.Controller.Communication;
 
 import android.content.ComponentName;
 import android.content.ServiceConnection;
