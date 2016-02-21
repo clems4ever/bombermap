@@ -1,17 +1,14 @@
 package com.game.wargame;
 
-import com.game.wargame.Communication.IEventSocket;
-import com.game.wargame.Communication.GameEngineSocket;
-import com.github.nkzawa.socketio.client.Ack;
+import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import static org.junit.Assert.*;
 

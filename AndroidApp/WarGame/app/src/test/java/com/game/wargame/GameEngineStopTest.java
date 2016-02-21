@@ -2,14 +2,13 @@ package com.game.wargame;
 
 import android.content.Context;
 
-import com.game.wargame.Communication.GameEngineSocket;
-import com.game.wargame.Communication.PlayerSocket;
-import com.game.wargame.Entities.LocalPlayerModel;
-import com.game.wargame.GameEngine.GameEngine;
-import com.game.wargame.GameEngine.GameView;
-import com.game.wargame.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Communication.Communication.Communication.GameEngineSocket;
+import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
+import com.game.wargame.Model.Entities.LocalPlayerModel;
+import com.game.wargame.Controller.Communication.Communication.Communication.GameEngine;
+import com.game.wargame.Views.GameView;
+import com.game.wargame.Controller.Sensors.LocationRetriever;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

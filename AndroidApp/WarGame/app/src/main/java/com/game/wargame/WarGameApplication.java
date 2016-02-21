@@ -2,9 +2,7 @@ package com.game.wargame;
 
 import android.app.Application;
 
-import com.game.wargame.Communication.GameEngineSocket;
-import com.game.wargame.GameEngine.GameEngine;
-import com.google.android.gms.games.Game;
+import com.game.wargame.Controller.Communication.Communication.Communication.GameEngine;
 
 /**
  * Created by clement on 15/02/16.

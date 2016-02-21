@@ -1,6 +1,6 @@
 package com.game.wargame.Mock;
 
-import com.game.wargame.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
 
 import org.json.JSONObject;
 

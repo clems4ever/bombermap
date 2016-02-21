@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.game.wargame.Entities.Player;
+import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.R;
 
 import java.util.ArrayList;

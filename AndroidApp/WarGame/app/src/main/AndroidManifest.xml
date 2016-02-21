@@ -20,15 +20,15 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Activities.MainMenuActivity">
+            android:name=".Views.Views.Activities.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MapActivity" />
+        <activity android:name=".Views.Activities.MapActivity" />
 
-        <service android:name=".Communication.RemoteCommunicationService" />
+        <service android:name=".Controller.Communication.Communication.Communication.RemoteCommunicationService" />
     </application>
 
 </manifest>

@@ -1,13 +1,11 @@
 package com.game.wargame;
 
-import com.game.wargame.Communication.PlayerSocket;
-import com.game.wargame.Entities.LocalPlayerModel;
-import com.game.wargame.Entities.OnPlayerPositionChangedListener;
-import com.game.wargame.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Entities.PlayerModel;
+import com.game.wargame.Controller.Communication.Communication.Communication.PlayerSocket;
+import com.game.wargame.Model.Entities.LocalPlayerModel;
+import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

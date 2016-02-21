@@ -1,16 +1,11 @@
 package com.game.wargame;
 
-import com.game.wargame.Communication.PlayerSocket;
-import com.game.wargame.Entities.LocalPlayerModel;
-import com.game.wargame.Entities.OnPlayerPositionChangedListener;
-import com.game.wargame.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Entities.Player;
-import com.game.wargame.Entities.PlayerException;
+import com.game.wargame.Model.Entities.Player;
+import com.game.wargame.Model.Entities.PlayerException;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
