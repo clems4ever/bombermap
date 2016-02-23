@@ -35,21 +35,31 @@ public class GameEngineSocket {
         mSocket.disconnect();
     }
 
-    public String joinGame(String username) {
+    public void setOnDisconnectedListener(IEventSocket.OnDisconnectedListener onDisconnectedListener) {
+        mSocket.setOnDisconnected(onDisconnectedListener);
+    }
+
+    public String joinGame(String username, final OnJoinedListener listener) {
         JSONObject message = new JSONObject();
         String playerId = null;
         try {
             message.put("username", username);
-            JSONObject retValue = mSocket.call("join", message);
 
-            if(retValue != null) {
-                playerId = retValue.getString("player_id");
-            }
+            mSocket.call("join", message, new IEventSocket.OnRemoteEventReceivedListener() {
+                @Override
+                public void onRemoteEventReceived(JSONObject message) {
+                    if(listener != null) {
+                        String playerId = null;
+                        try {
+                            playerId = message.getString("player_id");
+                            listener.onJoined(playerId);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -73,6 +83,10 @@ public class GameEngineSocket {
 
     public interface OnPlayerJoinedListener {
         public void onPlayerJoined(PlayerSocket playerSocket);
+    }
+
+    public interface OnJoinedListener {
+        public void onJoined(String playerId);
     }
 
     public PlayerSocket getLocalPlayerSocket() {

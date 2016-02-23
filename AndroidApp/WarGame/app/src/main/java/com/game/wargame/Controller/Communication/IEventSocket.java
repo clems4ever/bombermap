@@ -10,9 +10,11 @@ public interface IEventSocket {
     public void connect();
     public void disconnect();
 
+    public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener);
+
     public boolean isConnected();
 
-    public JSONObject call(String method, JSONObject args) throws InterruptedException, JSONException, IOException;
+    public void call(String method, JSONObject args, OnRemoteEventReceivedListener listener);
 
     public void emit(String channel);
     public void emit(String channel, JSONObject data);
@@ -22,5 +24,9 @@ public interface IEventSocket {
 
     public interface OnRemoteEventReceivedListener {
         public void onRemoteEventReceived(JSONObject message);
+    }
+
+    public interface OnDisconnectedListener {
+        public void onDisconnected();
     }
 }

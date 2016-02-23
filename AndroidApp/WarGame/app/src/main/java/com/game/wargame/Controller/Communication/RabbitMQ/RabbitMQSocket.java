@@ -21,10 +21,7 @@ public class RabbitMQSocket implements IEventSocket {
     public RabbitMQSocket(String host, String gameId) {
         mHost = host;
         mGameId = gameId;
-    }
 
-    @Override
-    public void connect() {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setAutomaticRecoveryEnabled(false);
         factory.setHost(mHost);
@@ -32,7 +29,10 @@ public class RabbitMQSocket implements IEventSocket {
         factory.setRequestedHeartbeat(240);
 
         mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, mGameId + "_game_room");
+    }
 
+    @Override
+    public void connect() {
         mPublisherSubscriber.start();
     }
 
@@ -42,13 +42,18 @@ public class RabbitMQSocket implements IEventSocket {
     }
 
     @Override
+    public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener) {
+        mPublisherSubscriber.setOnDisconnectedListener(onDisconnectedListener);
+    }
+
+    @Override
     public boolean isConnected() {
         return true;
     }
 
     @Override
-    public JSONObject call(String method, JSONObject args) throws InterruptedException, JSONException, IOException {
-        return mPublisherSubscriber.call(mGameId + "_" + method, args);
+    public void call(String method, JSONObject args, OnRemoteEventReceivedListener callback) {
+        mPublisherSubscriber.call(mGameId + "_" + method, args, callback);
     }
 
     @Override

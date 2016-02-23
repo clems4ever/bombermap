@@ -9,6 +9,7 @@ public class RabbitMQMessage {
 
     public boolean mRpc;
     public String mRpcMethod;
+    public String mExchange;
     public JSONObject mContent;
 
     public String mCorrelationId;

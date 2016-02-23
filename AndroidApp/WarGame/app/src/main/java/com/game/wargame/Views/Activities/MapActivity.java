@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Controller.Communication.IEventSocket;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Communication.GameEngineSocket;
 import com.game.wargame.Controller.Communication.PlayerSocket;
@@ -63,7 +64,7 @@ public class MapActivity extends FragmentActivity {
 
             // Get the current user
             Intent myIntent = getIntent();
-            String username = myIntent.getStringExtra("username");
+            final String username = myIntent.getStringExtra("username");
             String type = myIntent.getStringExtra("type");
 
             String gameRoomId = "abc";
@@ -72,6 +73,12 @@ public class MapActivity extends FragmentActivity {
             mConnection.getService().initialize(rabbitMqSocket);
 
             GameEngineSocket gameEngineSocket = mConnection.getService().getGameEngineSocket();
+            gameEngineSocket.setOnDisconnectedListener(new IEventSocket.OnDisconnectedListener() {
+                @Override
+                public void onDisconnected() {
+                    finish();
+                }
+            });
             gameEngineSocket.connect();
 
             GameEngine gameEngine = new GameEngine(mContext, gameEngineSocket, new LocationRetriever(mContext));
@@ -81,11 +88,15 @@ public class MapActivity extends FragmentActivity {
 
             }
 
-            String playerId = gameEngineSocket.joinGame(username);
-            PlayerSocket localPlayerSocket = mConnection.getService().getGameEngineSocket().getLocalPlayerSocket();
-            LocalPlayerModel localPlayer = new LocalPlayerModel(username, localPlayerSocket);
+            gameEngineSocket.joinGame(username, new GameEngineSocket.OnJoinedListener() {
+                @Override
+                public void onJoined(String playerId) {
+                    PlayerSocket localPlayerSocket = mConnection.getService().getGameEngineSocket().getLocalPlayerSocket();
+                    LocalPlayerModel localPlayer = new LocalPlayerModel(username, localPlayerSocket);
 
-            mApplication.getGameEngine().start(mGameView, localPlayer);
+                    mApplication.getGameEngine().start(mGameView, localPlayer);
+                }
+            });
         }
     });
 }

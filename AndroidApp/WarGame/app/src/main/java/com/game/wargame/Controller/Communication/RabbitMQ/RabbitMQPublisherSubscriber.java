@@ -2,6 +2,7 @@ package com.game.wargame.Controller.Communication.RabbitMQ;
 
 import com.game.wargame.Controller.Communication.IEventSocket;
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -27,13 +28,10 @@ public class RabbitMQPublisherSubscriber extends Thread {
     private String mExchangeName;
 
     private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
-    private BlockingQueue<JSONObject> mRpcReplies = new LinkedBlockingQueue<>();
-
-    private Channel mRpcChannel;
-    private String mRpcReplyQueueName;
-    private QueueingConsumer mRpcConsumer;
+    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
 
     private boolean mStopThreadFlag = false;
+    private IEventSocket.OnDisconnectedListener mOnDisconnectedListener;
 
     private Map<String, IEventSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
@@ -43,23 +41,24 @@ public class RabbitMQPublisherSubscriber extends Thread {
         mExchangeName = exchangeName;
     }
 
+    public void setOnDisconnectedListener(IEventSocket.OnDisconnectedListener onDisconnectedListener) {
+        mOnDisconnectedListener = onDisconnectedListener;
+    }
+
     @Override
     public void run() {
         Channel channel = null;
         Connection connection = null;
         boolean error = false;
+        String clientQueueName = null;
+
         try {
             connection = mConnectionFactory.newConnection();
             channel = connection.createChannel();
-            channel.exchangeDeclare(mExchangeName, "direct", false, true, false, null);
+            channel.exchangeDeclarePassive(mExchangeName);
+            clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
 
-            // declare the rpc reply queue
-            mRpcChannel = connection.createChannel();
-            mRpcReplyQueueName = mRpcChannel.queueDeclare().getQueue();
-            mRpcConsumer = new QueueingConsumer(mRpcChannel);
-            mRpcChannel.basicConsume(mRpcReplyQueueName, true, mRpcConsumer);
-
-            setupConsumer(channel);
+            setupConsumer(channel, clientQueueName);
         } catch (IOException e) {
             error = true;
             e.printStackTrace();
@@ -69,60 +68,65 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
 
         RabbitMQMessage message;
+        AMQP.BasicProperties properties = null;
+
         while (!mStopThreadFlag && !error) {
             try {
                 message = mQueue.poll(3000, TimeUnit.MILLISECONDS);
 
                 if(message != null) {
                     if(message.mRpc) {
-                        AMQP.BasicProperties props = new AMQP.BasicProperties.Builder()
+                        properties = new AMQP.BasicProperties.Builder()
                                 .correlationId(message.mCorrelationId)
-                                .replyTo(mRpcReplyQueueName)
+                                .replyTo(clientQueueName)
                                 .build();
 
-                        mRpcChannel.basicPublish("", message.mRpcMethod, props, message.mContent.toString().getBytes());
-
-                        JSONObject response;
-                        while (true) {
-                            QueueingConsumer.Delivery delivery = mRpcConsumer.nextDelivery();
-                            if (delivery.getProperties().getCorrelationId().equals(message.mCorrelationId)) {
-                                String responseStr = new String(delivery.getBody());
-                                response = new JSONObject(responseStr);
-                                mRpcReplies.add(response);
-                                break;
-                            }
-                        }
                     }
-                    else {
-                        channel.basicPublish(mExchangeName, "", null, message.toString().getBytes());
-                    }
+                    channel.basicPublish(message.mExchange, message.mRpcMethod, properties, message.mContent.toString().getBytes());
                 }
             } catch (InterruptedException e) {
+                error = true;
                 e.printStackTrace();
             } catch (IOException e) {
+                error = true;
                 e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (AlreadyClosedException e) {
+                error = true;
                 e.printStackTrace();
             }
         }
 
-        if (!error) {
-            try {
-                channel.exchangeDelete(mExchangeName, true);
+        try {
+            if(channel != null) {
+                if(!error) {
+                    channel.queueDelete(clientQueueName);
+                }
                 channel.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (AlreadyClosedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        if(connection != null) {
+            try {
                 connection.close();
             } catch (IOException e) {
-
-            } catch (TimeoutException e) {
                 e.printStackTrace();
             }
+        }
+
+        if(mOnDisconnectedListener != null) {
+            mOnDisconnectedListener.onDisconnected();
         }
     }
 
-    private void setupConsumer(Channel channel) {
+    private void setupConsumer(Channel channel, String queueName) {
         try {
-            String queueName = channel.queueDeclare().getQueue();
-            channel.queueBind(queueName, mExchangeName, "");
+            channel.queueBind(queueName, mExchangeName, "all");
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
@@ -131,13 +135,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
                     try {
                         JSONObject messageJson = new JSONObject(message);
 
-                        String channel = messageJson.optString(RabbitMQSocket.CHANNEL_TAG);
-                        JSONObject content = messageJson.optJSONObject(RabbitMQSocket.CONTENT_TAG);
-
-                        IEventSocket.OnRemoteEventReceivedListener listener = mListenerByChannel.get(channel);
-                        if(listener != null) {
-                            listener.onRemoteEventReceived(content);
-                        }
+                        routeMessage(messageJson, properties);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -146,6 +144,23 @@ public class RabbitMQPublisherSubscriber extends Thread {
             channel.basicConsume(queueName, true, consumer);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void routeMessage(JSONObject content, AMQP.BasicProperties properties) {
+        IEventSocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(properties.getCorrelationId());
+
+        if(listener != null) {
+            listener.onRemoteEventReceived(content);
+        }
+        else {
+            String channel = content.optString(RabbitMQSocket.CHANNEL_TAG);
+            JSONObject data = content.optJSONObject(RabbitMQSocket.CONTENT_TAG);
+
+            listener = mListenerByChannel.get(channel);
+            if(listener != null) {
+                listener.onRemoteEventReceived(data);
+            }
         }
     }
 
@@ -158,6 +173,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
             RabbitMQMessage message = new RabbitMQMessage();
             message.mContent = data;
             message.mRpc = false;
+            message.mExchange = mExchangeName;
 
             mQueue.put(message);
 
@@ -166,9 +182,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
     }
 
-    public JSONObject call(String method, JSONObject args) throws IOException, InterruptedException, JSONException {
-        JSONObject response = null;
-
+    public void call(String method, JSONObject args, IEventSocket.OnRemoteEventReceivedListener listener) {
         String corrId = java.util.UUID.randomUUID().toString();
 
         RabbitMQMessage message = new RabbitMQMessage();
@@ -177,10 +191,10 @@ public class RabbitMQPublisherSubscriber extends Thread {
         message.mCorrelationId = corrId;
         message.mRpc = true;
         message.mRpcMethod = method;
+        message.mExchange = "";
 
+        mRpcRepliesCallback.put(corrId, listener);
         mQueue.add(message);
-        response = mRpcReplies.poll(5000, TimeUnit.MILLISECONDS);
-        return response;
     }
 
     public void subscribe(String channel, IEventSocket.OnRemoteEventReceivedListener listener) {
