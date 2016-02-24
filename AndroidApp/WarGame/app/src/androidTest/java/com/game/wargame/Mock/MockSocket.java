@@ -1,6 +1,6 @@
 package com.game.wargame.Mock;
 
-import com.game.wargame.Controller.Communication.Communication.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.IEventSocket;
 
 import org.json.JSONObject;
 
@@ -8,15 +8,24 @@ import org.json.JSONObject;
  * Created by clement on 20/02/16.
  */
 public class MockSocket implements IEventSocket {
+
     @Override
-    public void connect(String gameRoom) {
+    public void connect() {
 
     }
+
+    @Override
+    public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener)
+    {}
 
     @Override
     public void disconnect() {
 
     }
+
+    @Override
+    public void call(String method, JSONObject args, OnRemoteEventReceivedListener listener)
+    {}
 
     @Override
     public boolean isConnected() {
