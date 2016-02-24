@@ -82,7 +82,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
                                 .build();
 
                     }
-                    channel.basicPublish(message.mExchange, message.mRpcMethod, properties, message.mContent.toString().getBytes());
+                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, message.mContent.toString().getBytes());
                 }
             } catch (InterruptedException e) {
                 error = true;
@@ -190,8 +190,8 @@ public class RabbitMQPublisherSubscriber extends Thread {
         message.mContent = args;
         message.mCorrelationId = corrId;
         message.mRpc = true;
-        message.mRpcMethod = method;
-        message.mExchange = "";
+        message.mRoutingKey = method;
+        message.mExchange = mExchangeName;
 
         mRpcRepliesCallback.put(corrId, listener);
         mQueue.add(message);

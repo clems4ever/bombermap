@@ -8,7 +8,7 @@ import org.json.JSONObject;
 public class RabbitMQMessage {
 
     public boolean mRpc;
-    public String mRpcMethod;
+    public String mRoutingKey;
     public String mExchange;
     public JSONObject mContent;
 

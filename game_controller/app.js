@@ -24,6 +24,7 @@ amqp.connect(rabbitmq_uri, function(err, conn) {
 
         // declare join_queue
         ch.assertQueue(join_queue_name, {durable: false, autoDelete: false});
+        ch.bindQueue(join_queue_name, room_exchange, 'join');
 
         console.log('[x] Awaiting new players');
         ch.consume(join_queue_name, function reply(msg) {
