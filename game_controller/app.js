@@ -4,7 +4,7 @@ var amqp = require('amqplib/callback_api');
 
 var players = [];
 
-function updateQueuesForNewPlayer(player_id) {
+function updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue) {
     for(p in players) {            
         console.log('+ Bind queue ' + client_queue + ' to all_but_' + players[p].player_id + ' routing key.');
         ch.bindQueue(client_queue, room_exchange, 'all_but_' + players[p].player_id);
@@ -48,7 +48,7 @@ function startGameChannel(conn, game_id) {
             
             ch.bindQueue(client_queue, room_exchange, "all");
                         
-	    updateQueuesForNewPlayer(player_id);
+	    updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue);
 
             var player = { 
                 'player_id': player_id,
@@ -77,7 +77,8 @@ function startGameCreationChannel(conn, gamesChannel) {
 
 	    //Verify the credentials here:
 	    if (game_creation.newgame)
-	    	startGameChannel(conn, game_id);        
+	    	startGameChannel(conn, game_id);
+    	    ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'game_id': game_id})), {correlationId: msg.properties.correlationId});               
 	});
     });
 }
