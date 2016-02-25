@@ -70,11 +70,11 @@ var global_queue = "global_queue";
 function startGameCreationChannel(conn, gamesChannel) {
     conn.createChannel(function(err, ch) {
 
-	    ch.assertQueue(global_queue, {durable: false, autoDelete: false});                	
+	ch.assertQueue(global_queue, {durable: false, autoDelete: false});                	
 
-	    ch.consume(global_queue, function reply(msg) {
-        //Get a game id;
-        var game_id = "abc";
+	ch.consume(global_queue, function reply(msg) {
+            //Get a game id;
+            var game_id = uuid.v4();
 
 	    var game_creation = JSON.parse(msg.content.toString());
 
