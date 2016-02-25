@@ -25,8 +25,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
 
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
-    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
-            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     public LocationRetriever(Context context) {
         mContext = context;

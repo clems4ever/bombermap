@@ -13,14 +13,12 @@ public class RabbitMQSocket implements IEventSocket {
     public static final String CHANNEL_TAG = "ch";
     public static final String CONTENT_TAG = "co";
 
-    private String mGameId;
     private String mHost;
 
     private RabbitMQPublisherSubscriber mPublisherSubscriber;
 
     public RabbitMQSocket(String host, String gameId) {
         mHost = host;
-        mGameId = gameId;
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setAutomaticRecoveryEnabled(false);
@@ -28,7 +26,7 @@ public class RabbitMQSocket implements IEventSocket {
         factory.setHandshakeTimeout(600000);
         factory.setRequestedHeartbeat(240);
 
-        mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, mGameId + "_game_room");
+        mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, gameId + "_game_room");
     }
 
     @Override
@@ -53,7 +51,7 @@ public class RabbitMQSocket implements IEventSocket {
 
     @Override
     public void call(String method, JSONObject args, OnRemoteEventReceivedListener callback) {
-        mPublisherSubscriber.call(mGameId + "_" + method, args, callback);
+        mPublisherSubscriber.call(method, args, callback);
     }
 
     @Override
