@@ -4,7 +4,7 @@ var amqp = require('amqplib/callback_api');
 
 var players = [];
 
-function updateQueuesForNewPlayer(player_id) {
+function updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue) {
     for(p in players) {            
         console.log('+ Bind queue ' + client_queue + ' to all_but_' + players[p].player_id + ' routing key.');
         ch.bindQueue(client_queue, room_exchange, 'all_but_' + players[p].player_id);
@@ -43,25 +43,25 @@ function startGameChannel(conn, game_id) {
 
         console.log('[x] Awaiting new players');
         ch.consume(join_queue_name, function reply(msg) {
+            // Create new player id
+            var player_id = uuid.v4();
+            console.log('[x] New player coming with ID ' + player_id);
 
-        // Create new player id
-        var player_id = uuid.v4();
-        console.log('[x] New player coming with ID ' + player_id);
+            var client_queue = msg.properties.replyTo;
 
-        var client_queue = msg.properties.replyTo;
+            ch.bindQueue(client_queue, room_exchange, "all");
+                        
+            updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue);
 
-        ch.bindQueue(client_queue, room_exchange, "all");
-        updateQueuesForNewPlayer(player_id);
+            var player = { 
+                'player_id': player_id,
+                'queue': client_queue
+            }
+            players.push(player);
 
-        var player = { 
-            'player_id': player_id,
-            'queue': client_queue
-        }
-        players.push(player);
-
-        console.log('Reply to ' + client_queue);
-        ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'player_id': player_id})), {correlationId: msg.properties.correlationId});
-        ch.ack(msg);
+            console.log('Reply to ' + client_queue);
+            ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'player_id': player_id})), {correlationId: msg.properties.correlationId});
+            ch.ack(msg);
         });
     });
 }
@@ -80,7 +80,8 @@ function startGameCreationChannel(conn, gamesChannel) {
 
 	    //Verify the credentials here:
 	    if (game_creation.newgame)
-	    	startGameChannel(conn, game_id);        
+	    	startGameChannel(conn, game_id);
+    	    ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'game_id': game_id})), {correlationId: msg.properties.correlationId});               
 	});
     });
 }
