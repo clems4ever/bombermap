@@ -39,6 +39,7 @@ function startGameChannel(conn, game_id) {
 
         // declare join_queue
         ch.assertQueue(join_queue_name, {durable: false, autoDelete: false});
+        ch.purgeQueue(join_queue_name, function(err, ok) {});
         ch.bindQueue(join_queue_name, room_exchange, 'join');
 
         console.log('[x] Awaiting new players');
@@ -48,7 +49,6 @@ function startGameChannel(conn, game_id) {
             console.log('[x] New player coming with ID ' + player_id);
 
             var client_queue = msg.properties.replyTo;
-
             ch.bindQueue(client_queue, room_exchange, "all");
                         
             updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue);
@@ -66,23 +66,24 @@ function startGameChannel(conn, game_id) {
     });
 }
 
-var global_queue = "global_queue";
-function startGameCreationChannel(conn, gamesChannel) {
+var create_game_queue_name = "create_game";
+
+function startGameCreationChannel(conn) {
+    console.log('Listening for new game creation requests...');
+
     conn.createChannel(function(err, ch) {
 
-	    ch.assertQueue(global_queue, {durable: false, autoDelete: false});                	
+	    ch.assertQueue(create_game_queue_name, {durable: false, autoDelete: false});
+	    ch.purgeQueue(create_game_queue_name, function(err, ok) {});             	
 
-	    ch.consume(global_queue, function reply(msg) {
-        //Get a game id;
-        var game_id = "abc";
+	    ch.consume(create_game_queue_name, function reply(msg) {
+            //Get a game id;
+            var game_id = "abc";
 
-	    var game_creation = JSON.parse(msg.content.toString());
-
-	    //Verify the credentials here:
-	    if (game_creation.newgame)
-	    	startGameChannel(conn, game_id);
+	        //Verify the credentials here:
+        	startGameChannel(conn, game_id);
     	    ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'game_id': game_id})), {correlationId: msg.properties.correlationId});               
-	});
+	    });
     });
 }
 

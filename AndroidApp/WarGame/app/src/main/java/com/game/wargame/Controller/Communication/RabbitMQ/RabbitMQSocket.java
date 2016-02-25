@@ -17,7 +17,7 @@ public class RabbitMQSocket implements IEventSocket {
 
     private RabbitMQPublisherSubscriber mPublisherSubscriber;
 
-    public RabbitMQSocket(String host, String gameId) {
+    public RabbitMQSocket(String host, String exchange) {
         mHost = host;
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -26,7 +26,7 @@ public class RabbitMQSocket implements IEventSocket {
         factory.setHandshakeTimeout(600000);
         factory.setRequestedHeartbeat(240);
 
-        mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, gameId + "_game_room");
+        mPublisherSubscriber = new RabbitMQPublisherSubscriber(factory, exchange);
     }
 
     @Override

@@ -55,7 +55,9 @@ public class RabbitMQPublisherSubscriber extends Thread {
         try {
             connection = mConnectionFactory.newConnection();
             channel = connection.createChannel();
-            channel.exchangeDeclarePassive(mExchangeName);
+            if(!mExchangeName.isEmpty())
+                channel.exchangeDeclarePassive(mExchangeName);
+
             clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
 
             setupConsumer(channel, clientQueueName);
@@ -68,6 +70,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
 
         RabbitMQMessage message;
+        String content;
         AMQP.BasicProperties properties = null;
 
         while (!mStopThreadFlag && !error) {
@@ -82,7 +85,17 @@ public class RabbitMQPublisherSubscriber extends Thread {
                                 .build();
 
                     }
-                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, message.mContent.toString().getBytes());
+                    else {
+                        properties = null;
+                    }
+
+                    if(message.mContent != null) {
+                        content = message.mContent.toString();
+                    }
+                    else {
+                        content = new String();
+                    }
+                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, content.getBytes());
                 }
             } catch (InterruptedException e) {
                 error = true;
@@ -126,7 +139,6 @@ public class RabbitMQPublisherSubscriber extends Thread {
 
     private void setupConsumer(Channel channel, String queueName) {
         try {
-            channel.queueBind(queueName, mExchangeName, "all");
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
@@ -173,6 +185,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
             RabbitMQMessage message = new RabbitMQMessage();
             message.mContent = data;
             message.mRpc = false;
+            message.mRoutingKey = "all";
             message.mExchange = mExchangeName;
 
             mQueue.put(message);

@@ -9,18 +9,13 @@ import java.util.UUID;
 public class GameEngineSocket {
 
     private IEventSocket mSocket;
-    private PlayerSocket mLocalPlayerSocket;
 
     public GameEngineSocket(IEventSocket remoteCommunicationSocket) {
         init(remoteCommunicationSocket);
     }
 
-    private void init(IEventSocket remoteCommunicationSocket) {
-        mSocket = remoteCommunicationSocket;
-
-        UUID playerUUID = UUID.randomUUID();
-        String playerId = playerUUID.toString();
-        mLocalPlayerSocket = new PlayerSocket(playerId, remoteCommunicationSocket);
+    private void init(IEventSocket eventSocket) {
+        mSocket = eventSocket;
     }
 
     public void connect() {
@@ -81,15 +76,15 @@ public class GameEngineSocket {
         });
     }
 
+    public IEventSocket getSocket() {
+        return mSocket;
+    }
+
     public interface OnPlayerJoinedListener {
         public void onPlayerJoined(PlayerSocket playerSocket);
     }
 
     public interface OnJoinedListener {
         public void onJoined(String playerId);
-    }
-
-    public PlayerSocket getLocalPlayerSocket() {
-        return mLocalPlayerSocket;
     }
 }
