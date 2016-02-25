@@ -78,7 +78,7 @@ function startGameCreationChannel(conn) {
 
 	    ch.consume(create_game_queue_name, function reply(msg) {
             //Get a game id;
-            var game_id = "abc";
+            var game_id = "abc"; // uuid.v4(); J'ai commenté l'ID UUID car c'est trop compliqué à rentrer manuellement pour faire les tests côté client.
 
 	        //Verify the credentials here:
         	startGameChannel(conn, game_id);
