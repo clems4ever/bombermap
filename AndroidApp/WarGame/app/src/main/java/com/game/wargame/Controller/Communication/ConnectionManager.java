@@ -5,10 +5,9 @@ import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQConnectionMana
 public class ConnectionManager {
 
     private static int mCount = 0;
-    private static IConnectionManager mConnectionManagerImpl;
+    private static IConnectionManager mConnectionManagerImpl = new RabbitMQConnectionManager("10.0.2.2");
 
-    private ConnectionManager() {
-        mConnectionManagerImpl = new RabbitMQConnectionManager("10.0.2.2");
+    private ConnectionManager() {;
     }
 
     public static IConnectionManager getInstance() {

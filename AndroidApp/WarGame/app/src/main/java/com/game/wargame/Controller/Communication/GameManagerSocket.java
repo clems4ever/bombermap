@@ -39,7 +39,7 @@ public class GameManagerSocket {
         try {
             message.put("game_id", gameId);
 
-            mSocket.call("join", message, new IEventSocket.OnRemoteEventReceivedListener() {
+            mSocket.call("join_game", message, new IEventSocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                     String playerId = null;

@@ -37,11 +37,11 @@ public class RabbitMQConnectionThread extends Thread {
 
 
     public RabbitMQConnectionThread(String host) {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setAutomaticRecoveryEnabled(false);
-        factory.setHost(host);
-        factory.setHandshakeTimeout(600000);
-        factory.setRequestedHeartbeat(240);
+        mConnectionFactory = new ConnectionFactory();
+        mConnectionFactory.setAutomaticRecoveryEnabled(false);
+        mConnectionFactory.setHost(host);
+        mConnectionFactory.setHandshakeTimeout(600000);
+        mConnectionFactory.setRequestedHeartbeat(240);
     }
 
     public void setOnDisconnectedListener(IConnectionManager.OnDisconnectedListener onDisconnectedListener) {

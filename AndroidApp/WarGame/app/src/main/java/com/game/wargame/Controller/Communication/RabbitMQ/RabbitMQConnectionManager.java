@@ -40,12 +40,12 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     @Override
     public GameSocket buildGameSocket(String gameId) {
-        return null;
+        return new GameSocket(gameId, new RabbitMQSocket(mConnectionThread, gameId + "_game_room", ""), this);
     }
 
     @Override
     public RemotePlayerSocket buildRemotePlayerSocket(String gameId, String playerId) {
-        return new RemotePlayerSocket(playerId, new RabbitMQSocket(mConnectionThread, gameId + "game_room", "all_but_" + playerId));
+        return new RemotePlayerSocket(playerId, new RabbitMQSocket(mConnectionThread, gameId + "_game_room", "all_but_" + playerId));
     }
 
     @Override
