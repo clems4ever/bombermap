@@ -9,17 +9,11 @@ import org.json.JSONObject;
 public class GameManagerSocket {
 
     private IEventSocket mSocket;
+    private IConnectionManager mConnectionManager;
 
-    public GameManagerSocket(IEventSocket socket) {
+    public GameManagerSocket(IEventSocket socket, IConnectionManager connectionManager) {
         mSocket = socket;
-    }
-
-    public void connect() {
-        mSocket.connect();
-    }
-
-    public void disconnect() {
-        mSocket.disconnect();
+        mConnectionManager = connectionManager;
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {
@@ -29,7 +23,7 @@ public class GameManagerSocket {
                 String gameId = null;
                 try {
                     gameId = message.getString("game_id");
-                    if(onGameCreatedListener != null) {
+                    if (onGameCreatedListener != null) {
                         onGameCreatedListener.onGameCreated(gameId);
                     }
                 } catch (JSONException e) {
@@ -39,8 +33,40 @@ public class GameManagerSocket {
         });
     }
 
+    public String joinGame(final String gameId, final OnGameJoinedListener onGameJoinedListener) {
+        JSONObject message = new JSONObject();
+        String playerId = null;
+        try {
+            message.put("game_id", gameId);
+
+            mSocket.call("join", message, new IEventSocket.OnRemoteEventReceivedListener() {
+                @Override
+                public void onRemoteEventReceived(JSONObject message) {
+                    String playerId = null;
+                    try {
+                        playerId = message.getString("player_id");
+                        GameSocket gameSocket = mConnectionManager.buildGameSocket(gameId);
+                        LocalPlayerSocket playerSocket = mConnectionManager.buildLocalPlayerSocket(gameId, playerId);
+
+                        onGameJoinedListener.onGameJoined(gameSocket, playerSocket);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return playerId;
+    }
+
     public interface OnGameCreatedListener {
         public void onGameCreated(String gameId);
+    }
+
+    public interface OnGameJoinedListener {
+        public void onGameJoined(GameSocket gameSocket, LocalPlayerSocket localPlayerSocket);
     }
 
 }

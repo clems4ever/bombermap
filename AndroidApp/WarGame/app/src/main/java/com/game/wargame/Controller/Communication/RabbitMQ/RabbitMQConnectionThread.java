@@ -1,5 +1,6 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
+import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.IEventSocket;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AlreadyClosedException;
@@ -22,26 +23,28 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class RabbitMQPublisherSubscriber extends Thread {
+public class RabbitMQConnectionThread extends Thread {
 
     private ConnectionFactory mConnectionFactory;
-    private String mExchangeName;
 
     private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
     private Map<String, IEventSocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
 
     private boolean mStopThreadFlag = false;
-    private IEventSocket.OnDisconnectedListener mOnDisconnectedListener;
+    private IConnectionManager.OnDisconnectedListener mOnDisconnectedListener;
 
     private Map<String, IEventSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
 
-    public RabbitMQPublisherSubscriber(ConnectionFactory connectionFactory, String exchangeName) {
-        mConnectionFactory = connectionFactory;
-        mExchangeName = exchangeName;
+    public RabbitMQConnectionThread(String host) {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setAutomaticRecoveryEnabled(false);
+        factory.setHost(host);
+        factory.setHandshakeTimeout(600000);
+        factory.setRequestedHeartbeat(240);
     }
 
-    public void setOnDisconnectedListener(IEventSocket.OnDisconnectedListener onDisconnectedListener) {
+    public void setOnDisconnectedListener(IConnectionManager.OnDisconnectedListener onDisconnectedListener) {
         mOnDisconnectedListener = onDisconnectedListener;
     }
 
@@ -55,9 +58,6 @@ public class RabbitMQPublisherSubscriber extends Thread {
         try {
             connection = mConnectionFactory.newConnection();
             channel = connection.createChannel();
-            if(!mExchangeName.isEmpty())
-                channel.exchangeDeclarePassive(mExchangeName);
-
             clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
 
             setupConsumer(channel, clientQueueName);
@@ -180,13 +180,13 @@ public class RabbitMQPublisherSubscriber extends Thread {
         mStopThreadFlag = true;
     }
 
-    public void publish(JSONObject data) {
+    public void publish(String exchangeName, String routingKey, JSONObject data) {
         try {
             RabbitMQMessage message = new RabbitMQMessage();
             message.mContent = data;
             message.mRpc = false;
-            message.mRoutingKey = "all";
-            message.mExchange = mExchangeName;
+            message.mRoutingKey = routingKey;
+            message.mExchange = exchangeName;
 
             mQueue.put(message);
 
@@ -195,7 +195,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
     }
 
-    public void call(String method, JSONObject args, IEventSocket.OnRemoteEventReceivedListener listener) {
+    public void call(String exchangeName, String method, JSONObject args, IEventSocket.OnRemoteEventReceivedListener listener) {
         String corrId = java.util.UUID.randomUUID().toString();
 
         RabbitMQMessage message = new RabbitMQMessage();
@@ -204,7 +204,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         message.mCorrelationId = corrId;
         message.mRpc = true;
         message.mRoutingKey = method;
-        message.mExchange = mExchangeName;
+        message.mExchange = exchangeName;
 
         mRpcRepliesCallback.put(corrId, listener);
         mQueue.add(message);

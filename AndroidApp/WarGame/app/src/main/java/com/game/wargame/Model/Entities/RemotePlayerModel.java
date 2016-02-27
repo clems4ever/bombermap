@@ -1,17 +1,18 @@
 package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.RemotePlayerSocket;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by clement on 19/02/16.
  */
-public class RemotePlayerModel extends PlayerModel implements PlayerSocket.OnMoveEventListener, PlayerSocket.OnFireEventListener{
+public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener{
 
-    protected PlayerSocket mPlayerSocket;
+    protected RemotePlayerSocket mPlayerSocket;
     private RemotePlayerModel mThat;
 
-    public RemotePlayerModel(String playerName, PlayerSocket playerSocket) {
+    public RemotePlayerModel(String playerName, RemotePlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);
 
         mPlayerSocket = playerSocket;

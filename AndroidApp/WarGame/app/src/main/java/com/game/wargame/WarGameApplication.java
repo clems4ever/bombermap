@@ -2,6 +2,8 @@ package com.game.wargame;
 
 import android.app.Application;
 
+import com.game.wargame.Controller.Communication.GameSocket;
+import com.game.wargame.Controller.Communication.LocalPlayerSocket;
 import com.game.wargame.Controller.GameEngine;
 
 /**
@@ -9,15 +11,9 @@ import com.game.wargame.Controller.GameEngine;
  */
 public class WarGameApplication extends Application {
 
-    private GameEngine mGameEngine;
+    public GameEngine mGameEngine;
+    public LocalPlayerSocket mLocalPlayerSocket;
+    public GameSocket mGameSocket;
 
     private boolean mDebugMode = false;
-
-    public void setGameEngine(GameEngine gameEngine) {
-        mGameEngine = gameEngine;
-    }
-
-    public GameEngine getGameEngine() {
-        return mGameEngine;
-    }
 }

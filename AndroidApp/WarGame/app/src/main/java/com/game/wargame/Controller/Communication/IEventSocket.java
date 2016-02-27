@@ -1,18 +1,8 @@
 package com.game.wargame.Controller.Communication;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 public interface IEventSocket {
-
-    public void connect();
-    public void disconnect();
-
-    public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener);
-
-    public boolean isConnected();
 
     public void call(String method, JSONObject args, OnRemoteEventReceivedListener listener);
 
@@ -24,9 +14,5 @@ public interface IEventSocket {
 
     public interface OnRemoteEventReceivedListener {
         public void onRemoteEventReceived(JSONObject message);
-    }
-
-    public interface OnDisconnectedListener {
-        public void onDisconnected();
     }
 }
