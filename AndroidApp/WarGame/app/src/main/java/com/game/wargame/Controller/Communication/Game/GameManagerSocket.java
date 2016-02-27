@@ -1,4 +1,8 @@
-package com.game.wargame.Controller.Communication;
+package com.game.wargame.Controller.Communication.Game;
+
+import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,12 +12,10 @@ import org.json.JSONObject;
  */
 public class GameManagerSocket {
 
-    private IEventSocket mSocket;
-    private IConnectionManager mConnectionManager;
+    private Socket mSocket;
 
-    public GameManagerSocket(IEventSocket socket, IConnectionManager connectionManager) {
+    public GameManagerSocket(Socket socket) {
         mSocket = socket;
-        mConnectionManager = connectionManager;
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {
@@ -45,8 +47,8 @@ public class GameManagerSocket {
                     String playerId = null;
                     try {
                         playerId = message.getString("player_id");
-                        GameSocket gameSocket = mConnectionManager.buildGameSocket(gameId);
-                        LocalPlayerSocket playerSocket = mConnectionManager.buildLocalPlayerSocket(gameId, playerId);
+                        GameSocket gameSocket = mSocket.getConnectionManager().buildGameSocket(gameId);
+                        LocalPlayerSocket playerSocket = mSocket.getConnectionManager().buildLocalPlayerSocket(gameId, playerId);
 
                         onGameJoinedListener.onGameJoined(gameSocket, playerSocket);
                     } catch (JSONException e) {

@@ -2,7 +2,7 @@ package com.game.wargame;
 
 import android.content.Context;
 
-import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
 import com.game.wargame.Controller.GameEngine;

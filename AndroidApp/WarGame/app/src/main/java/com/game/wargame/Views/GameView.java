@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.game.wargame.Model.Entities.LocalPlayerModel;
+import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.Entities.RemotePlayerModel;
 import com.game.wargame.Views.Animation.BulletAnimation;
 import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.R;
@@ -51,8 +54,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
     }
 
-    public void movePlayer(final Player player) {
-        mMapView.movePlayerTo(player.getPlayerId(), player.getPosition());
+    public void movePlayer(final PlayerModel player, boolean currentPlayer) {
+        mMapView.movePlayerTo(player.getPlayerId(), currentPlayer, player.getPosition());
     }
 
     public void moveCameraTo(LatLng position) {

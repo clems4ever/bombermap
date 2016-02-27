@@ -1,6 +1,6 @@
 package com.game.wargame.Model.Entities;
 
-import com.game.wargame.Controller.Communication.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Sensors.OnLocationUpdatedListener;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -13,6 +13,7 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
         super(playerSocket.getPlayerId(), playerName);
 
         mPlayerSocket = playerSocket;
+        mPlayerSocket.join();
     }
 
     public void fire(double latitude, double longitude, double speed) {
@@ -31,5 +32,13 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
         if(mOnPlayerPositionChangedListener != null) {
             mOnPlayerPositionChangedListener.onPlayerPositionChanged(this);
         }
+    }
+
+    public void sendJoinTo(RemotePlayerModel remotePlayerModel) {
+        mPlayerSocket.to(remotePlayerModel.mPlayerSocket).joinAck();
+    }
+
+    public void leave() {
+        mPlayerSocket.leave();
     }
 }

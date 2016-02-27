@@ -6,6 +6,7 @@ var players = [];
 
 function updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue) {
     ch.bindQueue(client_queue, room_exchange, "all");
+    ch.bindQueue(client_queue, room_exchange, "only_" + player_id);
 
     for(p in players) {            
         console.log('+ Bind queue ' + client_queue + ' to all_but_' + players[p].player_id + ' routing key.');

@@ -11,10 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.game.wargame.Controller.Communication.ConnectionManager;
-import com.game.wargame.Controller.Communication.GameManagerSocket;
-import com.game.wargame.Controller.Communication.GameSocket;
+import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
+import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
-import com.game.wargame.Controller.Communication.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.R;
 import com.game.wargame.WarGameApplication;
 

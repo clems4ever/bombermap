@@ -1,5 +1,6 @@
 package com.game.wargame.Views;
 
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Views.Animation.AnimationTimer;
@@ -12,6 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -49,7 +51,7 @@ public class MapView implements OnMapReadyCallback {
         return mMap.getProjection();
     }
 
-    public void movePlayerTo(final String playerId, final LatLng position) {
+    public void movePlayerTo(final String playerId, final boolean currentPlayer, final LatLng position) {
         if(mMap == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
@@ -59,11 +61,19 @@ public class MapView implements OnMapReadyCallback {
                 if (marker != null) {
                     marker.setPosition(position);
                 } else {
+                    BitmapDescriptor bmp = null;
+                    if(currentPlayer) {
+                        bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker_current);
+                    }
+                    else {
+                        bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker);
+                    }
+
                     Marker playerMarker = mMap.addMarker(new MarkerOptions()
                             .position(position)
                             .anchor(0.5f, 0.35f)
                             .flat(true)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+                            .icon(bmp));
                     mPlayerLocations.put(playerId, playerMarker);
                 }
             }

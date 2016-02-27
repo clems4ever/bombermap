@@ -1,11 +1,12 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
 import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RabbitMQSocket implements IEventSocket {
+public class RabbitMQSocket extends Socket {
 
     public static final String CHANNEL_TAG = "ch";
     public static final String CONTENT_TAG = "co";
@@ -13,27 +14,29 @@ public class RabbitMQSocket implements IEventSocket {
     private String mExchange;
     private String mRoutingKey;
 
-    private RabbitMQConnectionThread mConnectionThread;
+    private RabbitMQConnectionManager mRMQConnectionManager;
 
-    public RabbitMQSocket(RabbitMQConnectionThread connectionThread) {
-        mConnectionThread = connectionThread;
+    public RabbitMQSocket(RabbitMQConnectionManager connectionManager) {
+        super(connectionManager);
+        mRMQConnectionManager = connectionManager;
     }
 
-    public RabbitMQSocket(RabbitMQConnectionThread connectionThread, String exchange) {
+    public RabbitMQSocket(RabbitMQConnectionManager connectionManager, String exchange) {
+        super(connectionManager);
         mExchange = exchange;
-        mConnectionThread = connectionThread;
+        mRMQConnectionManager = connectionManager;
     }
 
-    public RabbitMQSocket(RabbitMQConnectionThread connectionThread, String exchange, String routingKey) {
+    public RabbitMQSocket(RabbitMQConnectionManager connectionManager, String exchange, String routingKey) {
+        super(connectionManager);
         mExchange = exchange;
         mRoutingKey = routingKey;
-
-        mConnectionThread = connectionThread;
+        mRMQConnectionManager = connectionManager;
     }
 
     @Override
     public void call(String method, JSONObject args, OnRemoteEventReceivedListener callback) {
-        mConnectionThread.call(mExchange, method, args, callback);
+        mRMQConnectionManager.getConnectionThread().call(mExchange, method, args, callback);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class RabbitMQSocket implements IEventSocket {
             message.put(CHANNEL_TAG, channel);
             message.put(CONTENT_TAG, data);
 
-            mConnectionThread.publish(mExchange, mRoutingKey, message);
+            mRMQConnectionManager.getConnectionThread().publish(mExchange, mRoutingKey, message);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -57,11 +60,11 @@ public class RabbitMQSocket implements IEventSocket {
 
     @Override
     public void on(String channel, OnRemoteEventReceivedListener listener) {
-        mConnectionThread.subscribe(channel, listener);
+        mRMQConnectionManager.getConnectionThread().subscribe(channel, listener);
     }
 
     @Override
     public void off(String channel) {
-        mConnectionThread.unsubscribe(channel);
+        mRMQConnectionManager.getConnectionThread().unsubscribe(channel);
     }
 }

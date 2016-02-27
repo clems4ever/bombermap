@@ -2,8 +2,8 @@ package com.game.wargame;
 
 import android.app.Application;
 
-import com.game.wargame.Controller.Communication.GameSocket;
-import com.game.wargame.Controller.Communication.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.GameEngine;
 
 /**

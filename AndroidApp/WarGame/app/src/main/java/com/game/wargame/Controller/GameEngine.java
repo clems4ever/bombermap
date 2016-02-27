@@ -1,14 +1,12 @@
 package com.game.wargame.Controller;
 
-import android.content.Context;
 import android.graphics.Point;
 import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
-import com.game.wargame.Controller.Communication.GameSocket;
-import com.game.wargame.Controller.Communication.PlayerSocket;
-import com.game.wargame.Controller.Communication.RemotePlayerSocket;
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
@@ -19,9 +17,8 @@ import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -65,6 +62,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Stops the game engine
      */
     public void onStop() {
+        mCurrentPlayer.leave();
         stopSensors();
     }
 
@@ -132,13 +130,9 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mPlayersById.put(player.getPlayerId(), player);
     }
 
-    public void removePlayer(PlayerModel player) {
-
-    }
-
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
-        mGameView.movePlayer(player);
+        mGameView.movePlayer(player, player == mCurrentPlayer);
     }
 
     @Override
@@ -160,7 +154,14 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     @Override
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
-        RemotePlayerModel player = new RemotePlayerModel("name", playerSocket);
+        RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
+        addPlayer(player);
+        mCurrentPlayer.sendJoinTo(player);
+    }
+
+    @Override
+    public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket) {
+        RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addPlayer(player);
     }
 

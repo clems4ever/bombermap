@@ -1,7 +1,7 @@
 package com.game.wargame.Controller.Communication.Communication;
 
 import com.game.wargame.Controller.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

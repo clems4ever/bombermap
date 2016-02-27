@@ -1,4 +1,4 @@
-package com.game.wargame.Controller.Communication;
+package com.game.wargame.Controller.Communication.Game;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,16 +8,13 @@ import org.json.JSONObject;
  */
 public abstract class PlayerSocket {
 
-    protected IEventSocket mSocket;
     protected String mPlayerId;
 
     /**
      *
      * @param playerId
-     * @param eventSocket
      */
-    public PlayerSocket(String playerId, IEventSocket eventSocket) {
-        mSocket = eventSocket;
+    public PlayerSocket(String playerId) {
         mPlayerId = playerId;
     }
 

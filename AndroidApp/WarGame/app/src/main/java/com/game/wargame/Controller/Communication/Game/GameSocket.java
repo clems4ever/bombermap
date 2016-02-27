@@ -1,32 +1,29 @@
-package com.game.wargame.Controller.Communication;
+package com.game.wargame.Controller.Communication.Game;
+
+import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.Socket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by clement on 27/02/16.
- */
 public class GameSocket {
 
     private String mGameId;
-    private IEventSocket mSocket;
-
-    private IConnectionManager mConnectionManager;
+    private Socket mSocket;
 
     private OnPlayerEventListener mOnPlayerEventListener;
 
-    public GameSocket(String gameId, IEventSocket socket, IConnectionManager connectionManager) {
+    public GameSocket(String gameId, final Socket socket) {
         mGameId = gameId;
         mSocket = socket;
-        mConnectionManager = connectionManager;
 
-        mSocket.on("on_join", new IEventSocket.OnRemoteEventReceivedListener() {
+        mSocket.on("player_join", new IEventSocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
                 try {
                     String playerId = message.getString("player_id");
                     if(mOnPlayerEventListener != null) {
-                        RemotePlayerSocket playerSocket = mConnectionManager.buildRemotePlayerSocket(mGameId, playerId);
+                        RemotePlayerSocket playerSocket = socket.getConnectionManager().buildRemotePlayerSocket(mGameId, playerId);
 
                         mOnPlayerEventListener.onPlayerJoined(playerSocket);
                     }
@@ -36,13 +33,29 @@ public class GameSocket {
             }
         });
 
-        mSocket.on("on_leave", new IEventSocket.OnRemoteEventReceivedListener() {
+        mSocket.on("player_join_ack", new IEventSocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
                 try {
                     String playerId = message.getString("player_id");
                     if(mOnPlayerEventListener != null) {
-                        RemotePlayerSocket playerSocket = mConnectionManager.buildRemotePlayerSocket(mGameId, playerId);
+                        RemotePlayerSocket playerSocket = socket.getConnectionManager().buildRemotePlayerSocket(mGameId, playerId);
+
+                        mOnPlayerEventListener.onPlayerJoinAckReceived(playerSocket);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mSocket.on("player_leave", new IEventSocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) {
+                try {
+                    String playerId = message.getString("player_id");
+                    if(mOnPlayerEventListener != null) {
+                        RemotePlayerSocket playerSocket = socket.getConnectionManager().buildRemotePlayerSocket(mGameId, playerId);
                         mOnPlayerEventListener.onPlayerLeft(playerSocket);
                     }
                 } catch (JSONException e) {
@@ -63,6 +76,7 @@ public class GameSocket {
 
     public interface OnPlayerEventListener {
         public void onPlayerJoined(RemotePlayerSocket playerSocket);
+        public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket);
         public void onPlayerLeft(RemotePlayerSocket playerSocket);
     }
 }
