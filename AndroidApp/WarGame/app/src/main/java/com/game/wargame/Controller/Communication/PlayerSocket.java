@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by clement on 19/02/16.
  */
-public class PlayerSocket {
+public abstract class PlayerSocket {
 
     protected IEventSocket mSocket;
     protected String mPlayerId;
