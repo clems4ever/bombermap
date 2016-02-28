@@ -2,6 +2,7 @@ package com.game.wargame.Controller;
 
 import android.graphics.Point;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
@@ -194,4 +195,29 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
             mPlayersById.remove(playerSocket.getPlayerId());
         }
     }
+
+    public class UpdateGameTask extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            //Manage collisions and position updations
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            //update UI?
+        }
+    }
+
 }
