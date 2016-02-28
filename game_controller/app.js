@@ -9,7 +9,7 @@ var room_exchange_config = {durable:false, autoDelete:true};
 var global_queue_config = {durable:false, autoDelete:false};
 
 
-function updateBindingsForNewPlayer(client_queue, game_id, player_id, players) {
+function addBindingsForNewPlayer(client_queue, game_id, player_id, players) {
     var room_exchange = game_id + "_game_room";
 
     console.log('+ Bind queue ' + client_queue + ' to all routing key.');
@@ -22,6 +22,21 @@ function updateBindingsForNewPlayer(client_queue, game_id, player_id, players) {
 
         console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
         server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
+    }
+}
+
+function unbindQueueForLeave(ch, client_queue, room_exchange, player_id, players) {
+    ch.unbindQueue(client_queue, room_exchange, "all");
+
+    for(p in players) {
+        var other_player = players[p];
+        if (other_player.player_id != player_id) {
+            console.log('+ UnBind queue ' + client_queue + ' to all_but_' + other_player.player_id + ' routing key.');
+            ch.unbindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
+
+            console.log('+ UnBind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
+            ch.unbindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
+        }
     }
 }
 
@@ -44,7 +59,7 @@ function handlePlayerJoin(game_id, msg) {
 
     //get the players in the game to update the bindings
     PlayerModel.getPlayersForGame(game_id, function(players) {
-        updateBindingsForNewPlayer(client_queue, game_id, player_id, players);
+        addBindingsForNewPlayer(client_queue, game_id, player_id, players);
     });
 
 	var player = {
@@ -60,6 +75,25 @@ function handlePlayerJoin(game_id, msg) {
 		{correlationId: msg.properties.correlationId});
 }
 
+function handlePlayerLeaveGame(game_id, player_id, msg)
+{
+    var room_exchange = game_id+"_game_room";
+    server_channel.assertExchange(room_exchange, "direct", room_exchange_config);
+
+    //Get the players in the game to remove the queue
+    //of the leaving player
+    PlayerModel.getPlayersForGame(game_id, function(players) {
+        unbindQueueForLeave(client_queue, game_id, player_id, players);
+    });
+    PlayerModel.removePlayer(player_id);
+
+    var client_queue = msg.properties.replyTo;
+    console.log('Reply to ' + client_queue);
+    server_channel.sendToQueue(client_queue,
+        new Buffer(JSON.stringify({})),
+        {correlationId: msg.properties.correlationId});
+}
+
 function createGameExchange(game_id) {
 	console.log('Creation of game : ' + game_id);
 
@@ -68,6 +102,12 @@ function createGameExchange(game_id) {
 	// Declare game_room exchange
 	var room_exchange = game_id + '_game_room';
 	server_channel.assertExchange(room_exchange, 'direct', room_exchange_config);
+
+    //reply to user request
+    var client_queue = msg.properties.replyTo;
+    server_channel.sendToQueue(client_queue,
+        new Buffer(JSON.stringify({'game_id': game_id})),
+        {correlationId: msg.properties.correlationId});
 }
 
 function removeGame(game_id) {
@@ -85,19 +125,18 @@ function startGameCreationWorker() {
         if (content.action == "newgame") {
             //Get a game id;
             var game_id = uuid.v4();
-
             //create the exchange for the game
-            createGameExchange(game_id);
-
-            //reply to user request
-            var client_queue = msg.properties.replyTo;
-            server_channel.sendToQueue(client_queue,
-                new Buffer(JSON.stringify({'game_id': game_id})),
-                {correlationId: msg.properties.correlationId});
+            createGameExchange(game_id, msg);
         }
         else if (content.action == "join") {
             var game_id = content.game_id;
             handlePlayerJoin(game_id, msg);
+        }
+        else if (content.action == "leave")
+        {
+            var game_id = content.game_id;
+            var player_id = content.player_id;
+            handlePlayerLeaveGame(game_id, player_id, msg);
         }
         else if (content.action == "remove") {
             var game_id = content.game_id;
