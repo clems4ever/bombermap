@@ -124,7 +124,7 @@ function startGameCreationWorker() {
         //Verify the credentials here:
         if (content.action == "newgame") {
             //Get a game id;
-            var game_id = uuid.v4();
+            var game_id = process.env.DEBUG_GAME_ID || uuid.v4();
             //create the exchange for the game
             createGameExchange(game_id, msg);
         }
