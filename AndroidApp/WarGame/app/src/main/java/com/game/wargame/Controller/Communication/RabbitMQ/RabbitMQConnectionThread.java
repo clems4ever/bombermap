@@ -162,10 +162,12 @@ public class RabbitMQConnectionThread extends Thread {
     }
 
     private void routeMessage(JSONObject content, AMQP.BasicProperties properties) {
-        ISocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(properties.getCorrelationId());
+        String correlationId = properties.getCorrelationId();
+        ISocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(correlationId);
 
         if(listener != null) {
             listener.onRemoteEventReceived(content);
+            mRpcRepliesCallback.remove(correlationId);
         }
         else {
             String channel = content.optString(RabbitMQSocket.CHANNEL_TAG);
@@ -214,5 +216,10 @@ public class RabbitMQConnectionThread extends Thread {
 
     public void unsubscribe(String channel) {
         mListenerByChannel.remove(channel);
+    }
+
+    public void clear() {
+        mListenerByChannel.clear();
+        mRpcRepliesCallback.clear();
     }
 }

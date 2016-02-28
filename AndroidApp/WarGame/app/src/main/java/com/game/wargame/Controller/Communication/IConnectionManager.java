@@ -16,6 +16,8 @@ public interface IConnectionManager {
 
     public ISocketFactory getSocketFactory();
 
+    public void clear();
+
     public interface OnDisconnectedListener {
         public void onDisconnected();
     }

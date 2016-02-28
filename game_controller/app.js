@@ -109,7 +109,11 @@ function joinGame(ch, msg) {
 function leaveGame(ch, msg) {
     var player_id = JSON.parse(msg.content.toString()).player_id;
     var room_exchange = "abc_game_room";
+    var player_queue = players[player_id].queue;
     console.log('[x] Player with ID ' + player_id + ' is leaving');
+    
+    ch.unbindQueue(player_queue, room_exchange, "all");
+    ch.unbindQueue(player_queue, room_exchange, "only_" + player_id);
     
     delete players[player_id];
     

@@ -41,6 +41,11 @@ public class RabbitMQConnectionManager implements IConnectionManager {
         return mSocketFactory;
     }
 
+    @Override
+    public void clear() {
+        mConnectionThread.clear();
+    }
+
     public interface OnDisconnectedListener {
         public void onDisconnected();
     }

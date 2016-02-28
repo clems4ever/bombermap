@@ -45,10 +45,7 @@ public class GameManagerSocket {
                     String playerId = null;
                     try {
                         playerId = message.getString("player_id");
-                        GameSocket gameSocket = mSocketFactory.buildGameSocket(gameId);
-                        LocalPlayerSocket playerSocket = mSocketFactory.buildLocalPlayerSocket(gameId, playerId);
-
-                        onGameJoinedListener.onGameJoined(gameSocket, playerSocket);
+                        onGameJoinedListener.onGameJoined(playerId);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -81,7 +78,7 @@ public class GameManagerSocket {
     }
 
     public interface OnGameJoinedListener {
-        public void onGameJoined(GameSocket gameSocket, LocalPlayerSocket localPlayerSocket);
+        public void onGameJoined(String playerId);
     }
 
 }

@@ -6,9 +6,11 @@ import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animation.AnimationTimer;
 import com.game.wargame.Views.Animation.BulletAnimation;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -26,6 +28,7 @@ public class MapView implements OnMapReadyCallback {
 
     private FragmentActivity mActivity;
     private GoogleMap mMap;
+    private com.google.android.gms.maps.MapView mMapView;
 
     private Map<String, Marker> mPlayerLocations;
     private AnimationTimer mAnimationTimer;
@@ -36,13 +39,14 @@ public class MapView implements OnMapReadyCallback {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
         mAnimationTimer = new AnimationTimer(mActivity);
+
+        mMapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
+        mMapView.onCreate(null);
+        mMapView.getMapAsync(this);
     }
 
     public void load(OnMapReadyListener onMapReadyListener) {
         mOnMapReadyListener = onMapReadyListener;
-
-        SupportMapFragment mapFragment = (SupportMapFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -55,6 +59,7 @@ public class MapView implements OnMapReadyCallback {
         if(mOnMapReadyListener != null) {
             mOnMapReadyListener.onMapReady();
         }
+        mMapView.onResume();
     }
 
     public Projection getMapProjection() {

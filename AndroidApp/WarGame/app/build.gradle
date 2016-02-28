@@ -7,9 +7,12 @@ android {
     defaultConfig {
         applicationId "com.game.wargame"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
 
         defaultConfig {
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,12 +29,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.google.android.gms:play-services:8.4.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4+'
-
-    // Socket.io
-    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.android.support:multidex:1.0.0'
 
     // RabbitMQ
     compile files('libs/commons-cli-1.1.jar')
@@ -48,9 +46,14 @@ dependencies {
     // Instrumented tests
     androidTestCompile 'junit:junit:4.12'
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
-    androidTestCompile 'com.android.support:support-annotations:23.0.1'
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
-}
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4.+'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.android.support:design:23.1.1'}
 
 apply plugin: 'com.google.gms.google-services'
