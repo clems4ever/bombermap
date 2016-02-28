@@ -2,9 +2,8 @@ package com.game.wargame;
 
 import android.content.Context;
 
-import com.game.wargame.Controller.Communication.GameEngineSocket;
-import com.game.wargame.Controller.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.PlayerSocket;
+import com.game.wargame.Controller.Communication.ISocket;
+import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
@@ -38,7 +37,7 @@ public class GameEnginePlayerJoinedTest {
     private PlayerSocket mMockPlayerSocket;
 
     @Mock
-    private IEventSocket mMockEventSocket;
+    private ISocket mMockEventSocket;
 
     private GameEngine mGameEngine;
 

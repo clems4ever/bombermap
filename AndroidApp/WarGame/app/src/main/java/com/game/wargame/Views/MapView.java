@@ -2,16 +2,20 @@ package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.R;
 import com.game.wargame.Views.Animation.AnimationTimer;
 import com.game.wargame.Views.Animation.BulletAnimation;
-import com.game.wargame.R;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -24,17 +28,25 @@ public class MapView implements OnMapReadyCallback {
 
     private FragmentActivity mActivity;
     private GoogleMap mMap;
+    private com.google.android.gms.maps.MapView mMapView;
 
     private Map<String, Marker> mPlayerLocations;
     private AnimationTimer mAnimationTimer;
+
+    private OnMapReadyListener mOnMapReadyListener;
 
     public MapView(FragmentActivity activity) {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
         mAnimationTimer = new AnimationTimer(mActivity);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mMapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
+        mMapView.onCreate(null);
+        mMapView.getMapAsync(this);
+    }
+
+    public void load(OnMapReadyListener onMapReadyListener) {
+        mOnMapReadyListener = onMapReadyListener;
     }
 
     public void onMapReady(GoogleMap googleMap) {
@@ -43,13 +55,18 @@ public class MapView implements OnMapReadyCallback {
 
         uiSettings.setZoomControlsEnabled(true);
         mAnimationTimer.start();
+
+        if(mOnMapReadyListener != null) {
+            mOnMapReadyListener.onMapReady();
+        }
+        mMapView.onResume();
     }
 
     public Projection getMapProjection() {
         return mMap.getProjection();
     }
 
-    public void movePlayerTo(final String playerId, final LatLng position) {
+    public void movePlayerTo(final String playerId, final boolean currentPlayer, final LatLng position) {
         if(mMap == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
@@ -59,13 +76,35 @@ public class MapView implements OnMapReadyCallback {
                 if (marker != null) {
                     marker.setPosition(position);
                 } else {
+                    BitmapDescriptor bmp = null;
+                    if(currentPlayer) {
+                        bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker_current);
+                    }
+                    else {
+                        bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker);
+                    }
+
                     Marker playerMarker = mMap.addMarker(new MarkerOptions()
                             .position(position)
                             .anchor(0.5f, 0.35f)
                             .flat(true)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker)));
+                            .icon(bmp));
                     mPlayerLocations.put(playerId, playerMarker);
                 }
+            }
+        });
+    }
+
+    public void removePlayer(final PlayerModel player) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Marker marker = mPlayerLocations.get(player.getPlayerId());
+
+                if(marker != null) {
+                    marker.remove();
+                }
+
             }
         });
     }
@@ -85,4 +124,7 @@ public class MapView implements OnMapReadyCallback {
         mAnimationTimer.startBulletAnimation(bulletAnimation);
     }
 
+    public interface OnMapReadyListener {
+        public void onMapReady();
+    }
 }

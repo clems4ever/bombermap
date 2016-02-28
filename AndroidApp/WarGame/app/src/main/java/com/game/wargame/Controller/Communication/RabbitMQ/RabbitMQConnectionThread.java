@@ -1,6 +1,7 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
-import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Communication.ISocket;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
@@ -9,7 +10,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.QueueingConsumer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,40 +22,44 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class RabbitMQPublisherSubscriber extends Thread {
+public class RabbitMQConnectionThread extends Thread {
 
     private ConnectionFactory mConnectionFactory;
-    private String mExchangeName;
+    private Connection mConnection;
 
     private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
-    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
 
     private boolean mStopThreadFlag = false;
-    private IEventSocket.OnDisconnectedListener mOnDisconnectedListener;
+    private IConnectionManager.OnDisconnectedListener mOnDisconnectedListener;
 
-    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
+    private Map<String, ISocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
+    private Map<String, ISocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
-
-    public RabbitMQPublisherSubscriber(ConnectionFactory connectionFactory, String exchangeName) {
-        mConnectionFactory = connectionFactory;
-        mExchangeName = exchangeName;
+    public RabbitMQConnectionThread(String host) {
+        mConnectionFactory = new ConnectionFactory();
+        mConnectionFactory.setAutomaticRecoveryEnabled(false);
+        mConnectionFactory.setHost(host);
+        mConnectionFactory.setHandshakeTimeout(600000);
+        mConnectionFactory.setRequestedHeartbeat(240);
     }
 
-    public void setOnDisconnectedListener(IEventSocket.OnDisconnectedListener onDisconnectedListener) {
+    public void setOnDisconnectedListener(IConnectionManager.OnDisconnectedListener onDisconnectedListener) {
         mOnDisconnectedListener = onDisconnectedListener;
+    }
+
+    public boolean isConnected() {
+        return mConnection != null && mConnection.isOpen();
     }
 
     @Override
     public void run() {
         Channel channel = null;
-        Connection connection = null;
         boolean error = false;
         String clientQueueName = null;
 
         try {
-            connection = mConnectionFactory.newConnection();
-            channel = connection.createChannel();
-            channel.exchangeDeclarePassive(mExchangeName);
+            mConnection = mConnectionFactory.newConnection();
+            channel = mConnection.createChannel();
             clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
 
             setupConsumer(channel, clientQueueName);
@@ -68,11 +72,12 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
 
         RabbitMQMessage message;
+        String content;
         AMQP.BasicProperties properties = null;
 
         while (!mStopThreadFlag && !error) {
             try {
-                message = mQueue.poll(3000, TimeUnit.MILLISECONDS);
+                message = mQueue.poll(1000, TimeUnit.MILLISECONDS);
 
                 if(message != null) {
                     if(message.mRpc) {
@@ -82,11 +87,20 @@ public class RabbitMQPublisherSubscriber extends Thread {
                                 .build();
 
                     }
-                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, message.mContent.toString().getBytes());
+                    else {
+                        properties = null;
+                    }
+
+                    if(message.mContent != null) {
+                        content = message.mContent.toString();
+                    }
+                    else {
+                        content = new String();
+                    }
+                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, content.getBytes());
                 }
             } catch (InterruptedException e) {
                 error = true;
-                e.printStackTrace();
             } catch (IOException e) {
                 error = true;
                 e.printStackTrace();
@@ -111,9 +125,10 @@ public class RabbitMQPublisherSubscriber extends Thread {
             e.printStackTrace();
         }
 
-        if(connection != null) {
+        if(mConnection != null) {
             try {
-                connection.close();
+                mConnection.close();
+                mConnection = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,7 +141,6 @@ public class RabbitMQPublisherSubscriber extends Thread {
 
     private void setupConsumer(Channel channel, String queueName) {
         try {
-            channel.queueBind(queueName, mExchangeName, "all");
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
@@ -148,10 +162,12 @@ public class RabbitMQPublisherSubscriber extends Thread {
     }
 
     private void routeMessage(JSONObject content, AMQP.BasicProperties properties) {
-        IEventSocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(properties.getCorrelationId());
+        String correlationId = properties.getCorrelationId();
+        ISocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(correlationId);
 
         if(listener != null) {
             listener.onRemoteEventReceived(content);
+            mRpcRepliesCallback.remove(correlationId);
         }
         else {
             String channel = content.optString(RabbitMQSocket.CHANNEL_TAG);
@@ -164,16 +180,13 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
     }
 
-    public void disconnect() {
-        mStopThreadFlag = true;
-    }
-
-    public void publish(JSONObject data) {
+    public void publish(String exchangeName, String routingKey, JSONObject data) {
         try {
             RabbitMQMessage message = new RabbitMQMessage();
             message.mContent = data;
             message.mRpc = false;
-            message.mExchange = mExchangeName;
+            message.mRoutingKey = routingKey;
+            message.mExchange = exchangeName;
 
             mQueue.put(message);
 
@@ -182,7 +195,7 @@ public class RabbitMQPublisherSubscriber extends Thread {
         }
     }
 
-    public void call(String method, JSONObject args, IEventSocket.OnRemoteEventReceivedListener listener) {
+    public void call(String exchangeName, String method, JSONObject args, ISocket.OnRemoteEventReceivedListener listener) {
         String corrId = java.util.UUID.randomUUID().toString();
 
         RabbitMQMessage message = new RabbitMQMessage();
@@ -191,17 +204,22 @@ public class RabbitMQPublisherSubscriber extends Thread {
         message.mCorrelationId = corrId;
         message.mRpc = true;
         message.mRoutingKey = method;
-        message.mExchange = mExchangeName;
+        message.mExchange = exchangeName;
 
         mRpcRepliesCallback.put(corrId, listener);
         mQueue.add(message);
     }
 
-    public void subscribe(String channel, IEventSocket.OnRemoteEventReceivedListener listener) {
+    public void subscribe(String channel, ISocket.OnRemoteEventReceivedListener listener) {
         mListenerByChannel.put(channel, listener);
     }
 
     public void unsubscribe(String channel) {
         mListenerByChannel.remove(channel);
+    }
+
+    public void clear() {
+        mListenerByChannel.clear();
+        mRpcRepliesCallback.clear();
     }
 }

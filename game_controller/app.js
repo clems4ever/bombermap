@@ -10,22 +10,22 @@ var global_queue_config = {durable:false, autoDelete:false};
 
 
 function updateBindingsForNewPlayer(client_queue, game_id, player_id, players) {
-	var room_exchange = game_id+"_game_room";
+    var room_exchange = game_id + "_game_room";
 
     console.log('+ Bind queue ' + client_queue + ' to all routing key.');
-	server_channel.bindQueue(client_queue, room_exchange, 'all');
+    server_channel.bindQueue(client_queue, room_exchange, 'all');
 
-	for(p in players) {
+    for (p in players) {
         var other_player = players[p];
         console.log('+ Bind queue ' + client_queue + ' to all_but_' + other_player.player_id + ' routing key.');
-		server_channel.bindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
-        
+        server_channel.bindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
+
         console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
-		server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
+        server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
     }
 }
 
-function handleError(err) {      
+function handleError(err) {
 	if (err) {
 		console.error("[AMQP]", err.message);      
 		setTimeout(start, 1000);
@@ -79,28 +79,27 @@ function startGameCreationWorker() {
 	server_channel.assertQueue(global_queue, global_queue_config);
 
 	server_channel.consume(global_queue, function reply(msg) {
-		var content = JSON.parse(msg.content.toString());
+        var content = JSON.parse(msg.content.toString());
 
-		//Verify the credentials here:
-		if (content.action == "newgame") {
-			//Get a game id;
-			var game_id = uuid.v4();
+        //Verify the credentials here:
+        if (content.action == "newgame") {
+            //Get a game id;
+            var game_id = uuid.v4();
 
-			//create the exchange for the game
-			createGameExchange(game_id);
+            //create the exchange for the game
+            createGameExchange(game_id);
 
-			//reply to user request
+            //reply to user request
             var client_queue = msg.properties.replyTo;
             server_channel.sendToQueue(client_queue,
-				new Buffer(JSON.stringify({'game_id': game_id})),
-				{correlationId: msg.properties.correlationId});
-		}
-		else if (content.action == "join") {
-			var game_id = content.game_id;
-			handlePlayerJoin(game_id, msg);
-		}
-        else if (content.action == "remove")
-        {
+                new Buffer(JSON.stringify({'game_id': game_id})),
+                {correlationId: msg.properties.correlationId});
+        }
+        else if (content.action == "join") {
+            var game_id = content.game_id;
+            handlePlayerJoin(game_id, msg);
+        }
+        else if (content.action == "remove") {
             var game_id = content.game_id;
             removeGame(game_id);
         }
@@ -112,7 +111,7 @@ rabbitmquri += "?heartbeat=60";
 function start() {	
 	console.log("Connection to " + rabbitmquri);	    
 	amqp.connect(rabbitmquri, function(err, conn) {
-	
+
 		handleError(err);
 		//Create game creation channel
 		conn.createChannel(function(err, ch) {

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Views.Views.Activities.MainMenuActivity"
     android:weightSum="1">
 
     <ImageView
@@ -59,11 +57,11 @@
 
         <Button
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="New Game"
             android:id="@+id/new_game_button"
             android:layout_gravity="center_horizontal"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_weight="0" />
 
         <Button

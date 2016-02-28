@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.game.wargame.MainActivity">
+
+    <!--<fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.game.wargame.Views.Activities.GameEntryFragment"
+        android:id="@+id/game_entry_fragment"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/game_entry" />
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.game.wargame.Views.Activities.GameMainFragmentment"
+        android:id="@+id/game_map_fragment"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />-->
+</RelativeLayout>
