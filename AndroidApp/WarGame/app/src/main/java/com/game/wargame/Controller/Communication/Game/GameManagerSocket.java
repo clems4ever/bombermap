@@ -17,29 +17,37 @@ public class GameManagerSocket {
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {
-        mSocket.call("create_game", null, new ISocket.OnRemoteEventReceivedListener() {
-            @Override
-            public void onRemoteEventReceived(JSONObject message) {
-                String gameId = null;
-                try {
-                    gameId = message.getString("game_id");
-                    if (onGameCreatedListener != null) {
-                        onGameCreatedListener.onGameCreated(gameId);
+        JSONObject message = new JSONObject();
+        try {
+            message.put("action", "newgame");
+            mSocket.call("global_queue", null, new ISocket.OnRemoteEventReceivedListener() {
+                @Override
+                public void onRemoteEventReceived(JSONObject message) {
+                    String gameId = null;
+                    try {
+                        gameId = message.getString("game_id");
+                        if (onGameCreatedListener != null) {
+                            onGameCreatedListener.onGameCreated(gameId);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String joinGame(final String gameId, final OnGameJoinedListener onGameJoinedListener) {
         JSONObject message = new JSONObject();
         String playerId = null;
         try {
+            message.put("action", "join");
             message.put("game_id", gameId);
 
-            mSocket.call("join_game", message, new ISocket.OnRemoteEventReceivedListener() {
+            mSocket.call("global_queue", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                     String playerId = null;
@@ -58,12 +66,14 @@ public class GameManagerSocket {
         return playerId;
     }
 
-    public void leaveGame(final String playerId) {
+    public void leaveGame(final String gameId, final String playerId) {
         JSONObject message = new JSONObject();
         try {
+            message.put("action", "leave");
             message.put("player_id", playerId);
+            message.put("game_id", gameId);
 
-            mSocket.call("leave_game", message, new ISocket.OnRemoteEventReceivedListener() {
+            mSocket.call("global_queue", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                 }
