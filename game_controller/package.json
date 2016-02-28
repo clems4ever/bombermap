@@ -6,6 +6,8 @@
   "author": "SK & CM",
   "dependencies": {
     "amqplib": "^0.4.1",
-    "node-uuid": "^1.4.7"
+    "node-uuid": "^1.4.7",
+    "mongoose": "3.8.24",
+    "moment": "*"
   }
 }

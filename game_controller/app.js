@@ -1,103 +1,125 @@
 
 var uuid = require('node-uuid');
 var amqp = require('amqplib/callback_api');
+var mongodb = require('./server/controllers/mongooseconnect')
+var PlayerModel = require("./server/model/playermodel");
 
-var players = [];
+var server_channel = null;
+var room_exchange_config = {durable:false, autoDelete:true};
+var global_queue_config = {durable:false, autoDelete:false};
 
-function updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue) {
-    for(p in players) {            
-        console.log('+ Bind queue ' + client_queue + ' to all_but_' + players[p].player_id + ' routing key.');
-        ch.bindQueue(client_queue, room_exchange, 'all_but_' + players[p].player_id);
+
+function updateBindingsForNewPlayer(client_queue, game_id, player_id, players) {
+	var room_exchange = game_id+"_game_room";
+
+    console.log('+ Bind queue ' + client_queue + ' to all routing key.');
+	server_channel.bindQueue(client_queue, room_exchange, 'all');
+
+	for(p in players) {
+        var other_player = players[p];
+        console.log('+ Bind queue ' + client_queue + ' to all_but_' + other_player.player_id + ' routing key.');
+		server_channel.bindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
         
-        console.log('+ Bind queue ' + players[p].queue + ' to all_but_' + player_id + ' routing key.');
-        ch.bindQueue(players[p].queue, room_exchange, 'all_but_' + player_id);
+        console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
+		server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
     }
 }
 
-function onConnectionError(err) {
-      console.error("[AMQP]", err.message);
-      return setTimeout(start, 1000);
+function handleError(err) {      
+	if (err) {
+		console.error("[AMQP]", err.message);      
+		setTimeout(start, 1000);
+	}
 }
 
-function startGameChannel(conn, game_id) {
-    console.log('Creation of game');
-    conn.createChannel(function(err, ch) {
+function handlePlayerJoin(game_id, msg) {
+    var room_exchange = game_id+"_game_room";
+    server_channel.assertExchange(room_exchange, "direct", room_exchange_config);
 
-	    if (err)
-	    {
-		    console.log("Error on creation of game channel for " + game_id);
-	    }
-	    
-        var room_exchange = game_id + '_game_room';
-        ch.prefetch(1);
+    // Create new player id
+	var player_id = uuid.v4();
+	console.log('[x] New player coming with ID ' + player_id);
 
-        // Declare game_room exchange
-        ch.assertExchange(room_exchange, 'direct', {durable: false, autoDelete: false});    
+	var client_queue = msg.properties.replyTo;
 
-        // JOIN RPC queue
-        var join_queue_name = game_id + '_join';
-
-        // declare join_queue
-        ch.assertQueue(join_queue_name, {durable: false, autoDelete: false});
-        ch.bindQueue(join_queue_name, room_exchange, 'join');
-
-        console.log('[x] Awaiting new players');
-        ch.consume(join_queue_name, function reply(msg) {
-            // Create new player id
-            var player_id = uuid.v4();
-            console.log('[x] New player coming with ID ' + player_id);
-
-            var client_queue = msg.properties.replyTo;
-
-            ch.bindQueue(client_queue, room_exchange, "all");
-                        
-            updateQueuesForNewPlayer(player_id, ch, room_exchange, client_queue);
-
-            var player = { 
-                'player_id': player_id,
-                'queue': client_queue
-            }
-            players.push(player);
-
-            console.log('Reply to ' + client_queue);
-            ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'player_id': player_id})), {correlationId: msg.properties.correlationId});
-            ch.ack(msg);
-        });
+    //get the players in the game to update the bindings
+    PlayerModel.getPlayersForGame(game_id, function(players) {
+        updateBindingsForNewPlayer(client_queue, game_id, player_id, players);
     });
+
+	var player = {
+		'player_id': player_id,
+		'queue_id': client_queue,
+        'game_id': game_id
+	};
+	PlayerModel.addPlayerToGame(player);
+
+	console.log('Reply to ' + client_queue);
+	server_channel.sendToQueue(client_queue,
+		new Buffer(JSON.stringify({'player_id': player_id})),
+		{correlationId: msg.properties.correlationId});
+}
+
+function createGameExchange(game_id) {
+	console.log('Creation of game : ' + game_id);
+
+	server_channel.prefetch(1);
+
+	// Declare game_room exchange
+	var room_exchange = game_id + '_game_room';
+	server_channel.assertExchange(room_exchange, 'direct', room_exchange_config);
+}
+
+function removeGame(game_id) {
+    PlayerModel.removePlayersForGame(game_id);
 }
 
 var global_queue = "global_queue";
-function startGameCreationChannel(conn, gamesChannel) {
-    conn.createChannel(function(err, ch) {
+function startGameCreationWorker() {
+	server_channel.assertQueue(global_queue, global_queue_config);
 
-	ch.assertQueue(global_queue, {durable: false, autoDelete: false});                	
+	server_channel.consume(global_queue, function reply(msg) {
+		var content = JSON.parse(msg.content.toString());
 
-	ch.consume(global_queue, function reply(msg) {
-            //Get a game id;
-            var game_id = uuid.v4();
+		//Verify the credentials here:
+		if (content.action == "newgame") {
+			//Get a game id;
+			var game_id = uuid.v4();
 
-	    var game_creation = JSON.parse(msg.content.toString());
+			//create the exchange for the game
+			createGameExchange(game_id);
 
-	    //Verify the credentials here:
-	    if (game_creation.newgame)
-	    	startGameChannel(conn, game_id);
-    	    ch.sendToQueue(msg.properties.replyTo, new Buffer(JSON.stringify({'game_id': game_id})), {correlationId: msg.properties.correlationId});               
-	});
+			//reply to user request
+            var client_queue = msg.properties.replyTo;
+            server_channel.sendToQueue(client_queue,
+				new Buffer(JSON.stringify({'game_id': game_id})),
+				{correlationId: msg.properties.correlationId});
+		}
+		else if (content.action == "join") {
+			var game_id = content.game_id;
+			handlePlayerJoin(game_id, msg);
+		}
+        else if (content.action == "remove")
+        {
+            var game_id = content.game_id;
+            removeGame(game_id);
+        }
     });
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://localhost";
 rabbitmquri += "?heartbeat=60";
 function start() {	
+	console.log("Connection to " + rabbitmquri);	    
 	amqp.connect(rabbitmquri, function(err, conn) {
-
-	    console.log("Connection to " + rabbitmquri);	    
-	    if (err) {
-		    onConnectionError(err);
-	    }
-
-	    //Create game creation channel
-	    startGameCreationChannel(conn);
+	
+		handleError(err);
+		//Create game creation channel
+		conn.createChannel(function(err, ch) {
+			handleError(err);
+			server_channel = ch;
+			startGameCreationWorker(ch);
+		});
 	});
 }
 
