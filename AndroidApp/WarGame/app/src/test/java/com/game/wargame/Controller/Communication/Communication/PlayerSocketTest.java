@@ -1,6 +1,6 @@
 package com.game.wargame.Controller.Communication.Communication;
 
-import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.ISocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 public class PlayerSocketTest {
 
     @Mock
-    private IEventSocket mMockEventSocket;
+    private ISocket mMockEventSocket;
 
     @Mock
     private PlayerSocket.OnMoveEventListener mMockOnMoveEventListener;
@@ -30,7 +30,7 @@ public class PlayerSocketTest {
 
         playerSocket.setOnMoveEventListener(mMockOnMoveEventListener);
 
-        verify(mMockEventSocket).on(Matchers.eq("move"), Matchers.<IEventSocket.OnRemoteEventReceivedListener>any());
+        verify(mMockEventSocket).on(Matchers.eq("move"), Matchers.<ISocket.OnRemoteEventReceivedListener>any());
     }
 
     @Test
@@ -40,6 +40,6 @@ public class PlayerSocketTest {
 
         playerSocket.setOnFireEventListener(mMockOnFireEventListener);
 
-        verify(mMockEventSocket).on(Matchers.eq("fire"), Matchers.<IEventSocket.OnRemoteEventReceivedListener>any());
+        verify(mMockEventSocket).on(Matchers.eq("fire"), Matchers.<ISocket.OnRemoteEventReceivedListener>any());
     }
 }

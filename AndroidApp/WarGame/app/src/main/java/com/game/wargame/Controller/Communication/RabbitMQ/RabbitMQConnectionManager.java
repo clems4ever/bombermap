@@ -1,76 +1,47 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
-import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
-import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
-import com.game.wargame.Controller.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
-import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Controller.Communication.Game.RemotePlayerSocketRouter;
-import com.game.wargame.Controller.Communication.Socket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 
 public class RabbitMQConnectionManager implements IConnectionManager {
 
     private RabbitMQConnectionThread mConnectionThread;
-    private RemotePlayerSocketRouter mRemotePlayerSocketRouter;
+    private RabbitMQSocketFactory mSocketFactory;
 
-    public RabbitMQConnectionManager(String host) {
-        mConnectionThread = new RabbitMQConnectionThread(host);
+
+    public RabbitMQConnectionManager() {
     }
 
     @Override
-    public void connect() {
+    public void connect(String host) {
+        mConnectionThread = new RabbitMQConnectionThread(host);
         mConnectionThread.start();
+        mSocketFactory = new RabbitMQSocketFactory(mConnectionThread);
     }
 
     @Override
     public void disconnect() {
-        mConnectionThread.disconnect();
+        mConnectionThread.interrupt();
+        mSocketFactory = null;
+        mConnectionThread = null;
     }
 
     @Override
-    public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener) {
+    public void setOnDisconnected(IConnectionManager.OnDisconnectedListener onDisconnectedListener) {
         mConnectionThread.setOnDisconnectedListener(onDisconnectedListener);
     }
 
     @Override
     public boolean isConnected() {
-        return true;
-    }
-
-    public RabbitMQConnectionThread getConnectionThread() {
-        return mConnectionThread;
-    }
-
-    public GameManagerSocket buildGameManagerSocket() {
-        return new GameManagerSocket(new RabbitMQSocket(this, "", ""));
+        return mConnectionThread.isConnected();
     }
 
     @Override
-    public GameSocket buildGameSocket(String gameId) {
-        return new GameSocket(gameId, new RabbitMQSocket(this, gameId + "_game_room", ""));
+    public ISocketFactory getSocketFactory() {
+        return mSocketFactory;
     }
 
-    @Override
-    public RemotePlayerSocket buildRemotePlayerSocket(String gameId, String playerId) {
-
-        if(mRemotePlayerSocketRouter == null) {
-            IEventSocket socket = new RabbitMQSocket(this, gameId + "_game_room", "");
-            mRemotePlayerSocketRouter = new RemotePlayerSocketRouter(socket);
-        }
-
-        RemotePlayerSocket playerSocket = new RemotePlayerSocket(playerId);
-        mRemotePlayerSocketRouter.addPlayer(playerSocket);
-        return playerSocket;
-    }
-
-    @Override
-    public LocalPlayerSocket buildLocalPlayerSocket(String gameId, String playerId) {
-        return new LocalPlayerSocket(playerId, new RabbitMQSocket(this, gameId + "_game_room", "all_but_" + playerId));
-    }
-
-    @Override
-    public Socket buildDirectPeerSocket(String gameId, RemotePlayerSocket remotePlayerSocket) {
-        return new RabbitMQSocket(this, gameId + "_game_room", "only_" + remotePlayerSocket.getPlayerId());
+    public interface OnDisconnectedListener {
+        public void onDisconnected();
     }
 }

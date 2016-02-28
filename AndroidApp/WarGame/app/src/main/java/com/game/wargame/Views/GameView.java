@@ -54,8 +54,16 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
     }
 
+    public void loadMap(MapView.OnMapReadyListener onMapReadyListener) {
+        mMapView.load(onMapReadyListener);
+    }
+
     public void movePlayer(final PlayerModel player, boolean currentPlayer) {
         mMapView.movePlayerTo(player.getPlayerId(), currentPlayer, player.getPosition());
+    }
+
+    public void removePlayer(PlayerModel player) {
+        mMapView.removePlayer(player);
     }
 
     public void moveCameraTo(LatLng position) {

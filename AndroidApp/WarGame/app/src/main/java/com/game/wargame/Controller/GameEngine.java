@@ -6,20 +6,24 @@ import android.util.Log;
 import android.view.View;
 
 import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Views.MapView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {
@@ -45,17 +49,18 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerModel localPlayerModel, LocationRetriever locationRetriever) {
+    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever) {
         mGameView = gameView;
         mGameSocket = gameSocket;
-        mCurrentPlayer = localPlayerModel;
         mLocationRetriever = locationRetriever;
 
+        mGameSocket.setOnPlayerEventListener(this);
+
+        mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
+
         startSensors();
         initializeView();
-
-        mGameSocket.setOnPlayerEventListener(this);
     }
 
     /**
@@ -118,6 +123,20 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 4);
             }
         });
+
+        mGameView.loadMap(new MapView.OnMapReadyListener() {
+            @Override
+            public void onMapReady() {
+                Set<Map.Entry<String, PlayerModel>> entrySet = mPlayersById.entrySet();
+                Iterator<Map.Entry<String, PlayerModel>> iterator = entrySet.iterator();
+
+                while(iterator.hasNext()) {
+                    Map.Entry<String, PlayerModel> entry = iterator.next();
+
+                    mGameView.movePlayer(entry.getValue(), entry.getValue() == mCurrentPlayer);
+                }
+            }
+        });
     }
 
     /**
@@ -151,7 +170,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         return mPlayersById.size();
     }
 
-
+    // A player has sent a join event, we must send him back a join event
     @Override
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
@@ -159,14 +178,20 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mCurrentPlayer.sendJoinTo(player);
     }
 
+    // A player has sent back join event to ack my join event. It allows to add already connected players
     @Override
     public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addPlayer(player);
     }
 
+    // A remote player has left the game
     @Override
     public void onPlayerLeft(RemotePlayerSocket playerSocket) {
-        mPlayersById.remove(playerSocket.getPlayerId());
+        PlayerModel playerModel = mPlayersById.get(playerSocket.getPlayerId());
+        if(playerModel != null) {
+            mGameView.removePlayer(playerModel);
+            mPlayersById.remove(playerSocket.getPlayerId());
+        }
     }
 }

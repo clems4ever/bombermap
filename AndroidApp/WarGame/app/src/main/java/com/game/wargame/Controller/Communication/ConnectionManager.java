@@ -5,9 +5,9 @@ import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQConnectionMana
 public class ConnectionManager {
 
     private static int mCount = 0;
-    private static IConnectionManager mConnectionManagerImpl = new RabbitMQConnectionManager("10.0.2.2");
+    private static IConnectionManager mConnectionManagerImpl = new RabbitMQConnectionManager();
 
-    private ConnectionManager() {;
+    private ConnectionManager() {
     }
 
     public static IConnectionManager getInstance() {
@@ -16,17 +16,24 @@ public class ConnectionManager {
 
     public static IConnectionManager onStart() {
         if(mCount == 0) {
-            mConnectionManagerImpl.connect();
+            mConnectionManagerImpl.connect("10.0.2.2");
         }
         mCount++;
-
         return mConnectionManagerImpl;
     }
 
-    public static void onStop() {
+    public static IConnectionManager onStop() {
         mCount--;
-        if(mCount == 0) {
+        if(mCount == 0 && mConnectionManagerImpl.isConnected()) {
             mConnectionManagerImpl.disconnect();
+        }
+        return mConnectionManagerImpl;
+    }
+
+    public static void restart() {
+        if(mCount > 0) {
+            mConnectionManagerImpl.disconnect();
+            mConnectionManagerImpl.connect("10.0.2.2");
         }
     }
 }

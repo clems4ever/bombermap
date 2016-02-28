@@ -13,8 +13,8 @@ import android.widget.EditText;
 import com.game.wargame.Controller.Communication.ConnectionManager;
 import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
-import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.R;
 import com.game.wargame.WarGameApplication;
 
@@ -22,7 +22,6 @@ public class MainMenuActivity extends Activity {
 
     private Context mContext;
     private IConnectionManager mConnectionManager;
-
     private WarGameApplication mApplication;
 
     @Override
@@ -68,7 +67,7 @@ public class MainMenuActivity extends Activity {
     }
 
     private void createGame(final String username) {
-        GameManagerSocket gameManagerSocket = mConnectionManager.buildGameManagerSocket();
+        GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
 
         gameManagerSocket.createGame(new GameManagerSocket.OnGameCreatedListener() {
             @Override
@@ -79,7 +78,7 @@ public class MainMenuActivity extends Activity {
     }
 
     private void joinGame(final String gameId, final String username) {
-        GameManagerSocket gameManagerSocket = mConnectionManager.buildGameManagerSocket();
+        GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
         gameManagerSocket.joinGame(gameId, new GameManagerSocket.OnGameJoinedListener() {
             @Override
             public void onGameJoined(GameSocket gameSocket, LocalPlayerSocket localPlayerSocket) {
@@ -112,6 +111,8 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        ConnectionManager.restart();
         mConnectionManager = ConnectionManager.onStart();
     }
 

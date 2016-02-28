@@ -1,6 +1,6 @@
 package com.game.wargame;
 
-import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.ISocket;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class GameEngineSocketTest {
 
     @Mock
-    private IEventSocket mEventSocket;
+    private ISocket mEventSocket;
 
     private GameEngineSocket mGameEngineSocket;
 

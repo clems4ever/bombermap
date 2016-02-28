@@ -1,6 +1,6 @@
 package com.game.wargame.Controller.Communication.Game;
 
-import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.ISocket;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,19 +8,19 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RemotePlayerSocketRouter {
+public class RemotePlayersSocket {
 
-    private IEventSocket mSocket;
+    private ISocket mSocket;
 
     private Map<String, RemotePlayerSocket> mPlayerByPlayerId;
 
 
-    public  RemotePlayerSocketRouter(IEventSocket socket) {
+    public RemotePlayersSocket(ISocket socket) {
         mSocket = socket;
 
         mPlayerByPlayerId = new HashMap<>();
 
-        mSocket.on("move", new IEventSocket.OnRemoteEventReceivedListener() {
+        mSocket.on("move", new ISocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
                 try {
@@ -38,7 +38,7 @@ public class RemotePlayerSocketRouter {
             }
         });
 
-        mSocket.on("fire", new IEventSocket.OnRemoteEventReceivedListener() {
+        mSocket.on("fire", new ISocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
                 try {

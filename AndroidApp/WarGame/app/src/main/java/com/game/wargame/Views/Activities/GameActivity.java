@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Controller.Communication.ConnectionManager;
+import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQConnectionManager;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
@@ -27,7 +29,6 @@ public class GameActivity extends FragmentActivity {
         setContentView(R.layout.activity_map);
 
         mContext = this;
-
         mApplication = (WarGameApplication) mContext.getApplicationContext();
     }
 
@@ -41,15 +42,15 @@ public class GameActivity extends FragmentActivity {
         String username = myIntent.getStringExtra("username");
 
         mGameEngine = new GameEngine();
-
-        LocalPlayerModel localPlayer = new LocalPlayerModel(username, mApplication.mLocalPlayerSocket);
-        mGameEngine.onStart(new GameView(this), mApplication.mGameSocket, localPlayer, new LocationRetriever(mContext));
+        mGameEngine.onStart(new GameView(this), mApplication.mGameSocket, mApplication.mLocalPlayerSocket, new LocationRetriever(mContext));
     }
 
 
     @Override
     protected void onStop() {
         mGameEngine.onStop();
+        ConnectionManager.getInstance().getSocketFactory().buildGameManagerSocket().leaveGame(mApplication.mLocalPlayerSocket.getPlayerId());
+
         ConnectionManager.onStop();
         super.onStop();
     }

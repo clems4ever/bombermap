@@ -1,7 +1,7 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
 import com.game.wargame.Controller.Communication.IConnectionManager;
-import com.game.wargame.Controller.Communication.IEventSocket;
+import com.game.wargame.Controller.Communication.ISocket;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
@@ -25,15 +25,15 @@ import java.util.concurrent.TimeoutException;
 public class RabbitMQConnectionThread extends Thread {
 
     private ConnectionFactory mConnectionFactory;
+    private Connection mConnection;
 
     private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
-    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
 
     private boolean mStopThreadFlag = false;
     private IConnectionManager.OnDisconnectedListener mOnDisconnectedListener;
 
-    private Map<String, IEventSocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
-
+    private Map<String, ISocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
+    private Map<String, ISocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
     public RabbitMQConnectionThread(String host) {
         mConnectionFactory = new ConnectionFactory();
@@ -47,16 +47,19 @@ public class RabbitMQConnectionThread extends Thread {
         mOnDisconnectedListener = onDisconnectedListener;
     }
 
+    public boolean isConnected() {
+        return mConnection != null && mConnection.isOpen();
+    }
+
     @Override
     public void run() {
         Channel channel = null;
-        Connection connection = null;
         boolean error = false;
         String clientQueueName = null;
 
         try {
-            connection = mConnectionFactory.newConnection();
-            channel = connection.createChannel();
+            mConnection = mConnectionFactory.newConnection();
+            channel = mConnection.createChannel();
             clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
 
             setupConsumer(channel, clientQueueName);
@@ -74,7 +77,7 @@ public class RabbitMQConnectionThread extends Thread {
 
         while (!mStopThreadFlag && !error) {
             try {
-                message = mQueue.poll(3000, TimeUnit.MILLISECONDS);
+                message = mQueue.poll(1000, TimeUnit.MILLISECONDS);
 
                 if(message != null) {
                     if(message.mRpc) {
@@ -98,7 +101,6 @@ public class RabbitMQConnectionThread extends Thread {
                 }
             } catch (InterruptedException e) {
                 error = true;
-                e.printStackTrace();
             } catch (IOException e) {
                 error = true;
                 e.printStackTrace();
@@ -123,9 +125,10 @@ public class RabbitMQConnectionThread extends Thread {
             e.printStackTrace();
         }
 
-        if(connection != null) {
+        if(mConnection != null) {
             try {
-                connection.close();
+                mConnection.close();
+                mConnection = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -159,7 +162,7 @@ public class RabbitMQConnectionThread extends Thread {
     }
 
     private void routeMessage(JSONObject content, AMQP.BasicProperties properties) {
-        IEventSocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(properties.getCorrelationId());
+        ISocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(properties.getCorrelationId());
 
         if(listener != null) {
             listener.onRemoteEventReceived(content);
@@ -173,10 +176,6 @@ public class RabbitMQConnectionThread extends Thread {
                 listener.onRemoteEventReceived(data);
             }
         }
-    }
-
-    public void disconnect() {
-        mStopThreadFlag = true;
     }
 
     public void publish(String exchangeName, String routingKey, JSONObject data) {
@@ -194,7 +193,7 @@ public class RabbitMQConnectionThread extends Thread {
         }
     }
 
-    public void call(String exchangeName, String method, JSONObject args, IEventSocket.OnRemoteEventReceivedListener listener) {
+    public void call(String exchangeName, String method, JSONObject args, ISocket.OnRemoteEventReceivedListener listener) {
         String corrId = java.util.UUID.randomUUID().toString();
 
         RabbitMQMessage message = new RabbitMQMessage();
@@ -209,7 +208,7 @@ public class RabbitMQConnectionThread extends Thread {
         mQueue.add(message);
     }
 
-    public void subscribe(String channel, IEventSocket.OnRemoteEventReceivedListener listener) {
+    public void subscribe(String channel, ISocket.OnRemoteEventReceivedListener listener) {
         mListenerByChannel.put(channel, listener);
     }
 

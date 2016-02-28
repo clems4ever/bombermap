@@ -1,22 +1,25 @@
 package com.game.wargame.Controller.Communication.Game;
 
-import com.game.wargame.Controller.Communication.Socket;
+import com.game.wargame.Controller.Communication.ISocket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LocalPlayerSocket extends PlayerSocket {
 
-    private Socket mSocket;
+    private ISocket mSocket;
+    private ISocketFactory mSocketFactory;
 
     /**
      * @param playerId
      * @param eventSocket
      */
-    public LocalPlayerSocket(String playerId, Socket eventSocket) {
+    public LocalPlayerSocket(String playerId, ISocket eventSocket, ISocketFactory socketFactory) {
         super(playerId);
 
         mSocket = eventSocket;
+        mSocketFactory = socketFactory;
     }
 
     private JSONObject buildClientJson() throws JSONException {
@@ -84,6 +87,6 @@ public class LocalPlayerSocket extends PlayerSocket {
     }
 
     public LocalPlayerSocket to(RemotePlayerSocket playerSocket) {
-        return new LocalPlayerSocket(mPlayerId, mSocket.getConnectionManager().buildDirectPeerSocket("abc", playerSocket));
+        return new LocalPlayerSocket(mPlayerId, mSocketFactory.buildDirectPeerSocket("abc", playerSocket), mSocketFactory);
     }
 }

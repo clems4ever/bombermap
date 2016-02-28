@@ -1,25 +1,23 @@
 package com.game.wargame.Controller.Communication.Game;
 
-import com.game.wargame.Controller.Communication.IConnectionManager;
-import com.game.wargame.Controller.Communication.IEventSocket;
-import com.game.wargame.Controller.Communication.Socket;
+import com.game.wargame.Controller.Communication.ISocket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by clement on 25/02/16.
- */
 public class GameManagerSocket {
 
-    private Socket mSocket;
+    private ISocket mSocket;
+    private ISocketFactory mSocketFactory;
 
-    public GameManagerSocket(Socket socket) {
+    public GameManagerSocket(ISocket socket, ISocketFactory socketFactory) {
         mSocket = socket;
+        mSocketFactory = socketFactory;
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {
-        mSocket.call("create_game", null, new IEventSocket.OnRemoteEventReceivedListener() {
+        mSocket.call("create_game", null, new ISocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
                 String gameId = null;
@@ -41,14 +39,14 @@ public class GameManagerSocket {
         try {
             message.put("game_id", gameId);
 
-            mSocket.call("join_game", message, new IEventSocket.OnRemoteEventReceivedListener() {
+            mSocket.call("join_game", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                     String playerId = null;
                     try {
                         playerId = message.getString("player_id");
-                        GameSocket gameSocket = mSocket.getConnectionManager().buildGameSocket(gameId);
-                        LocalPlayerSocket playerSocket = mSocket.getConnectionManager().buildLocalPlayerSocket(gameId, playerId);
+                        GameSocket gameSocket = mSocketFactory.buildGameSocket(gameId);
+                        LocalPlayerSocket playerSocket = mSocketFactory.buildLocalPlayerSocket(gameId, playerId);
 
                         onGameJoinedListener.onGameJoined(gameSocket, playerSocket);
                     } catch (JSONException e) {
@@ -61,6 +59,21 @@ public class GameManagerSocket {
         }
 
         return playerId;
+    }
+
+    public void leaveGame(final String playerId) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("player_id", playerId);
+
+            mSocket.call("leave_game", message, new ISocket.OnRemoteEventReceivedListener() {
+                @Override
+                public void onRemoteEventReceived(JSONObject message) {
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface OnGameCreatedListener {

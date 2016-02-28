@@ -1,11 +1,11 @@
 package com.game.wargame.Views;
 
-import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.R;
 import com.game.wargame.Views.Animation.AnimationTimer;
 import com.game.wargame.Views.Animation.BulletAnimation;
-import com.game.wargame.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,10 +30,16 @@ public class MapView implements OnMapReadyCallback {
     private Map<String, Marker> mPlayerLocations;
     private AnimationTimer mAnimationTimer;
 
+    private OnMapReadyListener mOnMapReadyListener;
+
     public MapView(FragmentActivity activity) {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
         mAnimationTimer = new AnimationTimer(mActivity);
+    }
+
+    public void load(OnMapReadyListener onMapReadyListener) {
+        mOnMapReadyListener = onMapReadyListener;
 
         SupportMapFragment mapFragment = (SupportMapFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -45,6 +51,10 @@ public class MapView implements OnMapReadyCallback {
 
         uiSettings.setZoomControlsEnabled(true);
         mAnimationTimer.start();
+
+        if(mOnMapReadyListener != null) {
+            mOnMapReadyListener.onMapReady();
+        }
     }
 
     public Projection getMapProjection() {
@@ -80,6 +90,20 @@ public class MapView implements OnMapReadyCallback {
         });
     }
 
+    public void removePlayer(final PlayerModel player) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Marker marker = mPlayerLocations.get(player.getPlayerId());
+
+                if(marker != null) {
+                    marker.remove();
+                }
+
+            }
+        });
+    }
+
     public void moveCameraTo(LatLng position) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(position);
         mMap.animateCamera(cameraUpdate);
@@ -95,4 +119,7 @@ public class MapView implements OnMapReadyCallback {
         mAnimationTimer.startBulletAnimation(bulletAnimation);
     }
 
+    public interface OnMapReadyListener {
+        public void onMapReady();
+    }
 }

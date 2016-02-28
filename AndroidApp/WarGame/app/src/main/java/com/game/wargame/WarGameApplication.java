@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.GameEngine;
 
 /**
@@ -12,6 +13,9 @@ import com.game.wargame.Controller.GameEngine;
 public class WarGameApplication extends Application {
 
     public GameEngine mGameEngine;
+
+    public IConnectionManager mConnectionManager;
+
     public LocalPlayerSocket mLocalPlayerSocket;
     public GameSocket mGameSocket;
 
