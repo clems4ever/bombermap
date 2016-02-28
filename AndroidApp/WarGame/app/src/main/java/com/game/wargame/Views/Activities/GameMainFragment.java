@@ -55,7 +55,7 @@ public class GameMainFragment extends Fragment {
         mGameEngine.onStop();
 
         GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
-        gameManagerSocket.leaveGame(mPlayerId);
+        gameManagerSocket.leaveGame(mGameId, mPlayerId);
 
         mConnectionManager.clear();
 
