@@ -1,18 +1,77 @@
 package com.game.wargame.Model.Entities;
 
+import android.location.Location;
+
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by sergei on 01/03/16.
  */
 public class Projectile {
+
+    protected static final int DEFAULT_SPEED = 200;
+    protected static final float DEFAULT_DELTA_T = 200;
+
+    private void initTrajectory() {
+        double deltaLatitude = mTarget.latitude - mPosition.latitude;
+        double deltaLongitude = mTarget.longitude - mPosition.longitude;
+
+        float[] results = new float[1];
+        Location.distanceBetween(mPosition.latitude, mPosition.longitude, mTarget.latitude, mTarget.longitude, results);
+
+        double distance = results[0]; // in meters
+
+        double totalTime = distance / DEFAULT_SPEED * 1000.0f;
+        int occurrences = (int) (totalTime / DEFAULT_DELTA_T);
+
+        double dLatitude = deltaLatitude / occurrences;
+        double dLongitude = deltaLongitude / occurrences;
+
+        for(int i=0; i<occurrences; ++i) {
+            LatLng position = new LatLng(mPosition.latitude + i * dLatitude, mPosition.longitude + i * dLongitude);
+            double positionTime = mTimeStart + DEFAULT_DELTA_T*i;
+            mTrajectory.put(positionTime, position);
+        }
+
+        mDirection = (float) SphericalUtil.computeHeading(mPosition, mTarget) + 90;
+    }
+
+    public Projectile(LatLng start, LatLng end, double timestamp)
+    {
+        mPosition = start;
+        mTarget = end;
+        mTimeStart = timestamp;
+        initTrajectory();
+    }
+
     public LatLng getPosition() {
         return mPosition;
     }
 
     public void setPosition(LatLng position) {
         mPosition = position;
+    }
+
+    public LatLng getTarget() {
+        return mTarget;
+    }
+
+    public void setTarget(LatLng target) {
+        mTarget = target;
+    }
+
+    public TreeMap<Double, LatLng> getTrajectory() {
+        return mTrajectory;
+    }
+
+    public void setTrajectory(TreeMap<Double, LatLng> trajectory) {
+        mTrajectory = trajectory;
     }
 
     public double getDirection() {
@@ -23,16 +82,36 @@ public class Projectile {
         mDirection = direction;
     }
 
-    public double getTimeOfDestroy() {
-        return mTimeOfDestroy;
+    public double setTimestart() {
+        return mTimeStart;
     }
 
-    public void setTimeOfDestroy(double timestamp) {
-        mTimeOfDestroy = timestamp;
+    public void setTimestart(double timestamp) {
+        mTimeStart = timestamp;
     }
 
-    private OnContactListener mOnContactListener;
-    protected double mDirection;
+    public String getUUID()
+    {
+        return mUUID;
+    }
+
+    public void setUUID(String uuid)
+    {
+        mUUID = uuid;
+    }
+
+    public boolean isToDestroy() {
+        return mToDestroy;
+    }
+    public void setToDestroy(boolean toDestroy) {
+        mToDestroy = toDestroy;
+    }
+
+    protected String mUUID;
+    protected double mTimeStart;
     protected LatLng mPosition;
-    protected double mTimeOfDestroy;
+    protected LatLng mTarget;
+    protected double mDirection;
+    protected TreeMap<Double, LatLng> mTrajectory;
+    private boolean mToDestroy;
 }

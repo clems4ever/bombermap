@@ -8,16 +8,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
-import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.PlayerModel;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
-import com.game.wargame.Views.Animation.BulletAnimation;
-import com.game.wargame.Model.Entities.Player;
+import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
@@ -60,11 +59,6 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void movePlayer(final PlayerModel player, boolean currentPlayer) {
         mMapView.movePlayerTo(player.getPlayerId(), currentPlayer, player.getPosition());
-    }
-
-    public void displayProjectiles()
-    {
-        mMapView.displayProjectiles();
     }
 
     public void removePlayer(PlayerModel player) {
@@ -123,9 +117,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
     }
 
-    public void triggerWeapon(LatLng source, LatLng destination, double speed) {
-        BulletAnimation bulletAnimation = new BulletAnimation(source, destination, speed);
-        mMapView.startAnimation(bulletAnimation);
+    public void renderProjectiles(ArrayList<Projectile> projectiles) {
+        mMapView.renderProjectiles(projectiles);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {
