@@ -2,7 +2,9 @@ package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Model.Entities.Projectile;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by sergei on 01/03/16.
@@ -10,19 +12,29 @@ import java.util.Set;
 
 public class ProjectileModel {
 
-    public static Set<Projectile> getProjectiles() {
-        return mProjectiles;
+    public static ArrayList<Projectile> getProjectiles() {
+        ArrayList<Projectile> projectiles = new ArrayList<>();
+
+        mLock.lock();
+        projectiles.addAll(mProjectiles);
+        mLock.unlock();
+
+        return projectiles;
     }
 
-    public static void addProjectile(Projectile projectile)
-    {
+    public static void addProjectile(Projectile projectile) {
+        mLock.lock();
         mProjectiles.add(projectile);
+        mLock.unlock();
     }
 
-    public static void removeProjectile(Projectile projectile)
-    {
+    public static void removeProjectile(Projectile projectile) {
+        mLock.lock();
         mProjectiles.remove(projectile);
+        mLock.unlock();
     }
 
-    protected static Set<Projectile> mProjectiles;
+
+    protected static Lock mLock = new ReentrantLock();
+    protected static ArrayList<Projectile> mProjectiles = new ArrayList<>();
 }

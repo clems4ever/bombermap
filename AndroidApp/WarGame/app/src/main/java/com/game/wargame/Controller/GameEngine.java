@@ -68,7 +68,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         startSensors();
         initializeView();
-        startUpdatingProjectiles();
     }
 
     /**
@@ -157,55 +156,18 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mPlayersById.put(player.getPlayerId(), player);
     }
 
-    /**
-     * @brief Updating all non playing elements of the game in a separate thread
-     */
-    private void startUpdatingProjectiles()
-    {
-        final Handler handler = new Handler(Looper.getMainLooper()) {
-            /*
-             * handleMessage() defines the operations to perform when
-             * the Handler receives a new Message to process.
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-                mGameView.displayProjectiles();
-            }
-        };
-
-        Runnable r = new Runnable() {
-            public void run() {
-                //TODO: get Timer value here
-                double time = 0;
-                //TODO: Wait for a tick to happen
-                Set<Projectile> projectiles = ProjectileModel.getProjectiles();
-                for (Projectile projectile : projectiles) {
-                    update(projectile, time);
-                }
-                //send empty message to notify UI thread to display the projectiles;
-                handler.sendEmptyMessage(0);
-            }
-        };
-        Thread thread = new Thread(r);
-        thread.start();
-    }
-
-    private void update(Projectile projectile, double time) {
-        //TODO: interpolate from timeToDestroy, Tick, position and target to reach destination on time
-
-    }
-
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player, player == mCurrentPlayer);
     }
 
     @Override
-    public void onPlayerWeaponTriggeredListener(PlayerModel player, double latitude, double longitude, double speed) {
+    public void onPlayerWeaponTriggeredListener(PlayerModel player, double latitude, double longitude, double timestamp) {
         LatLng source = player.getPosition();
         LatLng destination = new LatLng(latitude, longitude);
 
-        mGameView.triggerWeapon(source, destination, speed);
+        Projectile projectile = new Projectile(source, destination, timestamp);
+        ProjectileModel.addProjectile(projectile);
     }
 
     public LocalPlayerModel getLocalPlayer() {
@@ -238,30 +200,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         if(playerModel != null) {
             mGameView.removePlayer(playerModel);
             mPlayersById.remove(playerSocket.getPlayerId());
-        }
-    }
-
-    public class UpdateProjectilesTask extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            //Manage collisions and position updations
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            //update UI?
         }
     }
 

@@ -4,18 +4,12 @@ import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
-import com.game.wargame.Model.Entities.ProjectileModel;
 import com.game.wargame.R;
-import com.game.wargame.Views.Animation.AnimationTimer;
-import com.game.wargame.Views.Animation.BulletAnimation;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -23,9 +17,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class MapView implements OnMapReadyCallback {
 
@@ -33,15 +26,14 @@ public class MapView implements OnMapReadyCallback {
     private GoogleMap mMap;
     private com.google.android.gms.maps.MapView mMapView;
 
-    private Map<String, Marker> mPlayerLocations;
-    private AnimationTimer mAnimationTimer;
+    private HashMap<String, Marker> mPlayerLocations;
+    private HashMap<String, Marker> mProjectileLocations;
 
     private OnMapReadyListener mOnMapReadyListener;
 
     public MapView(FragmentActivity activity) {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
-        mAnimationTimer = new AnimationTimer(mActivity);
 
         mMapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
         mMapView.onCreate(null);
@@ -57,7 +49,6 @@ public class MapView implements OnMapReadyCallback {
         UiSettings uiSettings = mMap.getUiSettings();
 
         uiSettings.setZoomControlsEnabled(true);
-        mAnimationTimer.start();
 
         if(mOnMapReadyListener != null) {
             mOnMapReadyListener.onMapReady();
@@ -98,17 +89,37 @@ public class MapView implements OnMapReadyCallback {
         });
     }
 
-    public void displayProjectiles()
-    {
-        Set<Projectile> projectiles = ProjectileModel.getProjectiles();
+    public void renderProjectiles(ArrayList<Projectile> projectiles) {
         for (Projectile projectile : projectiles) {
-            displayProjectile(projectile);
+            renderProjectile(projectile);
         }
     }
 
-    public void displayProjectile(Projectile projectile)
+    public void addBulletMarker(final Projectile projectile)
     {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(projectile.getPosition())
+                        .rotation((float) projectile.getDirection())
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.bullet2)));
+            }
+        });
+    }
 
+    public void renderProjectile(Projectile projectile) {
+        Marker marker = mProjectileLocations.get(projectile.getUUID());
+        if (marker == null) {
+            addBulletMarker(projectile);
+        }
+        else {
+            if (projectile.isToDestroy()) {
+                marker.remove();
+            } else {
+                marker.setPosition(projectile.getPosition());
+            }
+        }
     }
 
     public void removePlayer(final PlayerModel player) {
@@ -117,7 +128,7 @@ public class MapView implements OnMapReadyCallback {
             public void run() {
                 Marker marker = mPlayerLocations.get(player.getPlayerId());
 
-                if(marker != null) {
+                if (marker != null) {
                     marker.remove();
                 }
 
@@ -135,10 +146,6 @@ public class MapView implements OnMapReadyCallback {
         mMap.animateCamera(cameraUpdate);
     }
 
-    public void startAnimation(final BulletAnimation bulletAnimation) {
-        bulletAnimation.setGoogleMap(mMap);
-        mAnimationTimer.startBulletAnimation(bulletAnimation);
-    }
 
     public interface OnMapReadyListener {
         public void onMapReady();
