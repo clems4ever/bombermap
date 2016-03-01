@@ -26,7 +26,7 @@ exports.getPlayersForGame = function(game_id, callback) {
     });
 }
 
-exports.addPlayerToGame = function(player) {
+exports.addPlayer = function(player) {
     var player_model = new PlayerModel(player);
     player_model.save(handleError);
 }

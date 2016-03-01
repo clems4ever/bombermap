@@ -47,6 +47,22 @@ function handleError(err) {
 	}
 }
 
+function addNewPlayer(client_queue, game_id, player_id) {
+    var player = {
+        'player_id': player_id,
+        'queue_id': client_queue,
+        'game_id': game_id
+    };
+    PlayerModel.addPlayer(player);
+}
+
+function replyToJoiningPlayer(client_queue, game_id, player_id, players, msg) {
+    console.log('Reply to ' + client_queue);
+    server_channel.sendToQueue(client_queue,
+        new Buffer(JSON.stringify({'player_id': player_id, 'players' : players})),
+        {correlationId: msg.properties.correlationId});
+}
+
 function handlePlayerJoin(game_id, msg) {
     var room_exchange = game_id+"_game_room";
     server_channel.assertExchange(room_exchange, "direct", room_exchange_config);
@@ -60,19 +76,9 @@ function handlePlayerJoin(game_id, msg) {
     //get the players in the game to update the bindings
     PlayerModel.getPlayersForGame(game_id, function(players) {
         addBindingsForNewPlayer(client_queue, game_id, player_id, players);
+        addNewPlayer(client_queue, game_id, player_id);
+        replyToJoiningPlayer(client_queue, game_id, player_id, players, msg);
     });
-
-	var player = {
-		'player_id': player_id,
-		'queue_id': client_queue,
-        'game_id': game_id
-	};
-	PlayerModel.addPlayerToGame(player);
-
-	console.log('Reply to ' + client_queue);
-	server_channel.sendToQueue(client_queue,
-		new Buffer(JSON.stringify({'player_id': player_id})),
-		{correlationId: msg.properties.correlationId});
 }
 
 function handlePlayerLeaveGame(game_id, player_id, msg)
@@ -94,7 +100,7 @@ function handlePlayerLeaveGame(game_id, player_id, msg)
         {correlationId: msg.properties.correlationId});
 }
 
-function createGameExchange(game_id) {
+function createGameExchange(game_id, msg) {
 	console.log('Creation of game : ' + game_id);
 
 	server_channel.prefetch(1);
