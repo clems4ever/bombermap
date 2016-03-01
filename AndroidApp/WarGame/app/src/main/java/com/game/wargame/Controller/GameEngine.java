@@ -155,7 +155,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         player.setOnPlayerWeaponTriggeredListener(this);
         mPlayersById.put(player.getPlayerId(), player);
     }
-    
+
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player, player == mCurrentPlayer);

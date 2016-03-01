@@ -67,15 +67,6 @@ public class GameEngineViewUpdaterTest {
     }
 
     @Test
-    public void testThatAnimationIsStartedInViewWhenPlayerFired() {
-        RemotePlayerModel player = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
-
-        mGameEngine.onPlayerWeaponTriggeredListener(player, 30, 40, 10);
-
-        verify(mMockGameView).triggerWeapon(player.getPosition(), new LatLng(30, 40), 10);
-    }
-
-    @Test
     public void testThatViewIsInitializedWhenGameEngineStarts() {
 
         verify(mMockGameView).initialize(Matchers.<GameView.OnWeaponTargetDefinedListener>any());
