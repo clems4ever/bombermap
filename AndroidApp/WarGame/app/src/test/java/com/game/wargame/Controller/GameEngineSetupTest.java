@@ -1,7 +1,9 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
 import android.content.Context;
 
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Controller.GameEngine;
@@ -26,33 +28,25 @@ public class GameEngineSetupTest {
     private Context mMockContext;
 
     @Mock
-    private GameEngineSocket mMockGameEngineSocket;
+    private GameSocket mMockGameEngineSocket;
 
     @Mock
     private LocationRetriever mMockLocationRetriever;
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private LocalPlayerSocket mMockLocalPlayerSocket;
 
     private GameEngine mGameEngine;
 
     @Before
     public void setUp() {
-        mGameEngine = new GameEngine(mMockContext, mMockGameEngineSocket, mMockLocationRetriever);
-
-        when(mMockGameEngineSocket.getLocalPlayerSocket()).thenReturn(mMockPlayerSocket);
+        mGameEngine = new GameEngine();
     }
 
     @Test
     public void testIfLocalPlayersIsCorrectlyAddedAtTheBeginningOfTheGame() {
-        PlayerSocket playerSocket = mMockGameEngineSocket.getLocalPlayerSocket();
+        mGameEngine.onStart(mMockGameView, mMockGameEngineSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
 
-        LocalPlayerModel setupLocalPlayer = new LocalPlayerModel("Clement", playerSocket);
-        mGameEngine.start(mMockGameView, setupLocalPlayer);
-
-        LocalPlayerModel localPlayer = mGameEngine.getLocalPlayer();
-
-        assertTrue(setupLocalPlayer == localPlayer);
         assertEquals(1, mGameEngine.getPlayersCount());
     }
 }

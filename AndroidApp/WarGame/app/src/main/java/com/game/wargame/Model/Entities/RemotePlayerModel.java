@@ -9,7 +9,6 @@ import com.google.android.gms.maps.model.LatLng;
 public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener{
 
     protected RemotePlayerSocket mPlayerSocket;
-    private RemotePlayerModel mThat;
 
     public RemotePlayerModel(String playerName, RemotePlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);

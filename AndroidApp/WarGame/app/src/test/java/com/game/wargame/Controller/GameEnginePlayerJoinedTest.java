@@ -1,9 +1,14 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
 import android.content.Context;
 
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.Communication.Game.RemotePlayersSocket;
 import com.game.wargame.Controller.Communication.ISocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
@@ -28,41 +33,40 @@ public class GameEnginePlayerJoinedTest {
     private Context mMockContext;
 
     @Mock
-    private GameEngineSocket mMockGameEngineSocket;
+    private GameSocket mMockGameSocket;
 
     @Mock
     private LocationRetriever mMockLocationRetriever;
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private LocalPlayerSocket mMockLocalPlayerSocket;
 
     @Mock
-    private ISocket mMockEventSocket;
+    private ISocket mMockSocket;
+
+    @Mock
+    private ISocketFactory mMockSocketFactory;
 
     private GameEngine mGameEngine;
 
     @Before
     public void setUp() {
-        mGameEngine = new GameEngine(mMockContext, mMockGameEngineSocket, mMockLocationRetriever);
+        mGameEngine = new GameEngine();
 
-        when(mMockGameEngineSocket.getLocalPlayerSocket()).thenReturn(mMockPlayerSocket);
-
-        PlayerSocket playerSocket = mMockGameEngineSocket.getLocalPlayerSocket();
-
-        LocalPlayerModel setupLocalPlayer = new LocalPlayerModel("Clement", playerSocket);
-        mGameEngine.start(mMockGameView, setupLocalPlayer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
     }
 
 
     @Test
     public void testIfPlayersAreCorrectlyAddedWhenJoiningTheGame() {
 
-        PlayerSocket playerSocket1 = new PlayerSocket("player_1", mMockEventSocket);
+        RemotePlayersSocket remotePlayersSocket = new RemotePlayersSocket(mMockSocket);
+        RemotePlayerSocket playerSocket1 = new RemotePlayerSocket("player_id", remotePlayersSocket);
         mGameEngine.onPlayerJoined(playerSocket1);
 
         assertEquals(2, mGameEngine.getPlayersCount());
 
-        PlayerSocket playerSocket2 = new PlayerSocket("player_2", mMockEventSocket);
+        RemotePlayerSocket playerSocket2 = new RemotePlayerSocket("player_2", remotePlayersSocket);
         mGameEngine.onPlayerJoined(playerSocket2);
 
         assertEquals(3, mGameEngine.getPlayersCount());

@@ -1,6 +1,6 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
-import com.game.wargame.Controller.Communication.Game.PlayerSocket;
+import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class RemotePlayerTest {
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private RemotePlayerSocket mMockRemotePlayerSocket;
 
     @Mock
     private OnPlayerPositionChangedListener mMockOnPlayerPositionChangedListener;
@@ -29,7 +29,7 @@ public class RemotePlayerTest {
     @Test
     public void testThatWhenLocationIsUpdatedPlayerUpdatesHisPosition() {
 
-        RemotePlayerModel playerModel = new RemotePlayerModel("player_name", mMockPlayerSocket);
+        RemotePlayerModel playerModel = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         playerModel.setPosition(initialPosition);
@@ -43,7 +43,7 @@ public class RemotePlayerTest {
     @Test
     public void testThatWhenLocationIsUpdatedPlayerCallsItsSubscriber() {
 
-        RemotePlayerModel localPlayerModel = new RemotePlayerModel("player_name", mMockPlayerSocket);
+        RemotePlayerModel localPlayerModel = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
@@ -57,7 +57,7 @@ public class RemotePlayerTest {
     @Test
     public void testThatWhenFireIsTriggeredPlayerCallsItsSubscriber() {
 
-        RemotePlayerModel localPlayerModel = new RemotePlayerModel("player_name", mMockPlayerSocket);
+        RemotePlayerModel localPlayerModel = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);

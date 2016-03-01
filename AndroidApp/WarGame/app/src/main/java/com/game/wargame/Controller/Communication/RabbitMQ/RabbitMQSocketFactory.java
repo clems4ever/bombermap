@@ -32,8 +32,7 @@ public class RabbitMQSocketFactory implements ISocketFactory {
     @Override
     public RemotePlayerSocket buildRemotePlayerSocket(String gameId, String playerId) {
 
-        RemotePlayerSocket playerSocket = new RemotePlayerSocket(playerId);
-        mRemotePlayersSocket.addPlayer(playerSocket);
+        RemotePlayerSocket playerSocket = new RemotePlayerSocket(playerId, mRemotePlayersSocket);
         return playerSocket;
     }
 

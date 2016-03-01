@@ -1,5 +1,6 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 public class LocalPlayerTest {
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private LocalPlayerSocket mMockLocalPlayerSocket;
 
     @Mock
     private OnPlayerPositionChangedListener mMockOnPlayerPositionChangedListener;
@@ -27,17 +28,16 @@ public class LocalPlayerTest {
     @Test
     public void testThatFireActionBroadcastTheEventToEveryOne() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         localPlayerModel.fire(50, 50, 10);
-
-        verify(mMockPlayerSocket).fire(50, 50, 10);
+        verify(mMockLocalPlayerSocket).fire(50, 50, 10);
     }
 
     @Test
     public void testThatWhenLocationIsUpdatedPlayerUpdatesHisPosition() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
@@ -51,55 +51,52 @@ public class LocalPlayerTest {
     @Test
     public void testThatWhenLocationIsUpdatedPlayerBroadcastsTheMoveToEveryone() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
 
         localPlayerModel.onLocationUpdated(30, 40);
 
-        verify(mMockPlayerSocket).move(30, 40);
+        verify(mMockLocalPlayerSocket).move(30, 40);
     }
 
     @Test
     public void testThatWhenLocationIsUpdatedPlayerCallsItsSubscriber() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
         localPlayerModel.setOnPlayerPositionChangedListener(mMockOnPlayerPositionChangedListener);
 
         localPlayerModel.onLocationUpdated(30, 40);
-
         verify(mMockOnPlayerPositionChangedListener).onPlayerPositionChanged(localPlayerModel);
     }
 
     @Test
     public void testThatWhenFireIsTriggeredPlayerBroadcastTheEventToEveryone() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
         localPlayerModel.setOnPlayerWeaponTriggeredListener(mMockOnPlayerWeaponTriggeredListener);
 
         localPlayerModel.fire(30, 40, 10);
-
-        verify(mMockPlayerSocket).fire(30, 40, 10);
+        verify(mMockLocalPlayerSocket).fire(30, 40, 10);
     }
 
     @Test
     public void testThatWhenFireIsTriggeredPlayerCallsItsSubscriber() {
 
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockPlayerSocket);
+        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
         localPlayerModel.setOnPlayerWeaponTriggeredListener(mMockOnPlayerWeaponTriggeredListener);
 
         localPlayerModel.fire(30, 40, 10);
-
         verify(mMockOnPlayerWeaponTriggeredListener).onPlayerWeaponTriggeredListener(localPlayerModel, 30, 40, 10);
     }
 }

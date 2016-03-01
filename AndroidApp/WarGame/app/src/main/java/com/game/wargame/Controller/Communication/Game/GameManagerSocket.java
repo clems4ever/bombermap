@@ -20,7 +20,7 @@ public class GameManagerSocket {
         JSONObject message = new JSONObject();
         try {
             message.put("action", "newgame");
-            mSocket.call("global_queue", null, new ISocket.OnRemoteEventReceivedListener() {
+            mSocket.call("global_queue", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                     String gameId = null;

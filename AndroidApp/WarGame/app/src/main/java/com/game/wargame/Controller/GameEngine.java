@@ -68,7 +68,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         startSensors();
         initializeView();
-        startUpdatingProjectiles();
+        //startUpdatingProjectiles();
     }
 
     /**
@@ -178,10 +178,10 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 //TODO: get Timer value here
                 double time = 0;
                 //TODO: Wait for a tick to happen
-                Set<Projectile> projectiles = ProjectileModel.getProjectiles();
+                /*Set<Projectile> projectiles = ProjectileModel.getProjectiles();
                 for (Projectile projectile : projectiles) {
                     update(projectile, time);
-                }
+                }*/
                 //send empty message to notify UI thread to display the projectiles;
                 handler.sendEmptyMessage(0);
             }
@@ -219,14 +219,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     // A player has sent a join event, we must send him back a join event
     @Override
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
-        RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
-        addPlayer(player);
-        mCurrentPlayer.sendJoinTo(player);
-    }
-
-    // A player has sent back join event to ack my join event. It allows to add already connected players
-    @Override
-    public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addPlayer(player);
     }

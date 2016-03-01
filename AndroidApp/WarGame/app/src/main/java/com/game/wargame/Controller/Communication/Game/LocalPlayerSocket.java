@@ -59,24 +59,6 @@ public class LocalPlayerSocket extends PlayerSocket {
         }
     }
 
-    public void join() {
-        try {
-            JSONObject data = buildClientJson();
-            mSocket.emit("player_join", data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void joinAck() {
-        try {
-            JSONObject data = buildClientJson();
-            mSocket.emit("player_join_ack", data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void leave() {
         try {
             JSONObject data = buildClientJson();
@@ -84,9 +66,5 @@ public class LocalPlayerSocket extends PlayerSocket {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public LocalPlayerSocket to(RemotePlayerSocket playerSocket) {
-        return new LocalPlayerSocket(mPlayerId, mSocketFactory.buildDirectPeerSocket("abc", playerSocket), mSocketFactory);
     }
 }

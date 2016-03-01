@@ -1,8 +1,12 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
 import android.content.Context;
 
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
+import com.game.wargame.Controller.Communication.ISocket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Views.GameView;
@@ -28,13 +32,19 @@ public class GameEngineStopTest {
     private Context mMockContext;
 
     @Mock
-    private GameEngineSocket mMockGameEngineSocket;
+    private GameSocket mMockGameSocket;
 
     @Mock
     private LocationRetriever mMockLocationRetriever;
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private LocalPlayerSocket mMockLocalPlayerSocket;
+
+    @Mock
+    private ISocket mMockSocket;
+
+    @Mock
+    private ISocketFactory mMockSocketFactory;
 
     private GameEngine mGameEngine;
 
@@ -42,16 +52,10 @@ public class GameEngineStopTest {
     @Test
     public void testIfLocationRetrieverIsStoppedWhenGameEngineIsStopped() {
 
-        mGameEngine = new GameEngine(mMockContext, mMockGameEngineSocket, mMockLocationRetriever);
+        mGameEngine = new GameEngine();
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
 
-        when(mMockGameEngineSocket.getLocalPlayerSocket()).thenReturn(mMockPlayerSocket);
-
-        PlayerSocket playerSocket = mMockGameEngineSocket.getLocalPlayerSocket();
-
-        LocalPlayerModel setupLocalPlayer = new LocalPlayerModel("Clement", playerSocket);
-        mGameEngine.start(mMockGameView, setupLocalPlayer);
-
-        mGameEngine.stop();
+        mGameEngine.onStop();
 
         verify(mMockLocationRetriever).stop();
     }

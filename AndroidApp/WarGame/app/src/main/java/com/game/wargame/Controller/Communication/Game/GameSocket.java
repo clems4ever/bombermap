@@ -34,21 +34,6 @@ public class GameSocket {
             }
         });
 
-        mSocket.on("player_join_ack", new ISocket.OnRemoteEventReceivedListener() {
-            @Override
-            public void onRemoteEventReceived(JSONObject message) {
-                try {
-                    String playerId = message.getString("player_id");
-                    if(mOnPlayerEventListener != null) {
-                        RemotePlayerSocket playerSocket = mSocketFactory.buildRemotePlayerSocket(mGameId, playerId);
-                        mOnPlayerEventListener.onPlayerJoinAckReceived(playerSocket);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         mSocket.on("player_leave", new ISocket.OnRemoteEventReceivedListener() {
             @Override
             public void onRemoteEventReceived(JSONObject message) {
@@ -76,7 +61,6 @@ public class GameSocket {
 
     public interface OnPlayerEventListener {
         public void onPlayerJoined(RemotePlayerSocket playerSocket);
-        public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket);
         public void onPlayerLeft(RemotePlayerSocket playerSocket);
     }
 }
