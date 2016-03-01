@@ -95,31 +95,30 @@ public class MapView implements OnMapReadyCallback {
         }
     }
 
-    public void addBulletMarker(final Projectile projectile)
+    public void addBulletMarker(Projectile projectile)
     {
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(projectile.getPosition())
+                    .rotation((float) projectile.getDirection())
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.bullet2)));
+    }
+
+    public void renderProjectile(final Projectile projectile) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mMap.addMarker(new MarkerOptions()
-                        .position(projectile.getPosition())
-                        .rotation((float) projectile.getDirection())
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.bullet2)));
+                Marker marker = mProjectileLocations.get(projectile.getUUID());
+                if (marker == null) {
+                    addBulletMarker(projectile);
+                } else {
+                    if(projectile.isToDestroy()) {
+                        marker.remove();
+                    } else {
+                        marker.setPosition(projectile.getPosition());
+                    }
+                }
             }
         });
-    }
-
-    public void renderProjectile(Projectile projectile) {
-        Marker marker = mProjectileLocations.get(projectile.getUUID());
-        if (marker == null) {
-            addBulletMarker(projectile);
-        }
-        else {
-            if (projectile.isToDestroy()) {
-                marker.remove();
-            } else {
-                marker.setPosition(projectile.getPosition());
-            }
-        }
     }
 
     public void removePlayer(final PlayerModel player) {
