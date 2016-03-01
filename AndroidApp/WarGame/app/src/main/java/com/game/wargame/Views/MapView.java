@@ -3,6 +3,8 @@ package com.game.wargame.Views;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.Entities.Projectile;
+import com.game.wargame.Model.Entities.ProjectileModel;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animation.AnimationTimer;
 import com.game.wargame.Views.Animation.BulletAnimation;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MapView implements OnMapReadyCallback {
 
@@ -93,6 +96,19 @@ public class MapView implements OnMapReadyCallback {
                 }
             }
         });
+    }
+
+    public void displayProjectiles()
+    {
+        Set<Projectile> projectiles = ProjectileModel.getProjectiles();
+        for (Projectile projectile : projectiles) {
+            displayProjectile(projectile);
+        }
+    }
+
+    public void displayProjectile(Projectile projectile)
+    {
+
     }
 
     public void removePlayer(final PlayerModel player) {

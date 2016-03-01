@@ -23,16 +23,16 @@ public class Projectile {
         mDirection = direction;
     }
 
-    public double getTTL() {
-        return mTTL;
+    public double getTimeOfDestroy() {
+        return mTimeOfDestroy;
     }
 
-    public void setTTL(double TTL) {
-        mTTL = TTL;
+    public void setTimeOfDestroy(double timestamp) {
+        mTimeOfDestroy = timestamp;
     }
 
     private OnContactListener mOnContactListener;
     protected double mDirection;
     protected LatLng mPosition;
-    protected double mTTL;
+    protected double mTimeOfDestroy;
 }

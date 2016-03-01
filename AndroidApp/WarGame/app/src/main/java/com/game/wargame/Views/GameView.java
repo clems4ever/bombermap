@@ -62,6 +62,11 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.movePlayerTo(player.getPlayerId(), currentPlayer, player.getPosition());
     }
 
+    public void displayProjectiles()
+    {
+        mMapView.displayProjectiles();
+    }
+
     public void removePlayer(PlayerModel player) {
         mMapView.removePlayer(player);
     }

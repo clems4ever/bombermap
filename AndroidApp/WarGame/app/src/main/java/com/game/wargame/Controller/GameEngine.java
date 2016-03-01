@@ -3,6 +3,9 @@ package com.game.wargame.Controller;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
@@ -14,7 +17,9 @@ import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
+import com.game.wargame.Model.Entities.ProjectileModel;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Views.MapView;
@@ -25,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.LogRecord;
 
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {
@@ -62,6 +68,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         startSensors();
         initializeView();
+        startUpdatingProjectiles();
     }
 
     /**
@@ -131,7 +138,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 Set<Map.Entry<String, PlayerModel>> entrySet = mPlayersById.entrySet();
                 Iterator<Map.Entry<String, PlayerModel>> iterator = entrySet.iterator();
 
-                while(iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     Map.Entry<String, PlayerModel> entry = iterator.next();
 
                     mGameView.movePlayer(entry.getValue(), entry.getValue() == mCurrentPlayer);
@@ -148,6 +155,44 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         player.setOnPlayerPositionChangedListener(this);
         player.setOnPlayerWeaponTriggeredListener(this);
         mPlayersById.put(player.getPlayerId(), player);
+    }
+
+    /**
+     * @brief Updating all non playing elements of the game in a separate thread
+     */
+    private void startUpdatingProjectiles()
+    {
+        final Handler handler = new Handler(Looper.getMainLooper()) {
+            /*
+             * handleMessage() defines the operations to perform when
+             * the Handler receives a new Message to process.
+             */
+            @Override
+            public void handleMessage(Message inputMessage) {
+                mGameView.displayProjectiles();
+            }
+        };
+
+        Runnable r = new Runnable() {
+            public void run() {
+                //TODO: get Timer value here
+                double time = 0;
+                //TODO: Wait for a tick to happen
+                Set<Projectile> projectiles = ProjectileModel.getProjectiles();
+                for (Projectile projectile : projectiles) {
+                    update(projectile, time);
+                }
+                //send empty message to notify UI thread to display the projectiles;
+                handler.sendEmptyMessage(0);
+            }
+        };
+        Thread thread = new Thread(r);
+        thread.start();
+    }
+
+    private void update(Projectile projectile, double time) {
+        //TODO: interpolate from timeToDestroy, Tick, position and target to reach destination on time
+
     }
 
     @Override
@@ -196,7 +241,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         }
     }
 
-    public class UpdateGameTask extends AsyncTask<Void, Void, Void>
+    public class UpdateProjectilesTask extends AsyncTask<Void, Void, Void>
     {
         @Override
         protected Void doInBackground(Void... params) {
