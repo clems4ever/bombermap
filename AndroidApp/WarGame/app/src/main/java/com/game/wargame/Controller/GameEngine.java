@@ -155,48 +155,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         player.setOnPlayerWeaponTriggeredListener(this);
         mPlayersById.put(player.getPlayerId(), player);
     }
-
-<<<<<<< HEAD
-    /**
-     * @brief Updating all non playing elements of the game in a separate thread
-     */
-    private void startUpdatingProjectiles()
-    {
-        final Handler handler = new Handler(Looper.getMainLooper()) {
-            /*
-             * handleMessage() defines the operations to perform when
-             * the Handler receives a new Message to process.
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-                mGameView.displayProjectiles();
-            }
-        };
-
-        Runnable r = new Runnable() {
-            public void run() {
-                //TODO: get Timer value here
-                double time = 0;
-                //TODO: Wait for a tick to happen
-                /*Set<Projectile> projectiles = ProjectileModel.getProjectiles();
-                for (Projectile projectile : projectiles) {
-                    update(projectile, time);
-                }*/
-                //send empty message to notify UI thread to display the projectiles;
-                handler.sendEmptyMessage(0);
-            }
-        };
-        Thread thread = new Thread(r);
-        thread.start();
-    }
-
-    private void update(Projectile projectile, double time) {
-        //TODO: interpolate from timeToDestroy, Tick, position and target to reach destination on time
-
-    }
-
-=======
->>>>>>> 12b8b18a396fb6a2d04f8724c2692b3c1a06650f
+    
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player, player == mCurrentPlayer);
