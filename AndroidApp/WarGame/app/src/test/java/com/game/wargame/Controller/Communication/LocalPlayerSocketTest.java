@@ -27,7 +27,7 @@ public class LocalPlayerSocketTest {
     @Test
     public void testThatThePlayerSendAFireMessageViaSocketWhenFireIsCalled() throws JSONException {
 
-        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket, mMockSocketFactory);
+        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket);
 
         localPlayerSocket.fire(10.0d, 20.0d, 100.0d);
 
@@ -43,7 +43,7 @@ public class LocalPlayerSocketTest {
     @Test
     public void testThatThePlayerSendAMoveMessageViaSocketWhenMoveMethodIsCalled() throws JSONException {
 
-        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket, mMockSocketFactory);
+        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket);
 
         localPlayerSocket.move(10.0d, 20.0d);
 
@@ -58,7 +58,7 @@ public class LocalPlayerSocketTest {
     @Test
     public void testThatThePlayerSendALeaveMessageViaSocketWhenLeaveMethodIsCalled() throws JSONException {
 
-        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket, mMockSocketFactory);
+        LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket);
 
         localPlayerSocket.leave();
 

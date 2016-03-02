@@ -9,17 +9,15 @@ import org.json.JSONObject;
 public class LocalPlayerSocket extends PlayerSocket {
 
     private ISocket mSocket;
-    private ISocketFactory mSocketFactory;
 
     /**
      * @param playerId
      * @param eventSocket
      */
-    public LocalPlayerSocket(String playerId, ISocket eventSocket, ISocketFactory socketFactory) {
+    public LocalPlayerSocket(String playerId, ISocket eventSocket) {
         super(playerId);
 
         mSocket = eventSocket;
-        mSocketFactory = socketFactory;
     }
 
     private JSONObject buildClientJson() throws JSONException {
