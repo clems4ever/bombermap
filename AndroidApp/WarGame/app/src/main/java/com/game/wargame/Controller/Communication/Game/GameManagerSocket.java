@@ -9,11 +9,9 @@ import org.json.JSONObject;
 public class GameManagerSocket {
 
     private ISocket mSocket;
-    private ISocketFactory mSocketFactory;
 
-    public GameManagerSocket(ISocket socket, ISocketFactory socketFactory) {
+    public GameManagerSocket(ISocket socket) {
         mSocket = socket;
-        mSocketFactory = socketFactory;
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {

@@ -21,6 +21,12 @@ public class Player {
         mRotation = 0;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Player that = (Player) obj;
+        return mPlayerId == that.mPlayerId;
+    }
+
     public void setPlayerId(String playerId) {
         mPlayerId = playerId;
     }

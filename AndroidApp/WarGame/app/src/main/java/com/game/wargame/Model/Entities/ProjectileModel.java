@@ -12,7 +12,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ProjectileModel {
 
-    public static ArrayList<Projectile> getProjectiles() {
+    public ProjectileModel() {
+
+    }
+
+    public ArrayList<Projectile> getProjectiles() {
         ArrayList<Projectile> projectiles = new ArrayList<>();
 
         mLock.lock();
@@ -22,19 +26,19 @@ public class ProjectileModel {
         return projectiles;
     }
 
-    public static void addProjectile(Projectile projectile) {
+    public void addProjectile(Projectile projectile) {
         mLock.lock();
         mProjectiles.add(projectile);
         mLock.unlock();
     }
 
-    public static void removeProjectile(Projectile projectile) {
+    public void removeProjectile(Projectile projectile) {
         mLock.lock();
         mProjectiles.remove(projectile);
         mLock.unlock();
     }
 
 
-    protected static Lock mLock = new ReentrantLock();
-    protected static ArrayList<Projectile> mProjectiles = new ArrayList<>();
+    protected Lock mLock = new ReentrantLock();
+    protected ArrayList<Projectile> mProjectiles = new ArrayList<>();
 }

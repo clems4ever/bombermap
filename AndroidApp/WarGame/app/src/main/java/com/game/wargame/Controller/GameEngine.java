@@ -46,11 +46,14 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private GameSocket mGameSocket;
 
+    private ProjectileModel mProjectileModel;
+
     /**
      * @brief Constructor
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
+        mProjectileModel = new ProjectileModel();
     }
 
     /**
@@ -167,7 +170,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         LatLng destination = new LatLng(latitude, longitude);
 
         Projectile projectile = new Projectile(source, destination, timestamp);
-        ProjectileModel.addProjectile(projectile);
+        mProjectileModel.addProjectile(projectile);
     }
 
     public LocalPlayerModel getLocalPlayer() {

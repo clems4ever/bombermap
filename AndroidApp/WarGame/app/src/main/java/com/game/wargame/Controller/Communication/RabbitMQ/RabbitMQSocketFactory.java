@@ -21,7 +21,7 @@ public class RabbitMQSocketFactory implements ISocketFactory {
     }
 
     public GameManagerSocket buildGameManagerSocket() {
-        return new GameManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""), this);
+        return new GameManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""));
     }
 
     @Override

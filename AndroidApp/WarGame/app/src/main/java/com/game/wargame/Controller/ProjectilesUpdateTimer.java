@@ -21,12 +21,14 @@ import com.google.android.gms.maps.model.LatLng;
 public class ProjectilesUpdateTimer extends Timer {
     private Activity mActivity;
     private Lock mLock = new ReentrantLock();
+    private ProjectileModel mProjectileModel;
 
     private Timer mTimer;
     private GameView mGameView;
 
-    public ProjectilesUpdateTimer(Activity activity) {
+    public ProjectilesUpdateTimer(Activity activity, ProjectileModel projectileModel) {
         mActivity = activity;
+        mProjectileModel = projectileModel;
     }
 
     public void start() {
@@ -64,7 +66,7 @@ public class ProjectilesUpdateTimer extends Timer {
             public void run() {
 
                 mLock.lock();
-                ArrayList<Projectile> projectiles = ProjectileModel.getProjectiles();
+                ArrayList<Projectile> projectiles = mProjectileModel.getProjectiles();
                 for (Projectile projectile : projectiles)
                 {
                     updateProjectile(projectile);
@@ -73,7 +75,7 @@ public class ProjectilesUpdateTimer extends Timer {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ArrayList<Projectile> projectiles = ProjectileModel.getProjectiles();
+                        ArrayList<Projectile> projectiles = mProjectileModel.getProjectiles();
                         mGameView.renderProjectiles(projectiles);
                     }
                 });
