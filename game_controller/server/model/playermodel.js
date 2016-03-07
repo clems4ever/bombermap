@@ -1,5 +1,7 @@
 // Load required packages
 var mongoose = require('mongoose');
+var ErrorHandler = require('../controllers/errorhandler')
+var player_model_prefix = "[PlayerModel]"
 
 // Define our player schema
 var PlayerSchema = new mongoose.Schema({
@@ -14,29 +16,28 @@ var PlayerSchema = new mongoose.Schema({
 
 var PlayerModel = mongoose.model('Player', PlayerSchema);
 
-function handleError(err) {
-    if (err != null)
-        console.error(err);
-}
-
 exports.getPlayersForGame = function(game_id, callback) {
     PlayerModel.find({'game_id':game_id}, function(err, players) {
-        handleError(err);
+        ErrorHandler.handleError(player_model_prefix, err);
         callback(players);
     });
 }
 
 exports.addPlayer = function(player) {
     var player_model = new PlayerModel(player);
-    player_model.save(handleError);
+    player_model.save(function(err) {
+        ErrorHandler.handleError(player_model_prefix, err);
+    });
 }
 
 exports.removePlayer = function(player_id) {
     var player = {'player_id': player_id};
-    PlayerModel.remove(player, handleError);
+    PlayerModel.remove(player, function(err) {
+        ErrorHandler.handleError(player_model_prefix, err);
+    });
 }
 
-exports.removePlayersForGame = function(game_id) {
+exports.removePlayersForGame = function(game_id, callback) {
     var game = {'game_id':game_id}
-    PlayerModel.remove(game , handleError);
+    PlayerModel.remove(game, callback);
 }
