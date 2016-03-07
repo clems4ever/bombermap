@@ -46,11 +46,14 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private GameSocket mGameSocket;
 
+    private ProjectileModel mProjectileModel;
+
     /**
      * @brief Constructor
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
+        mProjectileModel = new ProjectileModel();
     }
 
     /**
@@ -167,7 +170,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         LatLng destination = new LatLng(latitude, longitude);
 
         Projectile projectile = new Projectile(source, destination, timestamp);
-        ProjectileModel.addProjectile(projectile);
+        mProjectileModel.addProjectile(projectile);
     }
 
     public LocalPlayerModel getLocalPlayer() {
@@ -181,14 +184,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     // A player has sent a join event, we must send him back a join event
     @Override
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
-        RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
-        addPlayer(player);
-        mCurrentPlayer.sendJoinTo(player);
-    }
-
-    // A player has sent back join event to ack my join event. It allows to add already connected players
-    @Override
-    public void onPlayerJoinAckReceived(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addPlayer(player);
     }

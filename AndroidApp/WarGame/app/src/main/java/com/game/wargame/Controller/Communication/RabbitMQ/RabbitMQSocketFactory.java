@@ -21,7 +21,7 @@ public class RabbitMQSocketFactory implements ISocketFactory {
     }
 
     public GameManagerSocket buildGameManagerSocket() {
-        return new GameManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""), this);
+        return new GameManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""));
     }
 
     @Override
@@ -31,15 +31,12 @@ public class RabbitMQSocketFactory implements ISocketFactory {
 
     @Override
     public RemotePlayerSocket buildRemotePlayerSocket(String gameId, String playerId) {
-
-        RemotePlayerSocket playerSocket = new RemotePlayerSocket(playerId);
-        mRemotePlayersSocket.addPlayer(playerSocket);
-        return playerSocket;
+        return new RemotePlayerSocket(playerId, mRemotePlayersSocket);
     }
 
     @Override
     public LocalPlayerSocket buildLocalPlayerSocket(String gameId, String playerId) {
-        return new LocalPlayerSocket(playerId, new RabbitMQSocket(mConnectionThread, gameId + "_game_room", "all_but_" + playerId), this);
+        return new LocalPlayerSocket(playerId, new RabbitMQSocket(mConnectionThread, gameId + "_game_room", "all_but_" + playerId));
     }
 
     @Override

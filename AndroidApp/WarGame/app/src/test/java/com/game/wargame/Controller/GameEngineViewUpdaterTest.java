@@ -1,8 +1,12 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
 import android.content.Context;
 
+import com.game.wargame.Controller.Communication.Game.GameSocket;
+import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.PlayerSocket;
+import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
 import com.game.wargame.Controller.GameEngine;
@@ -33,44 +37,33 @@ public class GameEngineViewUpdaterTest {
     private Context mMockContext;
 
     @Mock
-    private GameEngineSocket mMockGameEngineSocket;
+    private GameSocket mMockGameSocket;
 
     @Mock
     private LocationRetriever mMockLocationRetriever;
 
     @Mock
-    private PlayerSocket mMockPlayerSocket;
+    private LocalPlayerSocket mMockPlayerSocket;
+
+    @Mock
+    private RemotePlayerSocket mMockRemotePlayerSocket;
+
+    @Mock
+    private ISocketFactory mMockSocketFactory;
 
     private GameEngine mGameEngine;
 
     @Before
     public void setUp() {
-        mGameEngine = new GameEngine(mMockContext, mMockGameEngineSocket, mMockLocationRetriever);
-
-        when(mMockGameEngineSocket.getLocalPlayerSocket()).thenReturn(mMockPlayerSocket);
-
-        PlayerSocket playerSocket = mMockGameEngineSocket.getLocalPlayerSocket();
-
-        LocalPlayerModel setupLocalPlayer = new LocalPlayerModel("Clement", playerSocket);
-        mGameEngine.start(mMockGameView, setupLocalPlayer);
+        mGameEngine = new GameEngine();
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever);
     }
 
     @Test
-    public void testThatPositionOfMovingPlayerIsUpdated() {
-        RemotePlayerModel player = new RemotePlayerModel("player_name", mMockPlayerSocket);
-
+    public void testThatPositionOfMovingCurrentPlayerIsUpdated() {
+        RemotePlayerModel player = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
         mGameEngine.onPlayerPositionChanged(player);
-
-        verify(mMockGameView).movePlayer(player);
-    }
-
-    @Test
-    public void testThatAnimationIsStartedInViewWhenPlayerFired() {
-        RemotePlayerModel player = new RemotePlayerModel("player_name", mMockPlayerSocket);
-
-        mGameEngine.onPlayerWeaponTriggeredListener(player, 30, 40, 10);
-
-        verify(mMockGameView).triggerWeapon(player.getPosition(), new LatLng(30, 40), 10);
+        verify(mMockGameView).movePlayer(player, false);
     }
 
     @Test

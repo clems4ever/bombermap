@@ -5,14 +5,18 @@ package com.game.wargame.Controller.Communication.Game;
  */
 public class RemotePlayerSocket extends PlayerSocket {
 
+    private RemotePlayersSocket mRemotePlayersSocket;
+
     private OnMoveEventListener mOnMoveEventListener;
     private OnFireEventListener mOnFireEventListener;
 
     /**
      * @param playerId
      */
-    public RemotePlayerSocket(String playerId) {
+    public RemotePlayerSocket(String playerId, RemotePlayersSocket remotePlayersSocket) {
         super(playerId);
+        mRemotePlayersSocket = remotePlayersSocket;
+        remotePlayersSocket.addPlayer(this);
     }
 
     public void setOnMoveEventListener(OnMoveEventListener onMoveEventListener) {

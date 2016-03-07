@@ -1,4 +1,4 @@
-package com.game.wargame;
+package com.game.wargame.Controller;
 
 import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerException;

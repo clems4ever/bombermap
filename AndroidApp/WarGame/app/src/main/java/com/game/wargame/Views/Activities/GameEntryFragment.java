@@ -61,7 +61,7 @@ public class GameEntryFragment extends Fragment {
                 final String username = userNameEditText.getText().toString();
 
                 if (!username.isEmpty()) {
-                    createGame(username);
+                    createGame();
                 } else {
                     displayAlertDialog();
                 }
@@ -75,7 +75,7 @@ public class GameEntryFragment extends Fragment {
                 String gameId = "abc";
 
                 if (!username.isEmpty()) {
-                    joinGame(gameId, username);
+                    joinGame(gameId);
                 } else {
                     displayAlertDialog();
                 }
@@ -83,19 +83,19 @@ public class GameEntryFragment extends Fragment {
         });
     }
 
-    private void createGame(final String username) {
+    private void createGame() {
         GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
 
         gameManagerSocket.createGame(new GameManagerSocket.OnGameCreatedListener() {
             @Override
             public void onGameCreated(String gameId) {
-                joinGame(gameId, username);
+                joinGame(gameId);
                 mEntryCallback.onGameCreated(gameId);
             }
         });
     }
 
-    private void joinGame(final String gameId, final String username) {
+    private void joinGame(final String gameId) {
         GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
         gameManagerSocket.joinGame(gameId, new GameManagerSocket.OnGameJoinedListener() {
             @Override

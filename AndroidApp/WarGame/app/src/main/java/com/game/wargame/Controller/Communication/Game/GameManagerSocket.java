@@ -9,18 +9,16 @@ import org.json.JSONObject;
 public class GameManagerSocket {
 
     private ISocket mSocket;
-    private ISocketFactory mSocketFactory;
 
-    public GameManagerSocket(ISocket socket, ISocketFactory socketFactory) {
+    public GameManagerSocket(ISocket socket) {
         mSocket = socket;
-        mSocketFactory = socketFactory;
     }
 
     public void createGame(final OnGameCreatedListener onGameCreatedListener) {
         JSONObject message = new JSONObject();
         try {
             message.put("action", "newgame");
-            mSocket.call("global_queue", null, new ISocket.OnRemoteEventReceivedListener() {
+            mSocket.call("global_queue", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
                 public void onRemoteEventReceived(JSONObject message) {
                     String gameId = null;
