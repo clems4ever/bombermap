@@ -39,6 +39,8 @@ public class RabbitMQConnectionThread extends Thread {
         mConnectionFactory = new ConnectionFactory();
         mConnectionFactory.setAutomaticRecoveryEnabled(false);
         mConnectionFactory.setHost(host);
+        mConnectionFactory.setUsername("player");
+        mConnectionFactory.setPassword("player");
         mConnectionFactory.setHandshakeTimeout(600000);
         mConnectionFactory.setRequestedHeartbeat(240);
     }
