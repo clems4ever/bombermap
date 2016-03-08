@@ -1,12 +1,16 @@
+//start server
+require('../app')
+
 var assert = require('assert');
 var amqp = require('amqplib/callback_api');
 var uuid = require('node-uuid');
 var game_client = require('./game_controller_client/app')
 var game_server = require('../server/controllers/gamemanager')
+var rabbitmqwrapper = require('../server/controllers/rabbitmqwrapper')
 var ErrorHandler = require('../server/controllers/errorhandler')
 
 var client_queue_config = {exclusive: false, autoDelete: true};
-var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://localhost";
+var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://skireev:skireev@broker.wargame.ingenious-cm.fr";
 rabbitmquri += "?heartbeat=60";
 
 describe('game client', function(){

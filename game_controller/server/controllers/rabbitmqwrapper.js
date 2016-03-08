@@ -1,6 +1,7 @@
 var amqp = require('amqplib/callback_api');
 var ErrorHandler = require("./errorhandler");
 
+
 var ampq_prefix = "[AMPQ]";
 
 var server_channel = null;
@@ -56,13 +57,13 @@ function startGameCreationWorker(consume_callback) {
     server_channel.consume(global_queue, consume_callback);
 }
 
-var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://localhost";
+var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://skireev:skireev@broker.wargame.ingenious-cm.fr";
 rabbitmquri += "?heartbeat=60";
 exports.initServerChannel = function(consume_callback) {
     console.log("Connection to " + rabbitmquri);
     amqp.connect(rabbitmquri, function(err, conn) {
-
         ErrorHandler.handleError(ampq_prefix, err);
+
         //Create game creation channel
         conn.createChannel(function(err, ch) {
             ErrorHandler.handleError(ampq_prefix, err);
@@ -71,4 +72,8 @@ exports.initServerChannel = function(consume_callback) {
             startGameCreationWorker(consume_callback);
         });
     });
+}
+
+exports.purgeGlobalQueue = function() {
+    server_channel.purgeQueue(global_queue);
 }
