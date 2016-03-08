@@ -18,15 +18,14 @@ function handleError(err) {
 	}
 }
 
-exports.joinGame = function() {
+exports.joinGame = function(game_id) {
 	var corr = uuid.v4();
 	if (game_id)
 	{	
 		console.log("joining game " + game_id);
 		var game_join_msg = {'action' : 'join',
                              'game_id' : game_id};
-		client_channel.assertQueue(global_queue, global_queue_config);
-        client_channel.sendToQueue(global_queue,
+		client_channel.sendToQueue(global_queue,
 			new Buffer(JSON.stringify(game_join_msg)),
 			{ correlationId: corr, replyTo: client_queue });
 	}	
@@ -88,7 +87,7 @@ function gameCreateJoin()
 	}
 	else {
 		console.log("joining game "+ game_id);
-		joinGame();
+		joinGame(game_id);
 	}
 }
 

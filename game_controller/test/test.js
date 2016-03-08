@@ -10,16 +10,18 @@ var rabbitmqwrapper = require('../server/controllers/rabbitmqwrapper')
 var ErrorHandler = require('../server/controllers/errorhandler')
 
 var client_queue_config = {exclusive: false, autoDelete: true};
-var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://skireev:skireev@broker.wargame.ingenious-cm.fr";
+var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://player:player@broker.wargame.ingenious-cm.fr";
 rabbitmquri += "?heartbeat=60";
 
 describe('game client', function(){
 
   var game_id = null;
+  var player_id = null;
 
   before(function(done) {
 
     amqp.connect(rabbitmquri, function(err, conn) {
+      ErrorHandler.handleError(err);
       //create a channel for communication
       conn.createChannel(function(err, ch) {
         ErrorHandler.handleError(err);
@@ -37,8 +39,14 @@ describe('game client', function(){
           ch.consume(client_queue, function(msg) {
             console.log("consumed");
             var content = JSON.parse(msg.content.toString());
-            game_id = content.game_id;
-            done();
+            if (content.game_id) {
+              game_id = content.game_id;
+              game_client.joinGame(game_id);
+            }
+            if (content.player_id) {
+              player_id = content.player_id;
+              done();
+            }
           });
 
           game_client.initQueue(client_queue);
@@ -52,7 +60,12 @@ describe('game client', function(){
       game_server.removeGame(game_id);
   });
 
-  it('should have a gameId', function(){
+  it('should have a game id', function(){
     assert(game_id);
   });
+
+  it('should have a player id', function(){
+    assert(player_id);
+  });
+
 })

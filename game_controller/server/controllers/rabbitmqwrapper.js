@@ -57,7 +57,7 @@ function startGameCreationWorker(consume_callback) {
     server_channel.consume(global_queue, consume_callback);
 }
 
-var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://skireev:skireev@broker.wargame.ingenious-cm.fr";
+var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://server:server@broker.wargame.ingenious-cm.fr";
 rabbitmquri += "?heartbeat=60";
 exports.initServerChannel = function(consume_callback) {
     console.log("Connection to " + rabbitmquri);
@@ -76,4 +76,8 @@ exports.initServerChannel = function(consume_callback) {
 
 exports.purgeGlobalQueue = function() {
     server_channel.purgeQueue(global_queue);
+}
+
+exports.clearAllQueues = function() {
+
 }
