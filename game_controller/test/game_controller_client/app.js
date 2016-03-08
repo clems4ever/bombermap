@@ -18,7 +18,7 @@ function handleError(err) {
 	}
 }
 
-function joinGame() {
+exports.joinGame = function() {
 	var corr = uuid.v4();
 	if (game_id)
 	{	
@@ -32,7 +32,7 @@ function joinGame() {
 	}	
 }
 
-function sendHello(player_id)
+exports.sendHello = function(player_id)
 {
     var coucou = {coucou:"coucou by player : "+player_id};
     console.log("sending coucou");
@@ -64,18 +64,20 @@ function consumeCallback(msg) {
 	{
 		console.log("consuming coucou " + content.coucou);
 	}
-    client_channel.ack(msg);
+	client_channel.ack(msg);
 }
 
-function createGame() {
+exports.createGame = function() {
+	console.log("[x] ask for game creation" + JSON.stringify(client_queue))
 	var corr = uuid.v4();
 	var game_create = {action : "newgame"};
-    client_channel.assertQueue(global_queue, global_queue_config);
-    client_channel.sendToQueue(global_queue,
+    //client_channel.assertQueue(global_queue, global_queue_config);
+	console.log("[x] global queue exists");
+
+	client_channel.sendToQueue(global_queue,
 		new Buffer(JSON.stringify(game_create)),
 		{ correlationId: corr, replyTo: client_queue });
 }
-
 
 function gameCreateJoin()
 {
@@ -90,6 +92,7 @@ function gameCreateJoin()
 	}
 }
 
+
 function initGameId()
 {
 	if (process.argv[2]) {
@@ -102,7 +105,7 @@ function initGameId()
 	}
 }
 
-function initQueue()
+function initializeGame()
 {
 	//check if game id provided
 	initGameId();
@@ -110,6 +113,14 @@ function initQueue()
 	client_channel.consume(client_queue, consumeCallback);
 	//Creating or joining a game depending on game_id being provided
 	gameCreateJoin();
+}
+
+exports.initChannel = function(ch) {
+	client_channel = ch;
+}
+
+exports.initQueue = function(queue) {
+	client_queue = queue
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://localhost";
@@ -127,11 +138,11 @@ function start() {
 			//create the client queue	
 			ch.assertQueue('', client_queue_config, function (err, q) {
 				handleError(err);
-				client_queue = q.queue;
-				initQueue();			
+				this.initQueue(q.queue);
+				initializeGame();
 			});
 		});
 	});
 }
 
-start();
+//start();
