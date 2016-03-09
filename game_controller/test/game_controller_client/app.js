@@ -1,6 +1,5 @@
 var amqp = require('amqplib/callback_api');
 var uuid = require('node-uuid');
-var room_exchange_config = {durable:false, autoDelete:true};
 var global_queue_config = {durable:false, autodelete:false};
 var client_queue_config = {exclusive: false, autoDelete: true};
 
@@ -38,6 +37,22 @@ exports.sendHello = function(player_id)
     client_channel.publish(game_id+"_game_room", "all_but_"+player_id, new Buffer(JSON.stringify(coucou)));
 }
 
+function sendRandomPos(player_id)
+{
+    var lat = 10;
+    var long = 10;
+    var move = {ch:"move", co:{'player_id':player_id, 'lat':lat, 'long':long}};
+    console.log("sending move");
+    client_channel.publish(game_id+"_game_room", "all_but_"+player_id, new Buffer(JSON.stringify(move)));
+}
+
+function sendJoin(player_id)
+{
+    var move = {ch:"player_join", co:{'player_id':player_id}};
+    console.log("sending join");
+    client_channel.publish(game_id+"_game_room", "all_but_"+player_id, new Buffer(JSON.stringify(move)));
+}
+
 function consumeCallback(msg) {
 	console.log(' [.] Got %s', msg.content.toString());
 	var content = JSON.parse(msg.content.toString());
@@ -56,8 +71,9 @@ function consumeCallback(msg) {
         console.log("sending coucou to exchange : " + room_exchange);
         console.log("via key : " + "all_but_"+player_id);
 
-        client_channel.assertExchange(room_exchange, 'direct', room_exchange_config);
-        setInterval(function(){sendHello(player_id)}, 1000);
+        //client_channel.assertExchange(room_exchange, 'direct', room_exchange_config);
+        sendJoin(player_id);
+        setInterval(function(){sendRandomPos(player_id)}, 1000);
 	}
 	if (content.coucou)
 	{

@@ -29,7 +29,6 @@ describe('game client', function(){
         //init the client channel
         game_client.initChannel(ch);
 
-
         //create the client queue
         ch.assertQueue('', client_queue_config, function (err, q) {
           ErrorHandler.handleError(err);

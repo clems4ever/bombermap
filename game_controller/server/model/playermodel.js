@@ -1,6 +1,7 @@
 // Load required packages
 var mongoose = require('mongoose');
 var ErrorHandler = require('../controllers/errorhandler')
+var RabbitMQWrapper = require('../controllers/rabbitmqwrapper')
 var player_model_prefix = "[PlayerModel]"
 
 // Define our player schema
@@ -19,7 +20,13 @@ var PlayerModel = mongoose.model('Player', PlayerSchema);
 exports.getPlayersForGame = function(game_id, callback) {
     PlayerModel.find({'game_id':game_id}, function(err, players) {
         ErrorHandler.handleError(player_model_prefix, err);
-        callback(players);
+        players.forEach(function(player) {
+                RabbitMQWrapper.checkIfQueueExists(player.queue_id, function () {
+                    exports.removePlayer(player.player_id);
+                    //players.splice(p, 1);
+                });
+        });
+        //callback(players);
     });
 }
 
@@ -32,8 +39,8 @@ exports.addPlayer = function(player) {
 
 exports.removePlayer = function(player_id) {
     var player = {'player_id': player_id};
-    PlayerModel.remove(player, function(err) {
-        ErrorHandler.handleError(player_model_prefix, err);
+    PlayerModel.remove(player, function (err) {
+       console.log(err);
     });
 }
 

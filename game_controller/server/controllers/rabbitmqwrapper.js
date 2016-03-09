@@ -6,6 +6,7 @@ var ampq_prefix = "[AMPQ]";
 
 var server_channel = null;
 var room_exchange_config = {durable:false, autoDelete:true};
+var client_queue_config = {durable:false, autoDelete:true, passive:true};
 var global_queue_config = {durable:false, autoDelete:false};
 
 exports.addBindingsForNewPlayer = function(client_queue, game_id, player_id, players) {
@@ -67,8 +68,10 @@ exports.initServerChannel = function(consume_callback) {
         //Create game creation channel
         conn.createChannel(function(err, ch) {
             ErrorHandler.handleError(ampq_prefix, err);
-
             server_channel = ch;
+            server_channel.on('error', function(err) {
+                console.log(err);
+            });
             startGameCreationWorker(consume_callback);
         });
     });
@@ -80,4 +83,11 @@ exports.purgeGlobalQueue = function() {
 
 exports.clearAllQueues = function() {
 
+}
+
+exports.checkIfQueueExists = function(client_queue, ifNotExists) {
+    server_channel.checkQueue(client_queue, function(err) {
+        if (err)
+           ifNotExists(client_queue);
+    });
 }
