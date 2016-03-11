@@ -6,6 +6,8 @@ import com.game.wargame.Controller.Communication.ISocketFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class GameManagerSocket {
 
     private ISocket mSocket;
@@ -51,6 +53,7 @@ public class GameManagerSocket {
                     String playerId = null;
                     try {
                         playerId = message.getString("player_id");
+                        //TODO: parse other players data here
                         onGameJoinedListener.onGameJoined(playerId);
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -2,20 +2,18 @@ package com.game.wargame.Controller;
 
 import android.graphics.Point;
 import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.Engine.GlobalTimer;
+import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
@@ -30,12 +28,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.LogRecord;
 
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {
 
     private static final int WEAPON_TIME = 100;
+    private static final int WEAPON_RANGE = 1000;
 
     private Map<String, PlayerModel> mPlayersById;
     private LocalPlayerModel mCurrentPlayer;
@@ -43,6 +41,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private GameView mGameView;
 
     private LocationRetriever mLocationRetriever;
+    private ProjectilesUpdateTimer mProjectilesUpdateTimer;
 
     private GameSocket mGameSocket;
 
@@ -59,10 +58,11 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever) {
+    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, ProjectilesUpdateTimer projectilesUpdateTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
         mLocationRetriever = locationRetriever;
+        mProjectilesUpdateTimer = projectilesUpdateTimer;
 
         mGameSocket.setOnPlayerEventListener(this);
 
@@ -71,6 +71,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         startSensors();
         initializeView();
+        startGameTimers();
     }
 
     /**
@@ -79,6 +80,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void onStop() {
         mCurrentPlayer.leave();
         stopSensors();
+        stopGameTimers();
     }
 
     /**
@@ -87,6 +89,22 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private void startSensors() {
         //mCompass.start(this);
         mLocationRetriever.start(mCurrentPlayer);
+    }
+
+    private void startGameTimers() {
+        GlobalTimer.start();
+        mProjectilesUpdateTimer.setProjectileModel(mProjectileModel);
+        mProjectilesUpdateTimer.setGameView(mGameView);
+        mProjectilesUpdateTimer.start();
+    }
+
+    private void stopGameTimers() {
+        GlobalTimer.stop();
+        mProjectilesUpdateTimer.stop();
+    }
+
+    private double getTime() {
+        return (double) GlobalTimer.getTicks()*GlobalTimer.UPDATE_SAMPLE_TIME;
     }
 
     /**
@@ -117,9 +135,8 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 float distanceInMeters = results[0];
                 Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
 
-                if (distanceInMeters < 1000) {
-                    onPlayerWeaponTriggeredListener(mCurrentPlayer, targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
-                    mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, WEAPON_TIME);
+                if (distanceInMeters < WEAPON_RANGE) {
+                    mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, getTime());
                 } else {
                     Log.d("GameEngine", "The target is out of range");
                     mGameView.onActionFinished();
@@ -147,6 +164,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 }
             }
         });
+
     }
 
     /**

@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class MapView implements OnMapReadyCallback {
 
@@ -31,9 +32,12 @@ public class MapView implements OnMapReadyCallback {
 
     private OnMapReadyListener mOnMapReadyListener;
 
+    private static final int DEFAULT_ZOOM = 15;
+
     public MapView(FragmentActivity activity) {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
+        mProjectileLocations = new HashMap<>();
 
         mMapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
         mMapView.onCreate(null);
@@ -73,6 +77,7 @@ public class MapView implements OnMapReadyCallback {
                     BitmapDescriptor bmp = null;
                     if(currentPlayer) {
                         bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker_current);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
                     }
                     else {
                         bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker);
@@ -101,6 +106,7 @@ public class MapView implements OnMapReadyCallback {
                     .position(projectile.getPosition())
                     .rotation((float) projectile.getDirection())
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.bullet2)));
+            mProjectileLocations.put(projectile.getUUID(), marker);
     }
 
     public void renderProjectile(final Projectile projectile) {
@@ -113,6 +119,7 @@ public class MapView implements OnMapReadyCallback {
                 } else {
                     if(projectile.isToDestroy()) {
                         marker.remove();
+                        mProjectileLocations.remove(projectile.getUUID());
                     } else {
                         marker.setPosition(projectile.getPosition());
                     }

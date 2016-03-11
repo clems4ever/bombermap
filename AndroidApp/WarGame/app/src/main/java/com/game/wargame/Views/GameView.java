@@ -85,7 +85,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, RelativeLayout.TRUE);
 
-            mMapLayout.addView(mWeaponControllerInterface, params);
+            if (mWeaponControllerInterface.getParent() == null)
+                mMapLayout.addView(mWeaponControllerInterface, params);
             mWeaponControllerInterface.setOnActionFinishedListener(this);
             mWeaponControllerInterface.setOnTouchListener(new View.OnTouchListener() {
                 @Override
