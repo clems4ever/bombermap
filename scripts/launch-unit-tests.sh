@@ -1,12 +1,17 @@
 #!/bin/bash
 
-RESULTS_DIRECTORY="`pwd`"
 
 if [ "$WARGAME_CLIENT_DIRECTORY" == "" ]
 then
 	echo "WARGAME_CLIENT_DIRECTORY not set"
         exit 1
 fi
+
+if [ "$RESULTS_DIRECTORY" == "" ]
+then
+	RESULTS_DIRECTORY="`pwd`"
+fi
+
 
 set -x
 
