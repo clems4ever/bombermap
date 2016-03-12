@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESULTS_DIRECTORY=`pwd`
+RESULTS_DIRECTORY="`pwd`"
 
 if [ "$WARGAME_CLIENT_DIRECTORY" == "" ]
 then
