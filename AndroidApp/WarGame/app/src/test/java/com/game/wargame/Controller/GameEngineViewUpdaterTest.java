@@ -56,7 +56,7 @@ public class GameEngineViewUpdaterTest {
     @Before
     public void setUp() {
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever);
+        //mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever);
     }
 
     @Test
