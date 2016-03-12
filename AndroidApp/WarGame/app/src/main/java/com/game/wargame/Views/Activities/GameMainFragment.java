@@ -7,12 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.GameEngine;
+import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.R;
 import com.game.wargame.Views.GameView;
@@ -47,7 +47,11 @@ public class GameMainFragment extends Fragment {
         LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(new GameView((FragmentActivity) getActivity()), gameSocket, localPlayerSocket, new LocationRetriever(getActivity()));
+        mGameEngine.onStart(new GameView((FragmentActivity) getActivity()),
+                            gameSocket,
+                            localPlayerSocket,
+                            new LocationRetriever(getActivity()),
+                            new ProjectilesUpdateTimer((FragmentActivity) getActivity()));
     }
 
     @Override

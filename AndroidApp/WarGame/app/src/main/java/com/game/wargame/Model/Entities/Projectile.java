@@ -6,9 +6,11 @@ import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * Created by sergei on 01/03/16.
@@ -33,6 +35,7 @@ public class Projectile {
         double dLatitude = deltaLatitude / occurrences;
         double dLongitude = deltaLongitude / occurrences;
 
+        mTrajectory = new TreeMap<Double, LatLng>();
         for(int i=0; i<occurrences; ++i) {
             LatLng position = new LatLng(mPosition.latitude + i * dLatitude, mPosition.longitude + i * dLongitude);
             double positionTime = mTimeStart + DEFAULT_DELTA_T*i;
@@ -48,6 +51,12 @@ public class Projectile {
         mTarget = end;
         mTimeStart = timestamp;
         initTrajectory();
+        mUUID = UUID.randomUUID().toString();
+    }
+
+    public boolean equals(Projectile other)
+    {
+        return this.getUUID().equals(other.getUUID());
     }
 
     public LatLng getPosition() {
@@ -95,11 +104,6 @@ public class Projectile {
         return mUUID;
     }
 
-    public void setUUID(String uuid)
-    {
-        mUUID = uuid;
-    }
-
     public boolean isToDestroy() {
         return mToDestroy;
     }
@@ -107,7 +111,7 @@ public class Projectile {
         mToDestroy = toDestroy;
     }
 
-    protected String mUUID;
+    protected final String mUUID;
     protected double mTimeStart;
     protected LatLng mPosition;
     protected LatLng mTarget;

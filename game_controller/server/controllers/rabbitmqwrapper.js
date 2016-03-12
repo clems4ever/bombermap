@@ -4,6 +4,7 @@ var ErrorHandler = require("./errorhandler");
 
 var ampq_prefix = "[AMPQ]";
 
+var connection = null;
 var server_channel = null;
 var room_exchange_config = {durable:false, autoDelete:true};
 var client_queue_config = {durable:false, autoDelete:true, passive:true};
@@ -15,14 +16,15 @@ exports.addBindingsForNewPlayer = function(client_queue, game_id, player_id, pla
     console.log('+ Bind queue ' + client_queue + ' to all routing key.');
     server_channel.bindQueue(client_queue, room_exchange, 'all');
 
-    for (p in players) {
-        var other_player = players[p];
-        console.log('+ Bind queue ' + client_queue + ' to all_but_' + other_player.player_id + ' routing key.');
-        server_channel.bindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
+    players.forEach(function(other_player) {
+        exports.checkIfQueueExists(other_player.queue_id, function(){}, function() {
+            console.log('+ Bind queue ' + client_queue + ' to all_but_' + other_player.player_id + ' routing key.');
+            server_channel.bindQueue(client_queue, room_exchange, 'all_but_' + other_player.player_id);
 
-        console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
-        server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
-    }
+            console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
+            server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
+        });
+    });
 }
 
 exports.unbindQueueForLeave = function(client_queue, room_exchange, player_id, players) {
@@ -65,6 +67,7 @@ exports.initServerChannel = function(consume_callback) {
     amqp.connect(rabbitmquri, function(err, conn) {
         ErrorHandler.handleError(ampq_prefix, err);
 
+        connection = conn;
         //Create game creation channel
         conn.createChannel(function(err, ch) {
             ErrorHandler.handleError(ampq_prefix, err);
@@ -85,9 +88,18 @@ exports.clearAllQueues = function() {
 
 }
 
-exports.checkIfQueueExists = function(client_queue, ifNotExists) {
-    server_channel.checkQueue(client_queue, function(err) {
-        if (err)
-           ifNotExists(client_queue);
+exports.checkIfQueueExists = function(client_queue, ifNotExists, ifExists) {
+
+    connection.createChannel(function(err, ch) {
+        ErrorHandler.handleError(ampq_prefix, err);
+        ch.checkQueue(client_queue, function(err) {
+            if (err)
+                ifNotExists();
+            else
+                ifExists()
+            ch.on('error', function(err) {
+                console.log(err);
+            });
+        });
     });
 }

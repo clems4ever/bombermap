@@ -23,10 +23,9 @@ exports.getPlayersForGame = function(game_id, callback) {
         players.forEach(function(player) {
                 RabbitMQWrapper.checkIfQueueExists(player.queue_id, function () {
                     exports.removePlayer(player.player_id);
-                    //players.splice(p, 1);
-                });
+                }, function(){});
         });
-        //callback(players);
+        callback(players);
     });
 }
 

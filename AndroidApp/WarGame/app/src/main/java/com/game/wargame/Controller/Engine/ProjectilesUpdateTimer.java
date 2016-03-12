@@ -1,6 +1,7 @@
-package com.game.wargame.Controller;
+package com.game.wargame.Controller.Engine;
 
 import android.app.Activity;
+import android.provider.Settings;
 
 import com.game.wargame.Model.Entities.Projectile;
 
@@ -22,14 +23,27 @@ public class ProjectilesUpdateTimer extends Timer {
     private Activity mActivity;
     private Lock mLock = new ReentrantLock();
     private ProjectileModel mProjectileModel;
+    private ArrayList<Projectile> mProjectilesToRemove;
 
     private Timer mTimer;
     private GameView mGameView;
+    private long mTime;
 
-    public ProjectilesUpdateTimer(Activity activity, ProjectileModel projectileModel) {
+    private static final int UPDATE_SAMPLE_TIME = 100;
+
+    public ProjectilesUpdateTimer(Activity activity) {
         mActivity = activity;
-        mProjectileModel = projectileModel;
     }
+
+    public void setProjectileModel(ProjectileModel projectileModel) {
+        mProjectileModel = projectileModel;
+        mProjectilesToRemove = new ArrayList<>();
+    }
+
+    public void setGameView(GameView gameView) {
+        mGameView = gameView;
+    }
+
 
     public void start() {
         startTimer();
@@ -40,13 +54,12 @@ public class ProjectilesUpdateTimer extends Timer {
     }
 
     public double getTime() {
-        //TODO: return realTime;
-        return 0;
+        return (double)GlobalTimer.getTicks()*GlobalTimer.UPDATE_SAMPLE_TIME;
     }
 
-    public void updateProjectile(Projectile projectile) {
+    public void updateProjectile(Projectile projectile, double time) {
         TreeMap<Double, LatLng> trajectory = projectile.getTrajectory();
-        Double newTimestamp = trajectory.ceilingKey(getTime());
+        Double newTimestamp = trajectory.ceilingKey(time);
 
         if (newTimestamp != null) {
             LatLng newPosition = trajectory.get(newTimestamp);
@@ -55,6 +68,7 @@ public class ProjectilesUpdateTimer extends Timer {
         }
         else {
             projectile.setToDestroy(true);
+            mProjectilesToRemove.add(projectile);
         }
     }
 
@@ -67,9 +81,13 @@ public class ProjectilesUpdateTimer extends Timer {
 
                 mLock.lock();
                 ArrayList<Projectile> projectiles = mProjectileModel.getProjectiles();
+                ArrayList<Projectile> toRemove = new ArrayList<Projectile>();
+                double time = getTime();
+
+                mProjectilesToRemove.clear();
                 for (Projectile projectile : projectiles)
                 {
-                    updateProjectile(projectile);
+                    updateProjectile(projectile, time);
                 }
 
                 mActivity.runOnUiThread(new Runnable() {
@@ -77,11 +95,16 @@ public class ProjectilesUpdateTimer extends Timer {
                     public void run() {
                         ArrayList<Projectile> projectiles = mProjectileModel.getProjectiles();
                         mGameView.renderProjectiles(projectiles);
+                        for (Projectile projectile : mProjectilesToRemove)
+                        {
+                            mProjectileModel.removeProjectile(projectile);
+                        }
                     }
                 });
+
                 mLock.unlock();
             }
-        }, 0, 100);
+        }, 0, UPDATE_SAMPLE_TIME);
     }
 
     private void stopTimer() {

@@ -4,7 +4,7 @@ var PlayerModel = require('../model/playermodel');
 
 exports.handlePlayerJoin = function(game_id, msg) {
     var room_exchange = game_id+"_game_room";
-    //RabbitMQWrapper.assertRoomExchange(room_exchange);
+    RabbitMQWrapper.assertRoomExchange(room_exchange);
 
     // Create new player id
     var player_id = uuid.v4();
