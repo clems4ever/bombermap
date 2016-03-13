@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.location.Location;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
@@ -84,6 +85,16 @@ public class LocationRetrieverTest {
         listener.onLocationChanged(mMockLocation);
 
         verify(mMockOnLocationUpdatedListener).onLocationUpdated(eq(5.0d), eq(10.0d));
+    }
+
+    @Test
+    public void testReconnectionWhenServiceConnectionIsSuspended() {
+        LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
+
+        locationRetriever.start(mMockOnLocationUpdatedListener);
+        locationRetriever.onConnectionSuspended(5);
+
+        verify(mMockGoogleApiClient, times(2)).connect();
     }
 
 }
