@@ -1,5 +1,6 @@
 package com.game.wargame.Controller.Communication;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface ISocket {
@@ -13,6 +14,6 @@ public interface ISocket {
     public void off(String channel);
 
     public interface OnRemoteEventReceivedListener {
-        public void onRemoteEventReceived(JSONObject message);
+        public void onRemoteEventReceived(JSONObject message) throws JSONException;
     }
 }

@@ -95,7 +95,7 @@ public class GameManagerSocketTest {
         listener.onRemoteEventReceived(reply);
     }
 
-    @Test
+    @Test(expected = JSONException.class)
     public void testThatMalformedReplyMustNotCallListener() throws JSONException {
 
         ArgumentCaptor<ISocket.OnRemoteEventReceivedListener> captor = ArgumentCaptor.forClass(ISocket.OnRemoteEventReceivedListener.class);

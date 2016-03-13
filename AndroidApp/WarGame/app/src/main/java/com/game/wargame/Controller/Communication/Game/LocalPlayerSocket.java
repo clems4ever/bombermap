@@ -37,12 +37,10 @@ public class LocalPlayerSocket extends PlayerSocket {
             mSocket.emit("move", moveJsonObject);
 
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
     public void fire(double latitude, double longitude, double velocity) {
-
         try {
             JSONObject fireJsonObject = buildClientJson();
 
@@ -51,9 +49,7 @@ public class LocalPlayerSocket extends PlayerSocket {
             fireJsonObject.put("speed", velocity);
 
             mSocket.emit("fire", fireJsonObject);
-
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
@@ -62,7 +58,6 @@ public class LocalPlayerSocket extends PlayerSocket {
             JSONObject data = buildClientJson();
             mSocket.emit("player_leave", data);
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 }

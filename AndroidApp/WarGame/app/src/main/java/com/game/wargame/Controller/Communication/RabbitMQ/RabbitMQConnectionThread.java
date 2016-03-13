@@ -150,7 +150,6 @@ public class RabbitMQConnectionThread extends Thread {
                     String message = new String(body, "UTF-8");
                     try {
                         JSONObject messageJson = new JSONObject(message);
-
                         routeMessage(messageJson, properties);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -163,7 +162,7 @@ public class RabbitMQConnectionThread extends Thread {
         }
     }
 
-    private void routeMessage(JSONObject content, AMQP.BasicProperties properties) {
+    private void routeMessage(JSONObject content, AMQP.BasicProperties properties) throws JSONException {
         String correlationId = properties.getCorrelationId();
         ISocket.OnRemoteEventReceivedListener listener = mRpcRepliesCallback.get(correlationId);
 
