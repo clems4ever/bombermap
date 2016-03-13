@@ -158,7 +158,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 while (iterator.hasNext()) {
                     Map.Entry<String, PlayerModel> entry = iterator.next();
 
-                    mGameView.movePlayer(entry.getValue(), entry.getValue() == mCurrentPlayer);
+                    if(mCurrentPlayer == entry.getValue()) {
+                        mGameView.addLocalPlayer(entry.getValue());
+                    } else {
+                        mGameView.addRemotePlayer(entry.getValue());
+                    }
+                    mGameView.movePlayer(entry.getValue());
                 }
             }
         });
@@ -177,7 +182,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
-        mGameView.movePlayer(player, player == mCurrentPlayer);
+        mGameView.movePlayer(player);
     }
 
     @Override
@@ -187,10 +192,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         Projectile projectile = new Projectile(source, destination, timestamp);
         mProjectileModel.addProjectile(projectile);
-    }
-
-    public LocalPlayerModel getLocalPlayer() {
-        return mCurrentPlayer;
     }
 
     public int getPlayersCount() {

@@ -167,9 +167,15 @@ public class GameEngineTest {
         RemotePlayerModel remotePlayerModel1 = new RemotePlayerModel("username", mMockRemotePlayerSocket1);
         RemotePlayerModel remotePlayerModel2 = new RemotePlayerModel("username", mMockRemotePlayerSocket2);
 
-        verify(mMockGameView).movePlayer(eq(remotePlayerModel1), eq(false));
-        verify(mMockGameView).movePlayer(eq(remotePlayerModel2), eq(false));
-        verify(mMockGameView).movePlayer(eq(localPlayerModel), eq(true));
+        verify(mMockGameView).addRemotePlayer(eq(remotePlayerModel1));
+        verify(mMockGameView).movePlayer(eq(remotePlayerModel1));
+
+        verify(mMockGameView).addRemotePlayer(eq(remotePlayerModel2));
+        verify(mMockGameView).movePlayer(eq(remotePlayerModel2));
+
+        verify(mMockGameView).addLocalPlayer(eq(localPlayerModel));
+        verify(mMockGameView).movePlayer(eq(localPlayerModel));
+
     }
 
 }

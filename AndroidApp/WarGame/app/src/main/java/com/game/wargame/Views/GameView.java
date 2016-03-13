@@ -32,8 +32,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
     public GameView(final FragmentActivity activity) {
+        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
+
         mActivity = activity;
-        mMapView = new MapView(mActivity);
+        mMapView = new MapView(mActivity, new GoogleMapViewWrapper(mapView), new BitmapDescriptorFactory());
         final GameView that = this;
 
         mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
@@ -54,11 +56,19 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     }
 
     public void loadMap(MapView.OnMapReadyListener onMapReadyListener) {
-        mMapView.load(onMapReadyListener);
+        mMapView.startAsync(onMapReadyListener);
     }
 
-    public void movePlayer(final PlayerModel player, boolean currentPlayer) {
-        mMapView.movePlayerTo(player.getPlayerId(), currentPlayer, player.getPosition());
+    public void addLocalPlayer(final PlayerModel player) {
+        mMapView.addLocalPlayer(player.getPlayerId());
+    }
+
+    public void addRemotePlayer(final PlayerModel player) {
+        mMapView.addRemotePlayer(player.getPlayerId());
+    }
+
+    public void movePlayer(final PlayerModel player) {
+        mMapView.movePlayerTo(player.getPlayerId(), player.getPosition());
     }
 
     public void removePlayer(PlayerModel player) {
