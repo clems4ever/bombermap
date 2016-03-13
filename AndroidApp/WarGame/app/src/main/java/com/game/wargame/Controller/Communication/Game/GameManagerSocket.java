@@ -30,7 +30,6 @@ public class GameManagerSocket {
                 }
             });
         } catch (JSONException e) {
-            e.printStackTrace();
         }
 
     }
@@ -51,7 +50,6 @@ public class GameManagerSocket {
                         //TODO: parse other players data here
                         onGameJoinedListener.onGameJoined(playerId);
                     } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             });
