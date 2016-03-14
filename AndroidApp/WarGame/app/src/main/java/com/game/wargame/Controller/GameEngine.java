@@ -24,10 +24,10 @@ import com.game.wargame.Views.MapView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {
@@ -35,7 +35,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
 
-    private Map<String, PlayerModel> mPlayersById;
+    private TreeMap<String, PlayerModel> mPlayersById;
     private LocalPlayerModel mCurrentPlayer;
 
     private GameView mGameView;
@@ -43,6 +43,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private LocationRetriever mLocationRetriever;
     private ProjectilesUpdateTimer mProjectilesUpdateTimer;
 
+    private GlobalTimer mGlobalTimer;
     private GameSocket mGameSocket;
 
     private ProjectileModel mProjectileModel;
@@ -51,7 +52,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Constructor
      */
     public GameEngine() {
-        mPlayersById = new HashMap<>();
+        mPlayersById = new TreeMap<>();
         mProjectileModel = new ProjectileModel();
     }
 
@@ -61,10 +62,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, ProjectilesUpdateTimer projectilesUpdateTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
+        mGlobalTimer = new GlobalTimer();
         mLocationRetriever = locationRetriever;
         mProjectilesUpdateTimer = projectilesUpdateTimer;
 
         mGameSocket.setOnPlayerEventListener(this);
+        mGameSocket.setOnClockEventListener(mGlobalTimer);
 
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
@@ -92,19 +95,20 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     }
 
     private void startGameTimers() {
-        GlobalTimer.start();
+        mGlobalTimer.start();
         mProjectilesUpdateTimer.setProjectileModel(mProjectileModel);
         mProjectilesUpdateTimer.setGameView(mGameView);
+        mProjectilesUpdateTimer.setGlobalTimer(mGlobalTimer);
         mProjectilesUpdateTimer.start();
     }
 
     private void stopGameTimers() {
-        GlobalTimer.stop();
+        mGlobalTimer.stop();
         mProjectilesUpdateTimer.stop();
     }
 
     private double getTime() {
-        return (double) GlobalTimer.getTicks()*GlobalTimer.UPDATE_SAMPLE_TIME;
+        return (double) mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
     }
 
     /**

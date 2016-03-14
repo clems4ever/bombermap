@@ -26,10 +26,12 @@ public class ProjectilesUpdateTimer extends Timer {
     private ArrayList<Projectile> mProjectilesToRemove;
 
     private Timer mTimer;
+    private GlobalTimer mGlobalTimer;
     private GameView mGameView;
     private long mTime;
 
     private static final int UPDATE_SAMPLE_TIME = 100;
+    private static final long STANDARD_OFFSET = 50;
 
     public ProjectilesUpdateTimer(Activity activity) {
         mActivity = activity;
@@ -54,7 +56,7 @@ public class ProjectilesUpdateTimer extends Timer {
     }
 
     public double getTime() {
-        return (double)GlobalTimer.getTicks()*GlobalTimer.UPDATE_SAMPLE_TIME;
+        return (double)mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
     }
 
     public void updateProjectile(Projectile projectile, double time) {
@@ -104,7 +106,7 @@ public class ProjectilesUpdateTimer extends Timer {
 
                 mLock.unlock();
             }
-        }, 0, UPDATE_SAMPLE_TIME);
+        }, STANDARD_OFFSET, UPDATE_SAMPLE_TIME);
     }
 
     private void stopTimer() {
@@ -112,6 +114,11 @@ public class ProjectilesUpdateTimer extends Timer {
             mTimer.cancel();
             mTimer.purge();
         }
+    }
+
+    public void setGlobalTimer(GlobalTimer globalTimer)
+    {
+        mGlobalTimer = globalTimer;
     }
 
 }

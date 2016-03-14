@@ -12,6 +12,8 @@ public interface IConnectionManager {
 
     public void setOnDisconnected(OnDisconnectedListener onDisconnectedListener);
 
+    public void initSocketFactory();
+
     public boolean isConnected();
 
     public ISocketFactory getSocketFactory();

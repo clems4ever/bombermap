@@ -113,17 +113,17 @@ public class MapView implements OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mProjectileLocations.get(projectile.getUUID());
-                if (marker == null) {
-                    addBulletMarker(projectile);
+            Marker marker = mProjectileLocations.get(projectile.getUUID());
+            if (marker == null) {
+                addBulletMarker(projectile);
+            } else {
+                if(projectile.isToDestroy()) {
+                    marker.remove();
+                    mProjectileLocations.remove(projectile.getUUID());
                 } else {
-                    if(projectile.isToDestroy()) {
-                        marker.remove();
-                        mProjectileLocations.remove(projectile.getUUID());
-                    } else {
-                        marker.setPosition(projectile.getPosition());
-                    }
+                    marker.setPosition(projectile.getPosition());
                 }
+            }
             }
         });
     }

@@ -20,6 +20,11 @@ public class RabbitMQConnectionManager implements IConnectionManager {
     }
 
     @Override
+    public void initSocketFactory() {
+        mSocketFactory.initRemotePlayersSocket();
+    }
+
+    @Override
     public void disconnect() {
         mConnectionThread.interrupt();
         mSocketFactory = null;

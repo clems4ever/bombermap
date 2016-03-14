@@ -17,6 +17,9 @@ public class RabbitMQSocketFactory implements ISocketFactory {
     public RabbitMQSocketFactory(RabbitMQConnectionThread connectionThread) {
         mConnectionThread = connectionThread;
 
+    }
+
+    public void initRemotePlayersSocket() {
         mRemotePlayersSocket = new RemotePlayersSocket(new RabbitMQSocket(mConnectionThread));
     }
 
