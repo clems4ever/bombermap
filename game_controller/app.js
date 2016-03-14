@@ -1,6 +1,7 @@
 var uuid = require('node-uuid');
 var GameManager = require('./server/controllers/gamemanager')
 var RabbitMQWrapper = require('./server/controllers/rabbitmqwrapper');
+var clock_exchange = "clock_exchange";
 
 //connect to mongo gloabally
 var mongodb = require('./server/controllers/mongooseconnect')
@@ -14,9 +15,11 @@ function consumeCallback(msg) {
         //Get a game id;
         //create the exchange for the game
         GameManager.createGameExchange(game_id, msg);
+        GameManager.addClockServiceToGame(game_id, clock_exchange);
     }
     else if (content.action == "join") {
         GameManager.handlePlayerJoin(game_id, msg);
+        GameManager.addClockServiceToGame(game_id, clock_exchange);
     }
     else if (content.action == "leave")
     {
@@ -29,6 +32,6 @@ function consumeCallback(msg) {
 }
 
 function start() {
-    RabbitMQWrapper.initServerChannel(consumeCallback);
+    RabbitMQWrapper.initServerChannel(consumeCallback, function() {});
 }
 start();

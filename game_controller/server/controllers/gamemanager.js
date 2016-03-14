@@ -1,6 +1,8 @@
 var uuid = require('node-uuid');
 var RabbitMQWrapper = require('./rabbitmqwrapper');
 var PlayerModel = require('../model/playermodel');
+var clock = 0;
+var clock_exchange = 'clock_exchange';
 
 exports.handlePlayerJoin = function(game_id, msg) {
     var room_exchange = game_id+"_game_room";
@@ -62,3 +64,14 @@ exports.createGameExchange = function(game_id, msg) {
 exports.removeGame = function(game_id, callback) {
     PlayerModel.removePlayersForGame(game_id, callback);
 }
+
+exports.addClockServiceToGame = function(game_id, clock_exchange) {
+    var room_exchange = game_id + '_game_room';
+    RabbitMQWrapper.assertRoomExchange(room_exchange);
+    RabbitMQWrapper.bindExchange(room_exchange, clock_exchange);
+}
+
+exports.updateClock = function() {
+    clock++;
+    RabbitMQWrapper.sendClockSync(clock_exchange, clock);
+};

@@ -6,6 +6,8 @@ var ampq_prefix = "[AMPQ]";
 
 var connection = null;
 var server_channel = null;
+
+var clock_exchange_config = {durable:false, autoDelete:false};
 var room_exchange_config = {durable:false, autoDelete:true};
 var client_queue_config = {durable:false, autoDelete:true, passive:true};
 var global_queue_config = {durable:false, autoDelete:false};
@@ -23,6 +25,9 @@ exports.addBindingsForNewPlayer = function(client_queue, game_id, player_id, pla
 
             console.log('+ Bind queue ' + other_player.queue_id + ' to all_but_' + player_id + ' routing key.');
             server_channel.bindQueue(other_player.queue_id, room_exchange, 'all_but_' + player_id);
+
+            exports.sendJoinMessage(client_queue, other_player.player_id);
+            exports.sendJoinMessage(other_player.queue_id, player_id);
         });
     });
 }
@@ -56,13 +61,14 @@ exports.assertRoomExchange = function(room_exchange) {
 var global_queue = "global_queue";
 function startGameCreationWorker(consume_callback) {
     server_channel.assertQueue(global_queue, global_queue_config);
+    server_channel.assertExchange('clock_exchange', "fanout", clock_exchange_config);
 
     server_channel.consume(global_queue, consume_callback);
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://server:server@broker.wargame.ingenious-cm.fr";
 rabbitmquri += "?heartbeat=60";
-exports.initServerChannel = function(consume_callback) {
+exports.initServerChannel = function(consume_callback, on_channel_ready) {
     console.log("Connection to " + rabbitmquri);
     amqp.connect(rabbitmquri, function(err, conn) {
         ErrorHandler.handleError(ampq_prefix, err);
@@ -75,6 +81,7 @@ exports.initServerChannel = function(consume_callback) {
             server_channel.on('error', function(err) {
                 console.log(err);
             });
+            on_channel_ready();
             startGameCreationWorker(consume_callback);
         });
     });
@@ -86,6 +93,11 @@ exports.purgeGlobalQueue = function() {
 
 exports.clearAllQueues = function() {
 
+}
+
+exports.sendMessage = function(client_queue, message) {
+    var buffer = new Buffer(message);
+    server_channel.sendToQueue(client_queue, buffer);
 }
 
 exports.checkIfQueueExists = function(client_queue, ifNotExists, ifExists) {
@@ -102,4 +114,28 @@ exports.checkIfQueueExists = function(client_queue, ifNotExists, ifExists) {
             });
         });
     });
+}
+
+exports.sendClockSync = function(clock_exchange, ticks) {
+    var message = JSON.stringify({'ch':'clock_sync',
+                                  'co':{'ticks': ticks}
+                                 });
+    console.log('[x] Sending clock sync : ' + ticks);
+    var buffer = new Buffer(message);
+    server_channel.publish(clock_exchange, "all", buffer);
+}
+
+exports.sendJoinMessage = function(client_queue, player_id)
+{
+    var message = JSON.stringify({'ch':'player_join',
+        'co':{'player_id': player_id}
+    });
+    console.log('[x] Player confirmed : ' + player_id + ' for '+ client_queue);
+    var buffer = new Buffer(message);
+    server_channel.sendToQueue(client_queue, buffer);
+}
+
+exports.bindExchange = function (exchange1, exchange2) {
+    console.log('+ Bind exchange ' + exchange1 + ' to exchange' + exchange2);
+    server_channel.bindExchange(exchange1, exchange2);
 }
