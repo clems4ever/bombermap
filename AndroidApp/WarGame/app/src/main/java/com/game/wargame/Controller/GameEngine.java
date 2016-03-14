@@ -90,7 +90,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Starts the sensors and listen to events
      */
     private void startSensors() {
-        //mCompass.start(this);
         mLocationRetriever.start(mCurrentPlayer);
     }
 
@@ -115,7 +114,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Stops listening to the sensors
      */
     private void stopSensors() {
-        //mCompass.stop();
         mLocationRetriever.stop();
     }
 

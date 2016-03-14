@@ -8,6 +8,7 @@ import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayersSocket;
 import com.game.wargame.Controller.Communication.ISocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
+import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.PlayerModel;
@@ -64,12 +65,15 @@ public class GameEngineTest {
     @Mock
     private ISocketFactory mMockSocketFactory;
 
+    @Mock
+    private ProjectilesUpdateTimer mMockProjectilesUpdateTimer;
+
     private GameEngine mGameEngine;
 
     @Test
     public void testIfLocalPlayersIsCorrectlyAddedAtTheBeginningOfTheGame() {
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
         assertEquals(1, mGameEngine.getPlayersCount());
     }
 
@@ -77,7 +81,7 @@ public class GameEngineTest {
     public void testIfLocationRetrieverIsStoppedWhenGameEngineIsStopped() {
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
 
         mGameEngine.onStop();
 
@@ -88,7 +92,7 @@ public class GameEngineTest {
     public void testIfPlayersAreCorrectlyAddedWhenJoiningTheGame() {
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
 
         RemotePlayersSocket remotePlayersSocket = new RemotePlayersSocket(mMockSocket);
         RemotePlayerSocket playerSocket1 = new RemotePlayerSocket("player_id", remotePlayersSocket);
@@ -110,7 +114,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket1.getPlayerId()).thenReturn("player1");
         when(mMockRemotePlayerSocket1.getPlayerId()).thenReturn("player2");
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);
@@ -126,7 +130,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket1.getPlayerId()).thenReturn("player1");
         when(mMockRemotePlayerSocket2.getPlayerId()).thenReturn("player2");
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);
@@ -147,7 +151,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket1.getPlayerId()).thenReturn("player1");
         when(mMockRemotePlayerSocket2.getPlayerId()).thenReturn("player2");
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockLocalPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);

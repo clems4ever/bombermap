@@ -22,38 +22,30 @@ public class RemotePlayersSocket {
 
         mSocket.on("move", new ISocket.OnRemoteEventReceivedListener() {
             @Override
-            public void onRemoteEventReceived(JSONObject message) {
-                try {
-                    String playerId = message.getString("player_id");
-                    RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                String playerId = message.getString("player_id");
+                RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
 
-                    if(player != null) {
-                        double latitude = message.getDouble("lat");
-                        double longitude = message.getDouble("long");
-                        player.onMove(latitude, longitude);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(player != null) {
+                    double latitude = message.getDouble("lat");
+                    double longitude = message.getDouble("long");
+                    player.onMove(latitude, longitude);
                 }
             }
         });
 
         mSocket.on("fire", new ISocket.OnRemoteEventReceivedListener() {
             @Override
-            public void onRemoteEventReceived(JSONObject message) {
-                try {
-                    String playerId = message.getString("player_id");
-                    RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                String playerId = message.getString("player_id");
+                RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
 
-                    if(player != null) {
-                        double latitude = message.getDouble("lat");
-                        double longitude = message.getDouble("long");
-                        double speed = message.getDouble("speed");
+                if(player != null) {
+                    double latitude = message.getDouble("lat");
+                    double longitude = message.getDouble("long");
+                    double speed = message.getDouble("speed");
 
-                        player.onFire(latitude, longitude, speed);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    player.onFire(latitude, longitude, speed);
                 }
             }
         });

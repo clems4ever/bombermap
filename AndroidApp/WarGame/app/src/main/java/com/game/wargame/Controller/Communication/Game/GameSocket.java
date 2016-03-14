@@ -24,16 +24,12 @@ public class GameSocket {
 
         mSocket.on("player_join", new ISocket.OnRemoteEventReceivedListener() {
             @Override
-            public void onRemoteEventReceived(JSONObject message) {
-                try {
-                    String playerId = message.getString("player_id");
-                    if(mOnPlayerEventListener != null) {
-                        RemotePlayerSocket playerSocket = mSocketFactory.buildRemotePlayerSocket(mGameId, playerId);
-                        mOnPlayerEventListener.onPlayerJoined(playerSocket);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+            String playerId = message.getString("player_id");
+            if(mOnPlayerEventListener != null) {
+                RemotePlayerSocket playerSocket = mSocketFactory.buildRemotePlayerSocket(mGameId, playerId);
+                mOnPlayerEventListener.onPlayerJoined(playerSocket);
+            }
             }
         });
 

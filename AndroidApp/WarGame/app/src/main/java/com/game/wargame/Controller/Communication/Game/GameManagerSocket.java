@@ -22,20 +22,14 @@ public class GameManagerSocket {
             message.put("action", "newgame");
             mSocket.call("global_queue", message, new ISocket.OnRemoteEventReceivedListener() {
                 @Override
-                public void onRemoteEventReceived(JSONObject message) {
-                    String gameId = null;
-                    try {
-                        gameId = message.getString("game_id");
-                        if (onGameCreatedListener != null) {
-                            onGameCreatedListener.onGameCreated(gameId);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                    String gameId = message.getString("game_id");
+                    if (onGameCreatedListener != null) {
+                        onGameCreatedListener.onGameCreated(gameId);
                     }
                 }
             });
         } catch (JSONException e) {
-            e.printStackTrace();
         }
 
     }
@@ -57,12 +51,10 @@ public class GameManagerSocket {
                         onGameJoinedListener.onGameJoined(playerId);
                         //sendPlayerJoinMessage(playerId);
                     } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             });
         } catch (JSONException e) {
-            e.printStackTrace();
         }
 
         return playerId;
@@ -81,7 +73,6 @@ public class GameManagerSocket {
                 }
             });
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 
