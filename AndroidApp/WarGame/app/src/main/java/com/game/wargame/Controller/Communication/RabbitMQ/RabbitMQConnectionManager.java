@@ -37,6 +37,16 @@ public class RabbitMQConnectionManager implements IConnectionManager {
     }
 
     @Override
+    public void freeze() {
+
+    }
+
+    @Override
+    public void unfreeze() {
+
+    }
+
+    @Override
     public ISocketFactory getSocketFactory() {
         return mSocketFactory;
     }

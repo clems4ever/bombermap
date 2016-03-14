@@ -16,6 +16,7 @@ import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.R;
 import com.game.wargame.Views.GameView;
+import com.game.wargame.Views.MapView;
 
 public class GameMainFragment extends Fragment {
 
@@ -43,23 +44,36 @@ public class GameMainFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
-        LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
+        final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
+        final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-        mGameEngine = new GameEngine();
-        mGameEngine.onStart(new GameView((FragmentActivity) getActivity()),
-                            gameSocket,
-                            localPlayerSocket,
-                            new LocationRetriever(getActivity()),
-                            new ProjectilesUpdateTimer((FragmentActivity) getActivity()));
+        final GameView gameView = new GameView((FragmentActivity) getActivity());
+
+        gameView.start(new MapView.OnMapReadyListener() {
+            @Override
+            public void onMapReady() {
+                mGameEngine = new GameEngine();
+                mGameEngine.onStart(gameView,
+                        gameSocket,
+                        localPlayerSocket,
+                        new LocationRetriever(getActivity()),
+                        new ProjectilesUpdateTimer((FragmentActivity) getActivity())
+                );
+
+                // Unfreeze messages when view is loaded
+                mConnectionManager.unfreeze();
+            }
+        });
     }
 
     @Override
     public void onStop() {
-        mGameEngine.onStop();
+        if(mGameEngine != null) {
+            mGameEngine.onStop();
 
-        GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
-        gameManagerSocket.leaveGame(mGameId, mPlayerId);
+            GameManagerSocket gameManagerSocket = mConnectionManager.getSocketFactory().buildGameManagerSocket();
+            gameManagerSocket.leaveGame(mGameId, mPlayerId);
+        }
 
         mConnectionManager.clear();
 

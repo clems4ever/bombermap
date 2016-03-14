@@ -55,7 +55,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
     }
 
-    public void loadMap(MapView.OnMapReadyListener onMapReadyListener) {
+    public void start(MapView.OnMapReadyListener onMapReadyListener) {
         mMapView.startAsync(onMapReadyListener);
     }
 

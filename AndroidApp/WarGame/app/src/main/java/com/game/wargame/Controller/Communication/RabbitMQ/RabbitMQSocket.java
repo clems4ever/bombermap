@@ -17,10 +17,13 @@ public class RabbitMQSocket implements ISocket {
 
     public RabbitMQSocket(RabbitMQConnectionThread connectionThread) {
         mConnectionThread = connectionThread;
+        mExchange = "";
+        mRoutingKey = "";
     }
 
     public RabbitMQSocket(RabbitMQConnectionThread connectionThread, String exchange) {
         mExchange = exchange;
+        mRoutingKey = "";
         mConnectionThread = connectionThread;
     }
 
@@ -51,7 +54,6 @@ public class RabbitMQSocket implements ISocket {
 
             mConnectionThread.publish(mExchange, mRoutingKey, message);
         } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

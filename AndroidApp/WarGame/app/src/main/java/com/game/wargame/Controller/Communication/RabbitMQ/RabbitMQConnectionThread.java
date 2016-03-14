@@ -26,8 +26,11 @@ public class RabbitMQConnectionThread extends Thread {
 
     private ConnectionFactory mConnectionFactory;
     private Connection mConnection;
+    private String mClientQueueName;
+    private Channel mChannel;
 
-    private BlockingQueue<RabbitMQMessage> mQueue = new LinkedBlockingQueue<>();
+    private BlockingQueue<RabbitMQMessage> mCommandQueue;
+    private SocketBuffer mSocketBuffer;
 
     private boolean mStopThreadFlag = false;
     private IConnectionManager.OnDisconnectedListener mOnDisconnectedListener;
@@ -43,6 +46,9 @@ public class RabbitMQConnectionThread extends Thread {
         mConnectionFactory.setPassword("player");
         mConnectionFactory.setHandshakeTimeout(600000);
         mConnectionFactory.setRequestedHeartbeat(240);
+
+        mCommandQueue = new LinkedBlockingQueue<>();
+        mSocketBuffer = new SocketBuffer(mCommandQueue);
     }
 
     public void setOnDisconnectedListener(IConnectionManager.OnDisconnectedListener onDisconnectedListener) {
@@ -61,10 +67,10 @@ public class RabbitMQConnectionThread extends Thread {
 
         try {
             mConnection = mConnectionFactory.newConnection();
-            channel = mConnection.createChannel();
-            clientQueueName = channel.queueDeclare("", false, false, true, null).getQueue();
+            mChannel = mConnection.createChannel();
+            mClientQueueName = mChannel.queueDeclare("", false, false, true, null).getQueue();
 
-            setupConsumer(channel, clientQueueName);
+            setupConsumer(channel, mClientQueueName);
         } catch (IOException e) {
             error = true;
             e.printStackTrace();
@@ -74,32 +80,15 @@ public class RabbitMQConnectionThread extends Thread {
         }
 
         RabbitMQMessage message;
-        String content;
-        AMQP.BasicProperties properties = null;
 
         while (!mStopThreadFlag && !error) {
             try {
-                message = mQueue.poll(1000, TimeUnit.MILLISECONDS);
+                message = mCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
 
-                if(message != null) {
-                    if(message.mRpc) {
-                        properties = new AMQP.BasicProperties.Builder()
-                                .correlationId(message.mCorrelationId)
-                                .replyTo(clientQueueName)
-                                .build();
-
-                    }
-                    else {
-                        properties = null;
-                    }
-
-                    if(message.mContent != null) {
-                        content = message.mContent.toString();
-                    }
-                    else {
-                        content = new String();
-                    }
-                    channel.basicPublish(message.mExchange, message.mRoutingKey, properties, content.getBytes());
+                if(message.mType == RabbitMQMessage.SEND) {
+                    sendMessage(message);
+                } else if (message.mType == RabbitMQMessage.RECEIVE) {
+                    receiveMessage(message);
                 }
             } catch (InterruptedException e) {
                 error = true;
@@ -141,19 +130,50 @@ public class RabbitMQConnectionThread extends Thread {
         }
     }
 
+    private void sendMessage(RabbitMQMessage message) throws IOException {
+        AMQP.BasicProperties properties = null;
+        String content;
+
+        if(message != null) {
+            if(message.mRpc) {
+                properties = new AMQP.BasicProperties.Builder()
+                        .correlationId(message.mCorrelationId)
+                        .replyTo(mClientQueueName)
+                        .build();
+            }
+            else {
+                properties = null;
+            }
+
+            if(message.mContent != null) {
+                content = message.mContent.toString();
+            }
+            else {
+                content = new String();
+            }
+            mChannel.basicPublish(message.mExchange, message.mRoutingKey, properties, content.getBytes());
+        }
+    }
+
+    private void receiveMessage(RabbitMQMessage message) {
+        JSONObject content = message.mContent;
+        AMQP.BasicProperties properties = message.mBasicProperties;
+
+        try {
+            routeMessage(content, properties);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setupConsumer(Channel channel, String queueName) {
         try {
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
                                            AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    String message = new String(body, "UTF-8");
-                    try {
-                        JSONObject messageJson = new JSONObject(message);
-                        routeMessage(messageJson, properties);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    String content = new String(body, "UTF-8");
+                    treatReceivedMessage(content, properties);
                 }
             };
             channel.basicConsume(queueName, true, consumer);
@@ -161,6 +181,21 @@ public class RabbitMQConnectionThread extends Thread {
             e.printStackTrace();
         }
     }
+
+    private void treatReceivedMessage(String content, AMQP.BasicProperties properties) {
+        try {
+            RabbitMQMessage rabbitMQMessage = new RabbitMQMessage();
+
+            JSONObject messageJson = new JSONObject(content);
+            rabbitMQMessage.mType = RabbitMQMessage.RECEIVE;
+            rabbitMQMessage.mContent = messageJson;
+            rabbitMQMessage.mBasicProperties = properties;
+            mSocketBuffer.consume(rabbitMQMessage);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void routeMessage(JSONObject content, AMQP.BasicProperties properties) throws JSONException {
         String correlationId = properties.getCorrelationId();
@@ -182,25 +217,21 @@ public class RabbitMQConnectionThread extends Thread {
     }
 
     public void publish(String exchangeName, String routingKey, JSONObject data) {
-        try {
-            RabbitMQMessage message = new RabbitMQMessage();
-            message.mContent = data;
-            message.mRpc = false;
-            message.mRoutingKey = routingKey;
-            message.mExchange = exchangeName;
+        RabbitMQMessage message = new RabbitMQMessage();
+        message.mType = RabbitMQMessage.SEND;
+        message.mContent = data;
+        message.mRpc = false;
+        message.mRoutingKey = routingKey;
+        message.mExchange = exchangeName;
 
-            mQueue.put(message);
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mSocketBuffer.consume(message);
     }
 
     public void call(String exchangeName, String method, JSONObject args, ISocket.OnRemoteEventReceivedListener listener) {
         String corrId = java.util.UUID.randomUUID().toString();
 
         RabbitMQMessage message = new RabbitMQMessage();
-
+        message.mType = RabbitMQMessage.SEND;
         message.mContent = args;
         message.mCorrelationId = corrId;
         message.mRpc = true;
@@ -208,7 +239,7 @@ public class RabbitMQConnectionThread extends Thread {
         message.mExchange = exchangeName;
 
         mRpcRepliesCallback.put(corrId, listener);
-        mQueue.add(message);
+        mSocketBuffer.consume(message);
     }
 
     public void subscribe(String channel, ISocket.OnRemoteEventReceivedListener listener) {
@@ -222,5 +253,13 @@ public class RabbitMQConnectionThread extends Thread {
     public void clear() {
         mListenerByChannel.clear();
         mRpcRepliesCallback.clear();
+    }
+
+    public void freeze() {
+        mSocketBuffer.freeze();
+    }
+
+    public void unfreeze() {
+        mSocketBuffer.unfreeze();
     }
 }
