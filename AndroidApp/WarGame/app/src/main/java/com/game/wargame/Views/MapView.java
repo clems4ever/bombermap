@@ -2,9 +2,13 @@ package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.R;
+import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.Animations.BitmapHolder;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,14 +25,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class MapView implements OnMapReadyCallback {
+public class MapView implements OnMapReadyCallback, EntityDisplayer {
 
     private FragmentActivity mActivity;
     private GoogleMap mMap;
     private com.google.android.gms.maps.MapView mMapView;
 
     private HashMap<String, Marker> mPlayerLocations;
-    private HashMap<String, Marker> mProjectileLocations;
+    private HashMap<String, Marker> mEntityMarkers;
+    private BitmapHolder mBitmapHolder;
 
     private OnMapReadyListener mOnMapReadyListener;
 
@@ -37,11 +42,12 @@ public class MapView implements OnMapReadyCallback {
     public MapView(FragmentActivity activity) {
         mActivity = activity;
         mPlayerLocations = new HashMap<>();
-        mProjectileLocations = new HashMap<>();
+        mEntityMarkers = new HashMap<>();
 
         mMapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
         mMapView.onCreate(null);
         mMapView.getMapAsync(this);
+        mBitmapHolder = new BitmapHolder();
     }
 
     public void load(OnMapReadyListener onMapReadyListener) {
@@ -77,7 +83,6 @@ public class MapView implements OnMapReadyCallback {
                     BitmapDescriptor bmp = null;
                     if(currentPlayer) {
                         bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker_current);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
                     }
                     else {
                         bmp = BitmapDescriptorFactory.fromResource(R.mipmap.marker);
@@ -96,36 +101,48 @@ public class MapView implements OnMapReadyCallback {
 
     public void renderProjectiles(ArrayList<Projectile> projectiles) {
         for (Projectile projectile : projectiles) {
-            renderProjectile(projectile);
+            display(projectile);
         }
     }
 
-    public void addBulletMarker(Projectile projectile)
+    public void addEntityMarker(Entity entity)
     {
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(projectile.getPosition())
-                    .rotation((float) projectile.getDirection())
-                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.bullet2)));
-            mProjectileLocations.put(projectile.getUUID(), marker);
+        Animation animation = entity.getAnimation();
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(entity.getPosition())
+                .rotation((float) entity.getDirection())
+                .icon(mBitmapHolder.getBitmap(animation.current())));
+        mEntityMarkers.put(entity.getUUID(), marker);
     }
 
-    public void renderProjectile(final Projectile projectile) {
+    public void display(final Entity entity) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-            Marker marker = mProjectileLocations.get(projectile.getUUID());
-            if (marker == null) {
-                addBulletMarker(projectile);
-            } else {
-                if(projectile.isToDestroy()) {
-                    marker.remove();
-                    mProjectileLocations.remove(projectile.getUUID());
+                Animation animation = entity.getAnimation();
+                Marker marker = mEntityMarkers.get(entity.getUUID());
+                if (marker == null) {
+                    addEntityMarker(entity);
                 } else {
-                    marker.setPosition(projectile.getPosition());
+                    if (entity.isToRemove()) {
+                        marker.remove();
+                        mEntityMarkers.remove(entity.getUUID());
+                    } else {
+                        marker.setPosition(entity.getPosition());
+                        marker.setIcon(mBitmapHolder.getBitmap(animation.current()));
+                    }
                 }
             }
-            }
         });
+    }
+
+    public void display(EntitiesModel entitiesModel) {
+        ArrayList<Entity> entities = entitiesModel.getEntities();
+        for (Entity entity : entities) {
+            display(entity);
+            if (entity.isToRemove())
+                entitiesModel.removeEntity(entity);
+        }
     }
 
     public void removePlayer(final PlayerModel player) {
@@ -137,7 +154,6 @@ public class MapView implements OnMapReadyCallback {
                 if (marker != null) {
                     marker.remove();
                 }
-
             }
         });
     }
@@ -151,7 +167,6 @@ public class MapView implements OnMapReadyCallback {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, zoom);
         mMap.animateCamera(cameraUpdate);
     }
-
 
     public interface OnMapReadyListener {
         public void onMapReady();

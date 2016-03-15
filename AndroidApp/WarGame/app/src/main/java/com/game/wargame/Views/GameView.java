@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.R;
@@ -19,7 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 
-public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
+public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
     private FragmentActivity mActivity;
     private MapView mMapView;
@@ -96,7 +98,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
                         float targetX = event.getX();
                         float targetY = event.getY();
 
-                        if(mOnWeaponTargetDefined != null) {
+                        if (mOnWeaponTargetDefined != null) {
                             mOnWeaponTargetDefined.onWeaponTargetDefined(targetX, targetY);
                         }
                         onActionFinished();
@@ -118,8 +120,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
     }
 
-    public void renderProjectiles(ArrayList<Projectile> projectiles) {
-        mMapView.renderProjectiles(projectiles);
+    public void display(EntitiesModel entities) {
+        mMapView.display(entities);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {

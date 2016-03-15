@@ -11,8 +11,8 @@ import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameEngine;
-import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.R;
 import com.game.wargame.Views.GameView;
@@ -51,7 +51,7 @@ public class GameMainFragment extends Fragment {
                             gameSocket,
                             localPlayerSocket,
                             new LocationRetriever(getActivity()),
-                            new ProjectilesUpdateTimer((FragmentActivity) getActivity()));
+                            new GlobalTimer((FragmentActivity) getActivity()));
     }
 
     @Override

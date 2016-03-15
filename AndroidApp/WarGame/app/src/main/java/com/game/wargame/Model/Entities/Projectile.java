@@ -3,6 +3,9 @@ package com.game.wargame.Model.Entities;
 import android.location.Location;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.GameLogic.OnCollisionListener;
+import com.game.wargame.Controller.GameLogic.OnExplosionListener;
+import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
@@ -15,10 +18,14 @@ import java.util.UUID;
 /**
  * Created by sergei on 01/03/16.
  */
-public class Projectile {
+public class Projectile extends Entity {
 
     protected static final int DEFAULT_SPEED = 200;
     protected static final float DEFAULT_DELTA_T = 200;
+    private static final double PROJECTILE_RADIUS = 100;
+
+    private OnExplosionListener mOnExplosion;
+    private OnCollisionListener mOnCollision;
 
     private void initTrajectory() {
         double deltaLatitude = mTarget.latitude - mPosition.latitude;
@@ -42,29 +49,25 @@ public class Projectile {
             mTrajectory.put(positionTime, position);
         }
 
-        mDirection = (float) SphericalUtil.computeHeading(mPosition, mTarget) + 90;
+        mDirection = (float) SphericalUtil.computeHeading(mPosition, mTarget);
     }
 
-    public Projectile(LatLng start, LatLng end, double timestamp)
-    {
+    public Projectile(LatLng start, LatLng end, double timestamp) {
         mPosition = start;
         mTarget = end;
         mTimeStart = timestamp;
+        mRadius = PROJECTILE_RADIUS;
         initTrajectory();
-        mUUID = UUID.randomUUID().toString();
+        mAnimation = AnimationFactory.buildProjectileAnimation();
     }
 
-    public boolean equals(Projectile other)
-    {
+    public void setOnExplosionListener(OnExplosionListener onExplosionListener) {
+        mOnExplosion = onExplosionListener;
+    }
+
+
+    public boolean equals(Projectile other) {
         return this.getUUID().equals(other.getUUID());
-    }
-
-    public LatLng getPosition() {
-        return mPosition;
-    }
-
-    public void setPosition(LatLng position) {
-        mPosition = position;
     }
 
     public LatLng getTarget() {
@@ -83,14 +86,6 @@ public class Projectile {
         mTrajectory = trajectory;
     }
 
-    public double getDirection() {
-        return mDirection;
-    }
-
-    public void setDirection(double direction) {
-        mDirection = direction;
-    }
-
     public double setTimestart() {
         return mTimeStart;
     }
@@ -99,23 +94,29 @@ public class Projectile {
         mTimeStart = timestamp;
     }
 
-    public String getUUID()
+    @Override
+    public void update(long ticks, int increment)
     {
-        return mUUID;
+        double time = ticks*increment;
+        Double newTimestamp = mTrajectory.ceilingKey(time);
+        mAnimation.addTime(increment);
+
+        if (newTimestamp != null) {
+            LatLng newPosition = mTrajectory.get(newTimestamp);
+            super.setPosition(newPosition);
+            //TODO: evaluateContacts
+        }
+        else {
+            mOnExplosion.onExplosion(this, (long)time);
+        }
     }
 
-    public boolean isToDestroy() {
-        return mToDestroy;
-    }
-    public void setToDestroy(boolean toDestroy) {
-        mToDestroy = toDestroy;
+    @Override
+    public void onCollision(PlayerModel player, double time) {
+        mOnExplosion.onExplosion(this, (long) time);
     }
 
-    protected final String mUUID;
     protected double mTimeStart;
-    protected LatLng mPosition;
     protected LatLng mTarget;
-    protected double mDirection;
     protected TreeMap<Double, LatLng> mTrajectory;
-    private boolean mToDestroy;
 }

@@ -30,7 +30,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     public LocationRetriever(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
