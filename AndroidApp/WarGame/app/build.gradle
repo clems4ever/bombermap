@@ -14,9 +14,9 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        defaultConfig {
+        /*defaultConfig {
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        }
+        }*/
     }
 
     testOptions {
@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
         release {
             minifyEnabled false
