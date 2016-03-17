@@ -117,7 +117,7 @@ public class MapView implements OnMapReadyCallback, EntityDisplayer {
                 Marker marker = mEntityMarkers.get(entity.getUUID());
                 if (marker == null && !entity.isToRemove()) {
                     addEntityMarker(entity);
-                } else {
+                } else if (marker != null) {
                     if (entity.isToRemove()) {
                         marker.remove();
                         mEntityMarkers.remove(entity.getUUID());
