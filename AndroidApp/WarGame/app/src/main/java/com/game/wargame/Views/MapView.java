@@ -99,12 +99,6 @@ public class MapView implements OnMapReadyCallback, EntityDisplayer {
         });
     }
 
-    public void renderProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile projectile : projectiles) {
-            display(projectile);
-        }
-    }
-
     public void addEntityMarker(Entity entity)
     {
         Animation animation = entity.getAnimation();
@@ -121,7 +115,7 @@ public class MapView implements OnMapReadyCallback, EntityDisplayer {
             public void run() {
                 Animation animation = entity.getAnimation();
                 Marker marker = mEntityMarkers.get(entity.getUUID());
-                if (marker == null) {
+                if (marker == null && !entity.isToRemove()) {
                     addEntityMarker(entity);
                 } else {
                     if (entity.isToRemove()) {
