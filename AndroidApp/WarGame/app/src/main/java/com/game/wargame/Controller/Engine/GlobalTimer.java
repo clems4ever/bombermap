@@ -3,12 +3,15 @@ package com.game.wargame.Controller.Engine;
 import android.app.Activity;
 import android.util.Log;
 
+import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.Views.GameView;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
@@ -23,9 +26,13 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private long mTicks = 0;
     private Lock mLock = new ReentrantLock();
     private Activity mActivity;
+
     private IUpdateCallback mUpdateCallback;
+    private CollisionManager mCollisionManager;
     private GameView mGameView;
+
     private EntitiesModel mEntities;
+    private PlayerModel mCurrentPlayer;
 
     public final int UPDATE_SAMPLE_TIME = 50;
     public final int SERVER_SAMPLE_TIME = 1000;
@@ -37,7 +44,14 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
             @Override
             public void run() {
                 mTicks++;
+                double time = mTicks*UPDATE_SAMPLE_TIME;
                 mUpdateCallback.update(mEntities, mTicks, UPDATE_SAMPLE_TIME);
+
+
+                mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
+                        mCurrentPlayer,
+                        time);
+
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -90,9 +104,18 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mEntities = entities;
     }
 
+    public void setPlayersModel(PlayerModel players)
+    {
+        mCurrentPlayer = players;
+    }
+
     public void setGameView(GameView gameView)
     {
         mGameView = gameView;
+    }
+
+    public void setCollisionManager(CollisionManager collisionManager) {
+        mCollisionManager = collisionManager;
     }
 
     public void setUpdateCallback(IUpdateCallback updateCallback) {

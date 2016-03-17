@@ -52,7 +52,8 @@ public class Projectile extends Entity {
         mDirection = (float) SphericalUtil.computeHeading(mPosition, mTarget);
     }
 
-    public Projectile(LatLng start, LatLng end, double timestamp) {
+    public Projectile(String owner, LatLng start, LatLng end, double timestamp) {
+        mOwner = owner;
         mPosition = start;
         mTarget = end;
         mTimeStart = timestamp;
@@ -113,7 +114,7 @@ public class Projectile extends Entity {
 
     @Override
     public void onCollision(PlayerModel player, double time) {
-        mOnExplosion.onExplosion(this, (long) time);
+        //mOnExplosion.onExplosion(this, (long) time);
     }
 
     protected double mTimeStart;

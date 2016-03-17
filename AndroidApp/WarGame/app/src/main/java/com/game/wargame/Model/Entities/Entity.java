@@ -20,6 +20,7 @@ public abstract class Entity {
     protected boolean mDirty;
     private ReentrantLock mLock;
     protected double mRadius;
+    protected String mOwner;
 
     Entity() {
         mDirty = true;
@@ -67,5 +68,7 @@ public abstract class Entity {
     public double getRadius() {return mRadius;}
 
     public abstract void onCollision(PlayerModel player, double time);
+
+    public String getOwner() {return mOwner;}
 }
 
