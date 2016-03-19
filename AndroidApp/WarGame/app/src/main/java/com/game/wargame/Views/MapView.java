@@ -52,7 +52,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
         mGoogleMapViewWrapper = googleMapViewWrapper;
         googleMapViewWrapper.onCreate(null);
-        mBitmapHolder = new BitmapHolder();
     }
 
     public void startAsync(OnMapReadyListener onMapReadyListener) {
@@ -62,6 +61,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     public void onMapReady(GoogleMapWrapper googleMap) {
         mGoogleMap = googleMap;
+        mBitmapHolder = new BitmapHolder(mBitmapDescriptorFactory);
         mGoogleMap.setZoomControlEnabled(true);
 
         if(mOnMapReadyListener != null) {
