@@ -14,9 +14,9 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
 
-        /*defaultConfig {
+        defaultConfig {
             testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        }*/
+        }
     }
 
     testOptions {

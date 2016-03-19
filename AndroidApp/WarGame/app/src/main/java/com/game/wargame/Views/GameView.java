@@ -50,7 +50,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
             }
         });
 
-        mMapLayout = (RelativeLayout) activity.findViewById(R.id.map_layout);
+        mMapLayout = (RelativeLayout) view.findViewById(R.id.map_layout);
     }
 
     public void initialize(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener) {

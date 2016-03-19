@@ -120,12 +120,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
         });
     }
 
-    public void renderProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile projectile : projectiles) {
-            display(projectile);
-        }
-    }
-
     public void addEntityMarker(Entity entity)
     {
         Animation animation = entity.getAnimation();
@@ -142,9 +136,9 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
             public void run() {
                 Animation animation = entity.getAnimation();
                 Marker marker = mEntityMarkers.get(entity.getUUID());
-                if (marker == null) {
+                if (marker == null && !entity.isToRemove()) {
                     addEntityMarker(entity);
-                } else {
+                } else if (marker != null) {
                     if (entity.isToRemove()) {
                         marker.remove();
                         mEntityMarkers.remove(entity.getUUID());

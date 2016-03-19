@@ -59,7 +59,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public GameEngine() {
         mPlayersById = new HashMap<>();
         mEntitiesModel = new EntitiesModel();
-        mCollisionManager = new CollisionManager();
     }
 
     /**
@@ -101,6 +100,8 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private void startEntitiesUpdateTimer() {
         mGlobalTimer.setEntitiesModel(mEntitiesModel);
+        mGlobalTimer.setPlayersModel(mCurrentPlayer);
+        mGlobalTimer.setCollisionManager(new CollisionManager());
         mGlobalTimer.setGameView(mGameView);
         mGlobalTimer.setUpdateCallback(new EntitiesUpdateCallback());
         mGlobalTimer.start();
@@ -170,11 +171,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
-        double time = mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
-        if (player == mCurrentPlayer)
-            mCollisionManager.treatPlayerEntitiesCollisions(mEntitiesModel,
-                    mCurrentPlayer,
-                    time);
         mGameView.movePlayer(player);
     }
 
@@ -183,7 +179,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         LatLng source = player.getPosition();
         LatLng destination = new LatLng(latitude, longitude);
 
-        Projectile projectile = new Projectile(source, destination, timestamp);
+        Projectile projectile = new Projectile(player.getPlayerId(), source, destination, timestamp);
         projectile.setOnExplosionListener(this);
         mEntitiesModel.addEntity(projectile);
     }
@@ -213,6 +209,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     @Override
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
-        mEntitiesModel.addEntity(new Explosion((double)time, entity.getPosition(), entity.getDirection()));
+        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
     }
 }
