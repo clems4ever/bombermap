@@ -59,7 +59,7 @@ public class GameEngineViewUpdaterTest {
     public void testThatPositionOfMovingCurrentPlayerIsUpdated() {
         RemotePlayerModel player = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
         mGameEngine.onPlayerPositionChanged(player);
-        verify(mMockGameView).movePlayer(player, false);
+        verify(mMockGameView).movePlayer(player);
     }
 
     @Test

@@ -101,6 +101,7 @@ public class GameEntryFragment extends Fragment {
             @Override
             public void onGameJoined(String playerId) {
                 mEntryCallback.onPlayerJoined(gameId, playerId);
+                mConnectionManager.freeze();
             }
         });
     }

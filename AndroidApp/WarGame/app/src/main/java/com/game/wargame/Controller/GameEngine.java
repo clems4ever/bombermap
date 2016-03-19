@@ -76,6 +76,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
+        mGameView.addLocalPlayer(mCurrentPlayer);
 
         startSensors();
         initializeView();
@@ -155,21 +156,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 15);
             }
         });
-
-        mGameView.loadMap(new MapView.OnMapReadyListener() {
-            @Override
-            public void onMapReady() {
-                Set<Map.Entry<String, PlayerModel>> entrySet = mPlayersById.entrySet();
-                Iterator<Map.Entry<String, PlayerModel>> iterator = entrySet.iterator();
-
-                while (iterator.hasNext()) {
-                    Map.Entry<String, PlayerModel> entry = iterator.next();
-
-                    mGameView.movePlayer(entry.getValue(), entry.getValue() == mCurrentPlayer);
-                }
-            }
-        });
-
     }
 
     /**
@@ -184,13 +170,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
-        mGameView.movePlayer(player, player == mCurrentPlayer);
         double time = mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
         if (player == mCurrentPlayer)
             mCollisionManager.treatPlayerEntitiesCollisions(mEntitiesModel,
                     mCurrentPlayer,
                     time);
-
+        mGameView.movePlayer(player);
     }
 
     @Override
@@ -203,10 +188,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mEntitiesModel.addEntity(projectile);
     }
 
-    public LocalPlayerModel getLocalPlayer() {
-        return mCurrentPlayer;
-    }
-
     public int getPlayersCount() {
         return mPlayersById.size();
     }
@@ -216,6 +197,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addPlayer(player);
+        mGameView.addRemotePlayer(player);
     }
 
     // A remote player has left the game

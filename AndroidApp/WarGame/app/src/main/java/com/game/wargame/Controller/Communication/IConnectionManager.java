@@ -16,6 +16,9 @@ public interface IConnectionManager {
 
     public boolean isConnected();
 
+    public void freeze();
+    public void unfreeze();
+
     public ISocketFactory getSocketFactory();
 
     public void clear();

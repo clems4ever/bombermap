@@ -142,7 +142,7 @@ public class GameEngineTest {
     }
 
     @Test
-    public void testAddingPlayersWhenMapIsLoaded() {
+    public void testAddingPlayers() {
 
         mGameEngine = new GameEngine();
 
@@ -155,20 +155,15 @@ public class GameEngineTest {
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);
 
-        ArgumentCaptor<MapView.OnMapReadyListener> onMapReadyListenerArgumentCaptor = ArgumentCaptor.forClass(MapView.OnMapReadyListener.class);
-
-        verify(mMockGameView).loadMap(onMapReadyListenerArgumentCaptor.capture());
-
-        onMapReadyListenerArgumentCaptor.getValue().onMapReady();
-
         LocalPlayerModel localPlayerModel = new LocalPlayerModel("username", mMockLocalPlayerSocket);
 
         RemotePlayerModel remotePlayerModel1 = new RemotePlayerModel("username", mMockRemotePlayerSocket1);
         RemotePlayerModel remotePlayerModel2 = new RemotePlayerModel("username", mMockRemotePlayerSocket2);
 
-        verify(mMockGameView).movePlayer(eq(remotePlayerModel1), eq(false));
-        verify(mMockGameView).movePlayer(eq(remotePlayerModel2), eq(false));
-        verify(mMockGameView).movePlayer(eq(localPlayerModel), eq(true));
+        verify(mMockGameView).addRemotePlayer(eq(remotePlayerModel1));
+        verify(mMockGameView).addRemotePlayer(eq(remotePlayerModel2));
+        verify(mMockGameView).addLocalPlayer(eq(localPlayerModel));
+
     }
 
 }
