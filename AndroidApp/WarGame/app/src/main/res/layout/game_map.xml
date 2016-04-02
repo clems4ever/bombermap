@@ -82,7 +82,38 @@
                 android:layout_alignLeft="@+id/fire_button"
                 android:layout_alignStart="@+id/fire_button"
                 android:layout_alignParentEnd="false"
-                android:layout_alignParentStart="false" />
+                android:layout_alignParentStart="false"
+                android:text="60" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="game_notif_1"
+                android:id="@+id/game_notif_1"
+                android:layout_below="@+id/gps_button"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="game_notif_2"
+                android:id="@+id/game_notif_2"
+                android:layout_below="@+id/game_notif_1"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="game_notif_3"
+                android:id="@+id/game_notif_3"
+                android:layout_below="@+id/game_notif_2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
 
         </RelativeLayout>
 

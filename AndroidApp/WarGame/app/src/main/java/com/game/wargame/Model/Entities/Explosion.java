@@ -42,7 +42,7 @@ public class Explosion extends Entity {
             //a collision with an explosion kills the player
             if (getOwner() != player.getPlayerId()) {
                 player.setHealth(0);
-                player.die(this.getOwner());
+                player.die(this.getOwner(), time);
             }
         }
         catch (PlayerException e)

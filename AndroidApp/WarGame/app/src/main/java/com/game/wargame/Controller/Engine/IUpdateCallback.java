@@ -1,6 +1,6 @@
 package com.game.wargame.Controller.Engine;
 
-import com.game.wargame.Model.GameContext;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 
 /**

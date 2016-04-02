@@ -12,9 +12,8 @@ import com.game.wargame.Controller.Engine.UpdateCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.OnPlayerDiedListener;
-import com.game.wargame.Model.Entities.Player;
-import com.game.wargame.Model.FragManager;
-import com.game.wargame.Model.GameContext;
+import com.game.wargame.Model.GameContext.FragManager;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
@@ -25,14 +24,13 @@ import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
 import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.GameContext.GameNotificationManager;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
-import com.game.wargame.Views.MapView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -81,7 +79,8 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         Set<String> playerIds = mPlayersById.keySet();
         FragManager fragManager = new FragManager(playerIds);
-        mGameContext = new GameContext(fragManager);
+        GameNotificationManager gameNotificationManager = new GameNotificationManager();
+        mGameContext = new GameContext(fragManager, gameNotificationManager);
 
         startSensors();
         initializeView();
@@ -220,8 +219,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     }
 
     @Override
-    public void onDied(String dead, String killer) {
-        mGameContext.addFrag(killer);
-        mGameContext.addDeath(dead);
+    public void onDied(String dead, String killer, double time) {
+        mGameContext.handleFrag(dead, killer, time);
     }
 }
