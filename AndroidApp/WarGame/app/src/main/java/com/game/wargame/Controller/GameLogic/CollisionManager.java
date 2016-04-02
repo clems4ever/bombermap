@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.google.android.gms.maps.model.LatLng;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  */
 public class CollisionManager {
 
-    public void treatPlayerEntitiesCollisions(EntitiesModel entitiesModel, PlayerModel player, double time)
+    public void treatPlayerEntitiesCollisions(EntitiesModel entitiesModel, LocalPlayerModel player, double time)
     {
         ArrayList<Entity> entities = entitiesModel.getEntities();
         for (Entity entity : entities) {

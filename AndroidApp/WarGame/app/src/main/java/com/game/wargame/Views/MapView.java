@@ -2,14 +2,12 @@ package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.game.wargame.Model.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
-import com.game.wargame.Views.Animations.BitmapFactory;
 import com.game.wargame.Views.Animations.BitmapHolder;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;

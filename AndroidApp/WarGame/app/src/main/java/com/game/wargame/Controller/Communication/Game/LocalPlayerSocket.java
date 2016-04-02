@@ -53,6 +53,18 @@ public class LocalPlayerSocket extends PlayerSocket {
         }
     }
 
+    public void die(String playerId, String killerId) {
+        try {
+            JSONObject fireJsonObject = buildClientJson();
+
+            fireJsonObject.put("player_id", playerId);
+            fireJsonObject.put("killer_id", killerId);
+
+            mSocket.emit("died", fireJsonObject);
+        } catch (JSONException e) {
+        }
+    }
+
     public void leave() {
         try {
             JSONObject data = buildClientJson();

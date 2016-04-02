@@ -37,11 +37,13 @@ public class Explosion extends Entity {
     }
 
     @Override
-    public void onCollision(PlayerModel player, double time) {
+    public void onCollision(LocalPlayerModel player, double time) {
         try {
             //a collision with an explosion kills the player
-            if (getOwner() != player.getPlayerId())
+            if (getOwner() != player.getPlayerId()) {
                 player.setHealth(0);
+                player.die(this.getOwner());
+            }
         }
         catch (PlayerException e)
         {

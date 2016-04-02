@@ -22,7 +22,7 @@ public abstract class Entity {
     protected double mRadius;
     protected String mOwner;
 
-    Entity() {
+    protected Entity() {
         mDirty = true;
         mUUID = UUID.randomUUID().toString();
     }
@@ -67,8 +67,8 @@ public abstract class Entity {
 
     public double getRadius() {return mRadius;}
 
-    public abstract void onCollision(PlayerModel player, double time);
-
     public String getOwner() {return mOwner;}
+
+    public abstract void onCollision(LocalPlayerModel player, double time);
 }
 

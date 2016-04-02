@@ -49,6 +49,17 @@ public class RemotePlayersSocket {
                 }
             }
         });
+
+        mSocket.on("died", new ISocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                String playerId = message.getString("player_id");
+                String killerId = message.getString("killer_id");
+                RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
+                player.onDie(killerId);
+
+            }
+        });
     }
 
     public void addPlayer(RemotePlayerSocket socket) {

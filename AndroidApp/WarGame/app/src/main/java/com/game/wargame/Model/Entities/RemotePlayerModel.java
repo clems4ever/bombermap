@@ -6,7 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by clement on 19/02/16.
  */
-public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener{
+public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener, RemotePlayerSocket.OnDieEventListener{
 
     protected RemotePlayerSocket mPlayerSocket;
 
@@ -33,5 +33,12 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
         if(mOnPlayerPositionChangedListener != null) {
             mOnPlayerPositionChangedListener.onPlayerPositionChanged(this);
         }
+    }
+
+    @Override
+    public void onDieEvent(String playerId, String killerId)
+    {
+        if(mOnPlayerDiedListener != null)
+            mOnPlayerDiedListener.onDied(playerId, killerId);
     }
 }

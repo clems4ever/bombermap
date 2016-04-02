@@ -113,8 +113,8 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void onCollision(PlayerModel player, double time) {
-        //mOnExplosion.onExplosion(this, (long) time);
+    public void onCollision(LocalPlayerModel player, double time) {
+
     }
 
     protected double mTimeStart;

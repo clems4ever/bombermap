@@ -33,6 +33,13 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
         }
     }
 
+    public void die(String killerId) {
+        mPlayerSocket.die(this.getPlayerId(), killerId);
+
+        if (mOnPlayerDiedListener != null)
+            mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId);
+    }
+
     public void leave() {
         mPlayerSocket.leave();
     }

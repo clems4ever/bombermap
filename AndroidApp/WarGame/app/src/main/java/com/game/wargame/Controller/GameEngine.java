@@ -8,16 +8,19 @@ import android.view.View;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Controller.Engine.EntitiesUpdateCallback;
+import com.game.wargame.Controller.Engine.UpdateCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
+import com.game.wargame.Model.Entities.OnPlayerDiedListener;
+import com.game.wargame.Model.Entities.Player;
+import com.game.wargame.Model.FragManager;
+import com.game.wargame.Model.GameContext;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.LocalPlayerModel;
 import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Model.Entities.Player;
 import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.Model.Entities.RemotePlayerModel;
@@ -32,10 +35,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener, OnExplosionListener {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, OnPlayerDiedListener, GameSocket.OnPlayerEventListener, OnExplosionListener {
 
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
@@ -51,7 +53,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private GameSocket mGameSocket;
 
     private EntitiesModel mEntitiesModel;
-    private CollisionManager mCollisionManager;
+    private GameContext mGameContext;
 
     /**
      * @brief Constructor
@@ -77,9 +79,13 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
 
+        Set<String> playerIds = mPlayersById.keySet();
+        FragManager fragManager = new FragManager(playerIds);
+        mGameContext = new GameContext(fragManager);
+
         startSensors();
         initializeView();
-        startEntitiesUpdateTimer();
+        startGlobalUpdateTimer();
     }
 
     /**
@@ -98,12 +104,13 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mLocationRetriever.start(mCurrentPlayer);
     }
 
-    private void startEntitiesUpdateTimer() {
+    private void startGlobalUpdateTimer() {
         mGlobalTimer.setEntitiesModel(mEntitiesModel);
-        mGlobalTimer.setPlayersModel(mCurrentPlayer);
+        mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
         mGlobalTimer.setCollisionManager(new CollisionManager());
         mGlobalTimer.setGameView(mGameView);
-        mGlobalTimer.setUpdateCallback(new EntitiesUpdateCallback());
+        mGlobalTimer.setGameContext(mGameContext);
+        mGlobalTimer.setUpdateCallback(new UpdateCallback());
         mGlobalTimer.start();
     }
 
@@ -210,5 +217,11 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
         mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
+    }
+
+    @Override
+    public void onDied(String dead, String killer) {
+        mGameContext.addFrag(killer);
+        mGameContext.addDeath(dead);
     }
 }
