@@ -35,7 +35,7 @@ public class LocalPlayerSocketTest {
         message.put("player_id", "player_id");
         message.put("lat", 10.0d);
         message.put("long", 20.0d);
-        message.put("speed", 100.0d);
+        message.put("time", 100.0d);
 
         verify(mMockSocket).emit(Matchers.eq("fire"), Matchers.refEq(message));
     }

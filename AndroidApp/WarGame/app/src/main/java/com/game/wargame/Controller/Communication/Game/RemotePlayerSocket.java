@@ -38,15 +38,15 @@ public class RemotePlayerSocket extends PlayerSocket {
         }
    }
 
-    public void onFire(double latitude, double longitude, double speed) {
+    public void onFire(double latitude, double longitude, double time) {
         if(mOnFireEventListener != null) {
-            mOnFireEventListener.onFireEvent(latitude, longitude, speed);
+            mOnFireEventListener.onFireEvent(latitude, longitude, time);
         }
     }
 
-    public void onDie(String killerId) {
+    public void onDie(String killerId, double time) {
         if(mOnDieEventListener != null) {
-            mOnDieEventListener.onDieEvent(this.getPlayerId(), killerId);
+            mOnDieEventListener.onDieEvent(this.getPlayerId(), killerId, time);
         }
     }
 
@@ -59,6 +59,6 @@ public class RemotePlayerSocket extends PlayerSocket {
     }
 
     public interface OnDieEventListener {
-        public void onDieEvent(String playerId, String killerId);
+        public void onDieEvent(String playerId, String killerId, double time);
     }
 }

@@ -5,5 +5,5 @@ package com.game.wargame.Model.Entities;
  */
 public interface OnPlayerWeaponTriggeredListener {
 
-    public void onPlayerWeaponTriggeredListener(PlayerModel player, double latitude, double longitude, double speed);
+    public void onPlayerWeaponTriggeredListener(PlayerModel player, double latitude, double longitude, double time);
 }

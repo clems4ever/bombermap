@@ -104,7 +104,8 @@ public class LocalPlayerTest {
     public void testThatWhenPlayerDiesPlayerBroadcastsEventToEveryone() {
          LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
          localPlayerModel.setPlayerId("player_id");
-         localPlayerModel.die("killer_id");
-         verify(mMockLocalPlayerSocket).die("player_id", "killer_id");
+         double time = 0;
+         localPlayerModel.die("killer_id", time);
+         verify(mMockLocalPlayerSocket).die("player_id", "killer_id", time);
      }
 }

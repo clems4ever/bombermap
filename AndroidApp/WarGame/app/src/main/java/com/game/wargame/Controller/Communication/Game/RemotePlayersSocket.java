@@ -43,9 +43,9 @@ public class RemotePlayersSocket {
                 if(player != null) {
                     double latitude = message.getDouble("lat");
                     double longitude = message.getDouble("long");
-                    double speed = message.getDouble("speed");
+                    double time = message.getDouble("time");
 
-                    player.onFire(latitude, longitude, speed);
+                    player.onFire(latitude, longitude, time);
                 }
             }
         });
@@ -55,8 +55,9 @@ public class RemotePlayersSocket {
             public void onRemoteEventReceived(JSONObject message) throws JSONException {
                 String playerId = message.getString("player_id");
                 String killerId = message.getString("killer_id");
+                double time = message.getDouble("time");
                 RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
-                player.onDie(killerId);
+                player.onDie(killerId, time);
 
             }
         });
