@@ -2,14 +2,15 @@ package com.game.wargame.Model.GameContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by sergei on 02/04/16.
  */
 public class GameNotificationManager {
-    private ArrayList<GameNotification> mGameNotifications;
-    private ReentrantLock mLock;
+    private ArrayList<GameNotification> mGameNotifications = new ArrayList<>();
+    private Lock mLock = new ReentrantLock();
 
     private static final int NOTIFICATIONS_BUFFER_LENGTH = 3;
 
@@ -20,12 +21,10 @@ public class GameNotificationManager {
         mLock.unlock();
     }
 
-    public void getNotificationsToDisplay(GameNotification[] gameNotifications, double time) {
+    public void getNotificationsToDisplay(ArrayList<GameNotification> gameNotifications) {
         mLock.lock();
-        if (gameNotifications.length == NOTIFICATIONS_BUFFER_LENGTH) {
-            for (int i = 0; i< Math.min(NOTIFICATIONS_BUFFER_LENGTH, mGameNotifications.size()); i++) {
-                gameNotifications[i] = mGameNotifications.get(i);
-            }
+        for (int i = 0; i< Math.min(NOTIFICATIONS_BUFFER_LENGTH, mGameNotifications.size()); i++) {
+            gameNotifications.add(mGameNotifications.get(i));
         }
         mLock.unlock();
     }

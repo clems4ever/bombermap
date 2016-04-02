@@ -12,11 +12,15 @@ import android.widget.TextView;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
@@ -29,6 +33,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private Button mFireButton;
     private ImageButton mGpsButton;
     private TextView mTimeText;
+    private TextView[] mNotificationsBuffer;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
@@ -42,6 +47,11 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
         mGpsButton = (ImageButton) mActivity.findViewById(R.id.gps_button);
         mTimeText = (TextView) mActivity.findViewById(R.id.time_text);
+
+        mNotificationsBuffer = new TextView[3];
+        mNotificationsBuffer[0] = (TextView) mActivity.findViewById(R.id.game_notif_1);
+        mNotificationsBuffer[1] = (TextView) mActivity.findViewById(R.id.game_notif_2);
+        mNotificationsBuffer[2] = (TextView) mActivity.findViewById(R.id.game_notif_3);
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +146,15 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void display(GameContext gameContext) {
         mTimeText.setText(""+gameContext.getRemainingTime());
+
+        ArrayList<GameNotification> gameNotifications = gameContext.getNotificationsToDisplay();
+
+        for (int i=0; i<3; i++) {
+            mNotificationsBuffer[i].setText("");
+            if (i < gameNotifications.size())
+                mNotificationsBuffer[i].setText(gameNotifications.get(i).getText());
+        }
+
         mMapView.display(gameContext);
     }
 

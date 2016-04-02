@@ -1,5 +1,7 @@
 package com.game.wargame.Model.GameContext;
 
+import java.util.ArrayList;
+
 /**
  * Created by sergei on 18/03/16.
  */
@@ -13,8 +15,7 @@ public class GameContext {
     private FragManager mFragManager;
     private GameNotificationManager mGameNotificationManager;
 
-    public GameContext(FragManager fragManager, GameNotificationManager gameNotificationManager)
-    {
+    public GameContext(FragManager fragManager, GameNotificationManager gameNotificationManager) {
         mFragManager = fragManager;
         mGameNotificationManager = gameNotificationManager;
     }
@@ -38,9 +39,9 @@ public class GameContext {
             mTimeStart = (int)ticks*increment;
             mCurrentTime = mTimeStart;
             mStarted = true;
-        } else {
-            mCurrentTime += increment;
         }
+        mCurrentTime += increment;
+        purgeNotifications(mCurrentTime);
     }
 
     public int getRemainingTime() {
@@ -53,4 +54,15 @@ public class GameContext {
         GameNotification gameNotification = new GameNotification(killer+" killed "+dead+" savagely", time);
         mGameNotificationManager.pushNotification(gameNotification);
     }
+
+    public ArrayList<GameNotification> getNotificationsToDisplay() {
+        ArrayList<GameNotification> gameNotifications = new ArrayList<>();
+        mGameNotificationManager.getNotificationsToDisplay(gameNotifications);
+        return gameNotifications;
+    }
+
+    public void purgeNotifications(double time) {
+        mGameNotificationManager.removeUnusedNotifications(time);
+    }
+
 }

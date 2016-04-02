@@ -1,4 +1,4 @@
-package com.game.wargame.Model;
+package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Model.Entities.Projectile;
