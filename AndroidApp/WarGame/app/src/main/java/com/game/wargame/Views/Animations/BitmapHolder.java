@@ -11,23 +11,30 @@ import java.util.HashMap;
  */
 public class BitmapHolder {
     private HashMap<Integer, BitmapDescriptor> mBitmaps;
+    private IAnimationFactory mAnimationFactory;
+    private IBitmapFactory mBitmapFactory;
 
     public BitmapDescriptor getBitmap(int resourceID)
     {
         return mBitmaps.get(resourceID);
     }
 
-    public BitmapHolder(BitmapDescriptorFactory bitmapDescriptorFactory) {
+    public BitmapHolder(IAnimationFactory animationFactory, IBitmapFactory bitmapFactory) {
+        mAnimationFactory = animationFactory;
+        mBitmapFactory = bitmapFactory;
+    }
+
+    public void loadBitmaps() {
         //Load all the bitmaps necessary for all animations in memory before the game
         mBitmaps = new HashMap<>();
-        ArrayList<Animation> animations = AnimationFactory.buildAllAnimations();
+        ArrayList<Animation> animations = mAnimationFactory.buildAllAnimations();
         for (Animation animation : animations)
         {
-            mBitmaps.put(animation.current(), bitmapDescriptorFactory.fromResource(animation.current()));
+            mBitmaps.put(animation.current(), mBitmapFactory.load(animation.current()));
             while (animation.hasNext()) {
                 animation.next();
                 int resourceKey = animation.current();
-                mBitmaps.put(resourceKey, bitmapDescriptorFactory.fromResource(resourceKey));
+                mBitmaps.put(resourceKey, mBitmapFactory.load(resourceKey));
             }
         }
     }
