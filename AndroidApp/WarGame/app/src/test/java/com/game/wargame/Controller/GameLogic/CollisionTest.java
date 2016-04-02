@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.Test;
 
 /**
  * Created by sergei on 20/03/16.
@@ -24,6 +25,7 @@ public class CollisionTest {
         mPlayerModel = new LocalPlayerModel("player_id", mLocalPlayerSocket);
     }
 
+    @Test
     public void testThat() {
 
     }

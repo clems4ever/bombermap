@@ -79,7 +79,7 @@ public class MapViewTest {
         uiTask.run();
 
         verify(mMockGoogleMap).addMarker(Matchers.<MarkerOptions>any());
-        verify(mMockBitmapDescriptorFactory).fromResource(MapView.LOCAL_PLAYER_MARKER_RES_ID);
+        verify(mMockBitmapDescriptorFactory).load(MapView.LOCAL_PLAYER_MARKER_RES_ID);
     }
 
     @Test
@@ -102,6 +102,6 @@ public class MapViewTest {
         uiTask.run();
 
         verify(mMockGoogleMap).addMarker(Matchers.<MarkerOptions>any());
-        verify(mMockBitmapDescriptorFactory).fromResource(MapView.REMOTE_PLAYER_MARKER_RES_ID);
+        verify(mMockBitmapDescriptorFactory).load(MapView.REMOTE_PLAYER_MARKER_RES_ID);
     }
 }
