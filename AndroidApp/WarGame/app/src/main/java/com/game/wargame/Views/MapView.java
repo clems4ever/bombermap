@@ -2,13 +2,16 @@ package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.game.wargame.Model.Entities.PlayerModel;
-import com.game.wargame.Model.Entities.Projectile;
+import com.game.wargame.Model.Entities.Players.Player;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -26,9 +29,10 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
     private GoogleMapWrapper mGoogleMap;
     private GoogleMapViewWrapper mGoogleMapViewWrapper;
 
-    private HashMap<String, Marker> mPlayerLocations;
+    private HashMap<String, PlayerMarker> mPlayerLocations;
     private HashMap<String, Marker> mProjectileLocations;
 
+    private PlayerMarkerFactory mPlayerMarkerFactory;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
     private OnMapReadyListener mOnMapReadyListener;
 
@@ -36,14 +40,23 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
 
 
     public MapView(FragmentActivity fragmentActivity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
-        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory);
+        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory, null);
+        mPlayerMarkerFactory = new PlayerMarkerFactory(mGoogleMap, mBitmapDescriptorFactory);
     }
 
-    private void init(FragmentActivity activity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
+
+    // For test
+    public MapView(FragmentActivity fragmentActivity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
+        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory, playerMarkerFactory);
+    }
+
+    private void init(FragmentActivity activity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
         mActivity = activity;
+        mGoogleMap = new GoogleMapWrapper();
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
         mProjectileLocations = new HashMap<>();
+        mPlayerMarkerFactory = playerMarkerFactory;
 
         mGoogleMapViewWrapper = googleMapViewWrapper;
         googleMapViewWrapper.onCreate(null);
@@ -72,13 +85,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BitmapDescriptor bmp = mBitmapDescriptorFactory.fromResource(LOCAL_PLAYER_MARKER_RES_ID);
-                Marker playerMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(0, 0))
-                        .anchor(0.5f, 0.35f)
-                        .flat(true)
-                        .icon(bmp));
-
+                PlayerMarker playerMarker = mPlayerMarkerFactory.create(LOCAL_PLAYER_MARKER_RES_ID);
                 mPlayerLocations.put(playerId, playerMarker);
             }
         });
@@ -88,13 +95,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BitmapDescriptor bmp = mBitmapDescriptorFactory.fromResource(REMOTE_PLAYER_MARKER_RES_ID);
-                Marker playerMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(0, 0))
-                        .anchor(0.5f, 0.35f)
-                        .flat(true)
-                        .icon(bmp));
-
+                PlayerMarker playerMarker = mPlayerMarkerFactory.create(REMOTE_PLAYER_MARKER_RES_ID);
                 mPlayerLocations.put(playerId, playerMarker);
             }
         });
@@ -106,9 +107,9 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mPlayerLocations.get(playerId);
+                PlayerMarker marker = mPlayerLocations.get(playerId);
                 if (marker != null) {
-                    marker.setPosition(position);
+                    marker.move(position);
                 }
             }
         });
@@ -137,7 +138,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
                 if (marker == null) {
                     addBulletMarker(projectile);
                 } else {
-                    if(projectile.isToDestroy()) {
+                    if (projectile.isToDestroy()) {
                         marker.remove();
                         mProjectileLocations.remove(projectile.getUUID());
                     } else {
@@ -148,12 +149,11 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         });
     }
 
-    public void removePlayer(final PlayerModel player) {
+    public void removePlayer(final String playerId) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mPlayerLocations.get(player.getPlayerId());
-
+                PlayerMarker marker = mPlayerLocations.get(playerId);
                 if (marker != null) {
                     marker.remove();
                 }
@@ -171,7 +171,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, zoom);
         mGoogleMap.animateCamera(cameraUpdate);
     }
-
 
     public interface OnMapReadyListener {
         public void onMapReady();

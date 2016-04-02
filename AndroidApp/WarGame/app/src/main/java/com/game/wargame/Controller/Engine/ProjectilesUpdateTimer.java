@@ -1,18 +1,16 @@
 package com.game.wargame.Controller.Engine;
 
 import android.app.Activity;
-import android.provider.Settings;
 
-import com.game.wargame.Model.Entities.Projectile;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import com.game.wargame.Model.Entities.ProjectileModel;
+import com.game.wargame.Model.Entities.Projectiles.ProjectileModel;
 import com.game.wargame.Views.GameView;
 import com.google.android.gms.maps.model.LatLng;
 

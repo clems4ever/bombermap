@@ -2,7 +2,6 @@ package com.game.wargame.Controller;
 
 import android.graphics.Point;
 import android.location.Location;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -11,23 +10,20 @@ import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
-import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Model.Entities.PlayerModel;
-import com.game.wargame.Model.Entities.Projectile;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
-import com.game.wargame.Model.Entities.ProjectileModel;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.ProjectileModel;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
-import com.game.wargame.Views.MapView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 
 public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {

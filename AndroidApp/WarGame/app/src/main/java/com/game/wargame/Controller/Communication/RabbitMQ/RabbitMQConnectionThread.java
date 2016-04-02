@@ -61,7 +61,6 @@ public class RabbitMQConnectionThread extends Thread {
 
     @Override
     public void run() {
-        Channel channel = null;
         boolean error = false;
         String clientQueueName = null;
 
@@ -70,7 +69,7 @@ public class RabbitMQConnectionThread extends Thread {
             mChannel = mConnection.createChannel();
             mClientQueueName = mChannel.queueDeclare("", false, false, true, null).getQueue();
 
-            setupConsumer(channel, mClientQueueName);
+            setupConsumer(mChannel, mClientQueueName);
         } catch (IOException e) {
             error = true;
             e.printStackTrace();
@@ -85,10 +84,12 @@ public class RabbitMQConnectionThread extends Thread {
             try {
                 message = mCommandQueue.poll(1000, TimeUnit.MILLISECONDS);
 
-                if(message.mType == RabbitMQMessage.SEND) {
-                    sendMessage(message);
-                } else if (message.mType == RabbitMQMessage.RECEIVE) {
-                    receiveMessage(message);
+                if(message != null) {
+                    if (message.mType == RabbitMQMessage.SEND) {
+                        sendMessage(message);
+                    } else if (message.mType == RabbitMQMessage.RECEIVE) {
+                        receiveMessage(message);
+                    }
                 }
             } catch (InterruptedException e) {
                 error = true;
@@ -102,11 +103,11 @@ public class RabbitMQConnectionThread extends Thread {
         }
 
         try {
-            if(channel != null) {
+            if(mChannel != null) {
                 if(!error) {
-                    channel.queueDelete(clientQueueName);
+                    mChannel.queueDelete(clientQueueName);
                 }
-                channel.close();
+                mChannel.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

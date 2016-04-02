@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
-import com.game.wargame.Model.Entities.PlayerModel;
-import com.game.wargame.Model.Entities.Projectile;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
@@ -32,10 +32,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
     public GameView(final FragmentActivity activity) {
-        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
-
         mActivity = activity;
-        mMapView = new MapView(mActivity, new GoogleMapViewWrapper(mapView), new BitmapDescriptorFactory());
+        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
+        GoogleMapViewWrapper googleMap = new GoogleMapViewWrapper(mapView);
+        mMapView = new MapView(mActivity, googleMap, new BitmapDescriptorFactory());
         final GameView that = this;
 
         mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
@@ -72,7 +72,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     }
 
     public void removePlayer(PlayerModel player) {
-        mMapView.removePlayer(player);
+        mMapView.removePlayer(player.getPlayerId());
     }
 
     public void moveCameraTo(LatLng position) {

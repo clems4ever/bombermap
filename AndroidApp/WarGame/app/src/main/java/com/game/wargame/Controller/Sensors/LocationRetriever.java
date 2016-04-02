@@ -15,36 +15,30 @@ import com.google.android.gms.location.LocationServices;
 
 public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private Context mContext;
-
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private FusedLocationProviderApi mLocationServices;
     private OnLocationUpdatedListener mOnLocationUpdatedListener;
 
-    protected static final String TAG = "location-updates-sample";
-
-
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     public LocationRetriever(Context context) {
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(mContext)
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
-        init(context, googleApiClient, LocationServices.FusedLocationApi);
+        init(googleApiClient, LocationServices.FusedLocationApi);
     }
 
     public LocationRetriever(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
-        init(context, googleApiClient, fusedLocationProviderApi);
+        init(googleApiClient, fusedLocationProviderApi);
     }
 
-    public void init(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
-        mContext = context;
+    public void init(GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
         mGoogleApiClient = googleApiClient;
         mLocationServices = fusedLocationProviderApi;
         createLocationRequest();

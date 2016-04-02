@@ -1,8 +1,5 @@
 package com.game.wargame.Controller.Engine;
 
-import com.game.wargame.Model.Entities.Projectile;
-
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;

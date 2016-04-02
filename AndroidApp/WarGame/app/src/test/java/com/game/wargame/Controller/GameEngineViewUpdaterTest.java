@@ -8,7 +8,7 @@ import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Views.GameView;
 
 import org.junit.Before;
