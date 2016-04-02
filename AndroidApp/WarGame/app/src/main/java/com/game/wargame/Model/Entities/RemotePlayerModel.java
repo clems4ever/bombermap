@@ -36,9 +36,9 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
     }
 
     @Override
-    public void onDieEvent(String playerId, String killerId)
+    public void onDieEvent(String playerId, String killerId, double time)
     {
         if(mOnPlayerDiedListener != null)
-            mOnPlayerDiedListener.onDied(playerId, killerId);
+            mOnPlayerDiedListener.onDied(playerId, killerId, time);
     }
 }

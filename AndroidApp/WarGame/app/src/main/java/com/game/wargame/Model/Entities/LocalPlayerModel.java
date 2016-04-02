@@ -15,11 +15,11 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
         mPlayerSocket = playerSocket;
     }
 
-    public void fire(double latitude, double longitude, double speed) {
-        mPlayerSocket.fire(latitude, longitude, speed);
+    public void fire(double latitude, double longitude, double time) {
+        mPlayerSocket.fire(latitude, longitude, time);
 
         if(mOnPlayerWeaponTriggeredListener != null) {
-            mOnPlayerWeaponTriggeredListener.onPlayerWeaponTriggeredListener(this, latitude, longitude, speed);
+            mOnPlayerWeaponTriggeredListener.onPlayerWeaponTriggeredListener(this, latitude, longitude, time);
         }
     }
 
@@ -33,11 +33,11 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
         }
     }
 
-    public void die(String killerId) {
-        mPlayerSocket.die(this.getPlayerId(), killerId);
+    public void die(String killerId, double time) {
+        mPlayerSocket.die(this.getPlayerId(), killerId, time);
 
         if (mOnPlayerDiedListener != null)
-            mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId);
+            mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
     }
 
     public void leave() {
