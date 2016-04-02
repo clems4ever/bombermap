@@ -173,7 +173,7 @@ public class MapViewTest {
         Runnable uiTask2 = captor2.getValue();
         uiTask2.run();
 
-        // Check that the move has been done
+        // Check that the removing has been done
         verify(mMockPlayerMarker).remove();
     }
 }

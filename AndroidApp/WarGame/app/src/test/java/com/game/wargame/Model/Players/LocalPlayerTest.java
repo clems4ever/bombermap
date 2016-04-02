@@ -98,4 +98,13 @@ public class LocalPlayerTest {
         localPlayerModel.fire(30, 40, 10);
         verify(mMockOnPlayerWeaponTriggeredListener).onPlayerWeaponTriggeredListener(localPlayerModel, 30, 40, 10);
     }
+
+     @Test
+    public void testThatWhenPlayerDiesPlayerBroadcastsEventToEveryone() {
+         LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
+         localPlayerModel.setPlayerId("player_id");
+         double time = 0;
+         localPlayerModel.die("killer_id", time);
+         verify(mMockLocalPlayerSocket).die("player_id", "killer_id", time);
+     }
 }

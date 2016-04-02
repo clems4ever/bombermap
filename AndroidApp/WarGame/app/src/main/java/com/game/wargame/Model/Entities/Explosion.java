@@ -1,5 +1,6 @@
 package com.game.wargame.Model.Entities;
 
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.PlayerException;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Views.Animations.AnimationFactory;
@@ -39,11 +40,13 @@ public class Explosion extends Entity {
     }
 
     @Override
-    public void onCollision(PlayerModel player, double time) {
+    public void onCollision(LocalPlayerModel player, double time) {
         try {
             //a collision with an explosion kills the player
-            if (getOwner() != player.getPlayerId())
+            if (getOwner() != player.getPlayerId()) {
                 player.setHealth(0);
+                player.die(this.getOwner(), time);
+            }
         }
         catch (PlayerException e)
         {

@@ -19,7 +19,7 @@ public class PlayerMarkerFactory {
     }
 
     public PlayerMarker create(int bitmapResId) {
-        BitmapDescriptor bmp = mBitmapDescriptorFactory.fromResource(bitmapResId);
+        BitmapDescriptor bmp = mBitmapDescriptorFactory.load(bitmapResId);
         GroundOverlay marker = mGoogleMapWrapper.addGroundOverlay(new GroundOverlayOptions()
                 .position(new LatLng(0, 0), 400000, 400000)
                 .anchor(0.5f, 0.35f)

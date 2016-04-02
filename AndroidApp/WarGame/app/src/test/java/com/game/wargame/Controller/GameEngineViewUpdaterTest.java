@@ -10,6 +10,7 @@ import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Views.GameView;
+import com.game.wargame.Views.MapView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,9 @@ public class GameEngineViewUpdaterTest {
 
     @Mock
     private GameView mMockGameView;
+
+    @Mock
+    private MapView mMockMapView;
 
     @Mock
     private Context mMockContext;
@@ -68,4 +72,6 @@ public class GameEngineViewUpdaterTest {
         verify(mMockGameView).initialize(Matchers.<GameView.OnWeaponTargetDefinedListener>any());
 
     }
+
+
 }

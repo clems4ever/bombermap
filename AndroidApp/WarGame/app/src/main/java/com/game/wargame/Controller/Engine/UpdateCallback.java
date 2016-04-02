@@ -1,17 +1,17 @@
 package com.game.wargame.Controller.Engine;
 
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by sergei on 14/03/16.
  */
-public class EntitiesUpdateCallback implements IUpdateCallback {
+public class UpdateCallback implements IUpdateCallback {
 
-    public EntitiesUpdateCallback() {}
+    public UpdateCallback() {}
 
     public void update(EntitiesModel entitiesModel, long ticks, int increment)
     {
@@ -20,5 +20,9 @@ public class EntitiesUpdateCallback implements IUpdateCallback {
         {
             entity.update(ticks, increment);
         }
+    }
+
+    public void update(GameContext gameContext, long ticks, int increment) {
+        gameContext.update(ticks, increment);
     }
 }

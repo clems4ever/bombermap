@@ -6,6 +6,7 @@ import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.GameLogic.OnCollisionListener;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -112,8 +113,8 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void onCollision(PlayerModel player, double time) {
-        //mOnExplosion.onExplosion(this, (long) time);
+    public void onCollision(LocalPlayerModel player, double time) {
+
     }
 
     protected double mTimeStart;

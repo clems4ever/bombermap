@@ -1,8 +1,6 @@
 package com.game.wargame.Views;
 
-import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +8,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -30,7 +27,7 @@ public class PlayerMarkerFactoryTest {
 
         PlayerMarker playerMarker = factory.create(4);
 
-        verify(mMockBitmapDescriptorFactory).fromResource(4);
+        verify(mMockBitmapDescriptorFactory).load(4);
         verify(mMockGoogleMapWrapper).addGroundOverlay(Matchers.<GroundOverlayOptions>any());
     }
 

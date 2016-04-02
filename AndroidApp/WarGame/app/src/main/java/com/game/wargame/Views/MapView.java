@@ -4,8 +4,10 @@ import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.Animations.AnimationFactory;
 import com.game.wargame.Views.Animations.BitmapHolder;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,7 +23,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.marker_current;
     public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.marker;
-    public static final int BULLET_MARKER_RES_ID = R.mipmap.bullet2;
 
     private FragmentActivity mActivity;
     private GoogleMapWrapper mGoogleMap;
@@ -60,6 +61,8 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
         mGoogleMapViewWrapper = googleMapViewWrapper;
         googleMapViewWrapper.onCreate(null);
+        mBitmapHolder = new BitmapHolder(new AnimationFactory(), bitmapDescriptorFactory);
+        mBitmapHolder.loadBitmaps();
     }
 
     public void startAsync(OnMapReadyListener onMapReadyListener) {
@@ -69,7 +72,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     public void onMapReady(GoogleMapWrapper googleMap) {
         mGoogleMap = googleMap;
-        mBitmapHolder = new BitmapHolder(mBitmapDescriptorFactory);
         mGoogleMap.setZoomControlEnabled(true);
 
         if(mOnMapReadyListener != null) {
@@ -153,6 +155,10 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
             if (entity.isToRemove())
                 entitiesModel.removeEntity(entity);
         }
+    }
+
+    public void display(GameContext gameContext) {
+
     }
 
     public void removePlayer(final String playerId) {

@@ -4,7 +4,8 @@ import android.app.Activity;
 
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesModel;
-import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Views.GameView;
 
 import java.util.Timer;
@@ -27,10 +28,12 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private GameView mGameView;
 
     private EntitiesModel mEntities;
-    private PlayerModel mCurrentPlayer;
+    private LocalPlayerModel mCurrentPlayer;
+    private GameContext mGameContext;
 
     public final int UPDATE_SAMPLE_TIME = 50;
     public final int SERVER_SAMPLE_TIME = 1000;
+    public final int GAME_TOTAL_TIME = 60000;
 
     private void startTimer(IUpdateCallback updateCallback) {
         mTimer = new Timer(false);
@@ -38,22 +41,27 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                mTicks++;
-                double time = mTicks*UPDATE_SAMPLE_TIME;
-                mUpdateCallback.update(mEntities, mTicks, UPDATE_SAMPLE_TIME);
+                if (!mGameContext.toEnd()) {
+                    mTicks++;
+                    double time = mTicks * UPDATE_SAMPLE_TIME;
 
+                    mUpdateCallback.update(mEntities, mTicks, UPDATE_SAMPLE_TIME);
+                    mUpdateCallback.update(mGameContext, mTicks, UPDATE_SAMPLE_TIME);
 
-                mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
-                        mCurrentPlayer,
-                        time);
+                    mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
+                            mCurrentPlayer,
+                            time);
 
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mGameView.display(mEntities);
-                    }
-                });
-
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mGameView.display(mEntities);
+                            mGameView.display(mGameContext);
+                        }
+                    });
+                } else {
+                    //TODO: end the game
+                }
             }
         }, 0, UPDATE_SAMPLE_TIME);
     }
@@ -99,9 +107,9 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mEntities = entities;
     }
 
-    public void setPlayersModel(PlayerModel players)
+    public void setCurrentPlayerModel(LocalPlayerModel player)
     {
-        mCurrentPlayer = players;
+        mCurrentPlayer = player;
     }
 
     public void setGameView(GameView gameView)
@@ -111,6 +119,10 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
     public void setCollisionManager(CollisionManager collisionManager) {
         mCollisionManager = collisionManager;
+    }
+
+    public void setGameContext(GameContext gameContext) {
+        mGameContext = gameContext;
     }
 
     public void setUpdateCallback(IUpdateCallback updateCallback) {
