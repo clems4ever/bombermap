@@ -107,7 +107,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private void startGlobalUpdateTimer() {
         mGlobalTimer.setEntitiesModel(mEntitiesModel);
         mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
-        mGlobalTimer.setCollisionManager(new CollisionManager());
+        mGlobalTimer.setCollisionManager(new CollisionManager(new com.game.wargame.Controller.Utils.Location()));
         mGlobalTimer.setGameView(mGameView);
         mGlobalTimer.setGameContext(mGameContext);
         mGlobalTimer.setUpdateCallback(new UpdateCallback());
