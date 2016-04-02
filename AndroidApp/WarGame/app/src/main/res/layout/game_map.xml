@@ -70,6 +70,20 @@
                 android:layout_marginBottom="20dp"
                 android:textColor="#000000" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/time_text"
+                android:layout_alignBottom="@+id/health_level_text"
+                android:layout_alignRight="@+id/fire_button"
+                android:layout_alignEnd="@+id/fire_button"
+                android:layout_alignTop="@+id/gps_button"
+                android:layout_alignLeft="@+id/fire_button"
+                android:layout_alignStart="@+id/fire_button"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="false" />
+
         </RelativeLayout>
 
     </LinearLayout>

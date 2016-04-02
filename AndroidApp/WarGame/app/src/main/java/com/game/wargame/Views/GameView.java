@@ -7,18 +7,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.game.wargame.Model.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
-import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.PlayerModel;
-import com.game.wargame.Model.Entities.Projectile;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
 
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
@@ -30,6 +28,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private AbstractWeaponControllerView mWeaponControllerInterface;
     private Button mFireButton;
     private ImageButton mGpsButton;
+    private TextView mTimeText;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
@@ -40,8 +39,9 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView = new MapView(mActivity, new GoogleMapViewWrapper(mapView), new BitmapDescriptorFactory());
         final GameView that = this;
 
-        mFireButton = (Button) view.findViewById(R.id.fire_button);
-        mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
+        mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
+        mGpsButton = (ImageButton) mActivity.findViewById(R.id.gps_button);
+        mTimeText = (TextView) mActivity.findViewById(R.id.time_text);
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +132,11 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void display(EntitiesModel entities) {
         mMapView.display(entities);
+    }
+
+    public void display(GameContext gameContext) {
+        mTimeText.setText(""+gameContext.getRemainingTime());
+        mMapView.display(gameContext);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {
