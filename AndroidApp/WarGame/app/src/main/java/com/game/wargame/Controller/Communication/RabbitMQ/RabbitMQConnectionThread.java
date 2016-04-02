@@ -1,5 +1,7 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
+import android.util.Log;
+
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.ISocket;
 import com.rabbitmq.client.AMQP;
@@ -213,6 +215,9 @@ public class RabbitMQConnectionThread extends Thread {
             listener = mListenerByChannel.get(channel);
             if(listener != null) {
                 listener.onRemoteEventReceived(data);
+            }
+            else {
+                Log.v("[RabbitMQThread]", "Listener not found for channel :" + channel);
             }
         }
     }

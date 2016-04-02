@@ -11,8 +11,8 @@ import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameEngine;
-import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.R;
 import com.game.wargame.Views.GameView;
@@ -26,6 +26,8 @@ public class GameMainFragment extends Fragment {
     private String mGameId;
     private String mPlayerId;
 
+    private GameView mGameView;
+
     public void setConnectionManager(IConnectionManager connectionManager) {
         mConnectionManager = connectionManager;
     }
@@ -33,6 +35,7 @@ public class GameMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.game_map, container, false);
+        mGameView = new GameView((FragmentActivity) getActivity(), fragment);
 
         Bundle args = getArguments();
         mGameId = args.getString("game_id");
@@ -47,17 +50,17 @@ public class GameMainFragment extends Fragment {
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-        final GameView gameView = new GameView((FragmentActivity) getActivity());
 
-        gameView.start(new MapView.OnMapReadyListener() {
+
+        mGameView.start(new MapView.OnMapReadyListener() {
             @Override
             public void onMapReady() {
                 mGameEngine = new GameEngine();
-                mGameEngine.onStart(gameView,
+                mGameEngine.onStart(mGameView,
                         gameSocket,
                         localPlayerSocket,
                         new LocationRetriever(getActivity()),
-                        new ProjectilesUpdateTimer((FragmentActivity) getActivity())
+                        new GlobalTimer((FragmentActivity) getActivity())
                 );
 
                 // Unfreeze messages when view is loaded

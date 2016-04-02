@@ -2,16 +2,14 @@ package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
 
-import com.game.wargame.Model.Entities.Players.Player;
-import com.game.wargame.Model.Entities.Players.PlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.R;
+import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.Animations.BitmapHolder;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -19,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
+public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityDisplayer {
 
     public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.marker_current;
     public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.marker;
@@ -30,7 +28,8 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
     private GoogleMapViewWrapper mGoogleMapViewWrapper;
 
     private HashMap<String, PlayerMarker> mPlayerLocations;
-    private HashMap<String, Marker> mProjectileLocations;
+    private HashMap<String, Marker> mEntityMarkers;
+    private BitmapHolder mBitmapHolder;
 
     private PlayerMarkerFactory mPlayerMarkerFactory;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
@@ -55,8 +54,9 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         mGoogleMap = new GoogleMapWrapper();
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
-        mProjectileLocations = new HashMap<>();
+
         mPlayerMarkerFactory = playerMarkerFactory;
+        mEntityMarkers = new HashMap<>();
 
         mGoogleMapViewWrapper = googleMapViewWrapper;
         googleMapViewWrapper.onCreate(null);
@@ -69,6 +69,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
 
     public void onMapReady(GoogleMapWrapper googleMap) {
         mGoogleMap = googleMap;
+        mBitmapHolder = new BitmapHolder(mBitmapDescriptorFactory);
         mGoogleMap.setZoomControlEnabled(true);
 
         if(mOnMapReadyListener != null) {
@@ -102,7 +103,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
     }
 
     public void movePlayerTo(final String playerId, final LatLng position) {
-        if(mGoogleMap == null) return;
+        if (mGoogleMap == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -115,38 +116,43 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
         });
     }
 
-    public void renderProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile projectile : projectiles) {
-            renderProjectile(projectile);
-        }
+    public void addEntityMarker(Entity entity) {
+        Animation animation = entity.getAnimation();
+        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                .position(entity.getPosition())
+                .rotation((float) entity.getDirection())
+                .icon(mBitmapHolder.getBitmap(animation.current())));
+        mEntityMarkers.put(entity.getUUID(), marker);
     }
 
-    public void addBulletMarker(Projectile projectile)
-    {
-            Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                    .position(projectile.getPosition())
-                    .rotation((float) projectile.getDirection())
-                    .icon(mBitmapDescriptorFactory.fromResource(BULLET_MARKER_RES_ID)));
-            mProjectileLocations.put(projectile.getUUID(), marker);
-    }
-
-    public void renderProjectile(final Projectile projectile) {
+    public void display(final Entity entity) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mProjectileLocations.get(projectile.getUUID());
-                if (marker == null) {
-                    addBulletMarker(projectile);
-                } else {
-                    if (projectile.isToDestroy()) {
+                Animation animation = entity.getAnimation();
+                Marker marker = mEntityMarkers.get(entity.getUUID());
+                if (marker == null && !entity.isToRemove()) {
+                    addEntityMarker(entity);
+                } else if (marker != null) {
+                    if (entity.isToRemove()) {
                         marker.remove();
-                        mProjectileLocations.remove(projectile.getUUID());
+                        mEntityMarkers.remove(entity.getUUID());
                     } else {
-                        marker.setPosition(projectile.getPosition());
+                        marker.setPosition(entity.getPosition());
+                        marker.setIcon(mBitmapHolder.getBitmap(animation.current()));
                     }
                 }
             }
         });
+    }
+
+    public void display(EntitiesModel entitiesModel) {
+        ArrayList<Entity> entities = entitiesModel.getEntities();
+        for (Entity entity : entities) {
+            display(entity);
+            if (entity.isToRemove())
+                entitiesModel.removeEntity(entity);
+        }
     }
 
     public void removePlayer(final String playerId) {
@@ -157,7 +163,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback {
                 if (marker != null) {
                     marker.remove();
                 }
-
             }
         });
     }

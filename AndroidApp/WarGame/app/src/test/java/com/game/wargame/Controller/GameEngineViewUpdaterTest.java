@@ -6,7 +6,7 @@ import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
-import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
+import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Views.GameView;
@@ -45,14 +45,14 @@ public class GameEngineViewUpdaterTest {
     private ISocketFactory mMockSocketFactory;
 
     @Mock
-    private ProjectilesUpdateTimer mMockProjectilesUpdateTimer;
+    private GlobalTimer mMockGlobalTimer;
 
     private GameEngine mGameEngine;
 
     @Before
     public void setUp() {
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever, mMockProjectilesUpdateTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
     }
 
     @Test

@@ -8,18 +8,16 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 
-
-public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
+public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
     private FragmentActivity mActivity;
     private MapView mMapView;
@@ -31,15 +29,16 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
-    public GameView(final FragmentActivity activity) {
+    public GameView(final FragmentActivity activity, View view) {
         mActivity = activity;
-        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) mActivity.findViewById(R.id.map);
+
+        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) view.findViewById(R.id.map);
         GoogleMapViewWrapper googleMap = new GoogleMapViewWrapper(mapView);
         mMapView = new MapView(mActivity, googleMap, new BitmapDescriptorFactory());
         final GameView that = this;
 
-        mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
-        mGpsButton = (ImageButton) mActivity.findViewById(R.id.gps_button);
+        mFireButton = (Button) view.findViewById(R.id.fire_button);
+        mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +47,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
             }
         });
 
-        mMapLayout = (RelativeLayout) activity.findViewById(R.id.map_layout);
+        mMapLayout = (RelativeLayout) view.findViewById(R.id.map_layout);
     }
 
     public void initialize(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener) {
@@ -106,7 +105,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
                         float targetX = event.getX();
                         float targetY = event.getY();
 
-                        if(mOnWeaponTargetDefined != null) {
+                        if (mOnWeaponTargetDefined != null) {
                             mOnWeaponTargetDefined.onWeaponTargetDefined(targetX, targetY);
                         }
                         onActionFinished();
@@ -128,8 +127,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
     }
 
-    public void renderProjectiles(ArrayList<Projectile> projectiles) {
-        mMapView.renderProjectiles(projectiles);
+    public void display(EntitiesModel entities) {
+        mMapView.display(entities);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {

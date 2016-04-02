@@ -8,17 +8,21 @@ import android.view.View;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.Engine.EntitiesUpdateCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
-import com.game.wargame.Controller.Engine.ProjectilesUpdateTimer;
+import com.game.wargame.Controller.GameLogic.CollisionManager;
+import com.game.wargame.Controller.GameLogic.OnExplosionListener;
+import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.ProjectileModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Views.GameView;
-import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -26,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener, OnExplosionListener {
 
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
@@ -37,30 +41,32 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private GameView mGameView;
 
     private LocationRetriever mLocationRetriever;
-    private ProjectilesUpdateTimer mProjectilesUpdateTimer;
 
+    private GlobalTimer mGlobalTimer;
     private GameSocket mGameSocket;
 
-    private ProjectileModel mProjectileModel;
+    private EntitiesModel mEntitiesModel;
+    private CollisionManager mCollisionManager;
 
     /**
      * @brief Constructor
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
-        mProjectileModel = new ProjectileModel();
+        mEntitiesModel = new EntitiesModel();
     }
 
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, ProjectilesUpdateTimer projectilesUpdateTimer) {
+    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
+        mGlobalTimer = globalTimer;
         mLocationRetriever = locationRetriever;
-        mProjectilesUpdateTimer = projectilesUpdateTimer;
 
         mGameSocket.setOnPlayerEventListener(this);
+        mGameSocket.setOnClockEventListener(mGlobalTimer);
 
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
@@ -68,7 +74,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
         startSensors();
         initializeView();
-        startGameTimers();
+        startEntitiesUpdateTimer();
     }
 
     /**
@@ -87,20 +93,21 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mLocationRetriever.start(mCurrentPlayer);
     }
 
-    private void startGameTimers() {
-        GlobalTimer.start();
-        mProjectilesUpdateTimer.setProjectileModel(mProjectileModel);
-        mProjectilesUpdateTimer.setGameView(mGameView);
-        mProjectilesUpdateTimer.start();
+    private void startEntitiesUpdateTimer() {
+        mGlobalTimer.setEntitiesModel(mEntitiesModel);
+        mGlobalTimer.setPlayersModel(mCurrentPlayer);
+        mGlobalTimer.setCollisionManager(new CollisionManager());
+        mGlobalTimer.setGameView(mGameView);
+        mGlobalTimer.setUpdateCallback(new EntitiesUpdateCallback());
+        mGlobalTimer.start();
     }
 
     private void stopGameTimers() {
-        GlobalTimer.stop();
-        mProjectilesUpdateTimer.stop();
+        mGlobalTimer.stop();
     }
 
     private double getTime() {
-        return (double) GlobalTimer.getTicks()*GlobalTimer.UPDATE_SAMPLE_TIME;
+        return (double) mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
     }
 
     /**
@@ -142,7 +149,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 4);
+                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 15);
             }
         });
     }
@@ -167,8 +174,9 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         LatLng source = player.getPosition();
         LatLng destination = new LatLng(latitude, longitude);
 
-        Projectile projectile = new Projectile(source, destination, timestamp);
-        mProjectileModel.addProjectile(projectile);
+        Projectile projectile = new Projectile(player.getPlayerId(), source, destination, timestamp);
+        projectile.setOnExplosionListener(this);
+        mEntitiesModel.addEntity(projectile);
     }
 
     public int getPlayersCount() {
@@ -193,4 +201,9 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         }
     }
 
+    @Override
+    public void onExplosion(Entity entity, long time) {
+        entity.setToRemove(true);
+        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
+    }
 }

@@ -49,6 +49,7 @@ public class GameManagerSocket {
                         playerId = message.getString("player_id");
                         //TODO: parse other players data here
                         onGameJoinedListener.onGameJoined(playerId);
+                        //sendPlayerJoinMessage(playerId);
                     } catch (JSONException e) {
                     }
                 }
@@ -72,6 +73,16 @@ public class GameManagerSocket {
                 }
             });
         } catch (JSONException e) {
+        }
+    }
+
+    private void sendPlayerJoinMessage(final String playerId) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("player_id", playerId);
+            mSocket.emit("player_join", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

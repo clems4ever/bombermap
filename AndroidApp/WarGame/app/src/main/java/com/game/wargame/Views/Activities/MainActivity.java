@@ -74,6 +74,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
     @Override
     public void onPlayerJoined(String gameId, String playerId) {
         GameMainFragment gameFragment = new GameMainFragment();
+        mConnectionManager.initSocketFactory();
         gameFragment.setConnectionManager(mConnectionManager);
 
         Bundle args = new Bundle();
