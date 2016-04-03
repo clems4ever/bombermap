@@ -153,6 +153,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
         for (Entity entity : entities) {
             display(entity);
             if (entity.isToRemove())
+                //The View should not update the model directly
                 entitiesModel.removeEntity(entity);
         }
     }

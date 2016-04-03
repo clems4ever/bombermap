@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.GameContext.GameContext;
@@ -20,6 +22,8 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
@@ -32,6 +36,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private ImageButton mGpsButton;
     private TextView mTimeText;
     private TextView[] mNotificationsBuffer;
+    private TextView[] mScoreBoard;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
@@ -43,14 +48,20 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView = new MapView(mActivity, googleMap, new BitmapDescriptorFactory());
         final GameView that = this;
 
-        mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
-        mGpsButton = (ImageButton) mActivity.findViewById(R.id.gps_button);
-        mTimeText = (TextView) mActivity.findViewById(R.id.time_text);
+        mFireButton = (Button) view.findViewById(R.id.fire_button);
+        mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
+        mTimeText = (TextView) view.findViewById(R.id.time_text);
 
         mNotificationsBuffer = new TextView[3];
-        mNotificationsBuffer[0] = (TextView) mActivity.findViewById(R.id.game_notif_1);
-        mNotificationsBuffer[1] = (TextView) mActivity.findViewById(R.id.game_notif_2);
-        mNotificationsBuffer[2] = (TextView) mActivity.findViewById(R.id.game_notif_3);
+        mNotificationsBuffer[0] = (TextView) view.findViewById(R.id.game_notif_1);
+        mNotificationsBuffer[1] = (TextView) view.findViewById(R.id.game_notif_2);
+        mNotificationsBuffer[2] = (TextView) view.findViewById(R.id.game_notif_3);
+
+        mScoreBoard = new TextView[3];
+        mScoreBoard [0] = (TextView) view.findViewById(R.id.score1);
+        mScoreBoard [1] = (TextView) view.findViewById(R.id.score2);
+        mScoreBoard [2] = (TextView) view.findViewById(R.id.score3);
+
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +163,17 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
             mNotificationsBuffer[i].setText("");
             if (i < gameNotifications.size())
                 mNotificationsBuffer[i].setText(gameNotifications.get(i).getText());
+        }
+
+        Map<String, GameScore> scores = gameContext.getScores();
+        Set<String> playersId = scores.keySet();
+        int i = 0;
+        for (String playerId : playersId)
+        {
+            GameScore gameScore = scores.get(playerId);
+            if (i<3)
+               mScoreBoard[i].setText(gameScore.toString());
+            i++;
         }
 
         mMapView.display(gameContext);

@@ -1,17 +1,20 @@
 package com.game.wargame.Model.GameContext;
 
+import com.game.wargame.Controller.GameLogic.GameScore;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by sergei on 18/03/16.
  */
 public class GameContext {
 
-    private static final int GAME_DURATION = 60000;
+    private static final int GAME_DURATION = 10*60*1000;
 
     private boolean mStarted;
-    private int mTimeStart;
-    private int mCurrentTime;
+    private double mTimeStart;
+    private double mCurrentTime;
     private FragManager mFragManager;
     private GameNotificationManager mGameNotificationManager;
 
@@ -36,16 +39,19 @@ public class GameContext {
 
     public void update(long ticks, int increment) {
         if (!isStarted()) {
-            mTimeStart = (int)ticks*increment;
-            mCurrentTime = mTimeStart;
+            mTimeStart = ticks*increment;
             mStarted = true;
         }
-        mCurrentTime += increment;
+        mCurrentTime = ticks*increment;
         purgeNotifications(mCurrentTime);
     }
 
     public int getRemainingTime() {
-        return (GAME_DURATION-(mCurrentTime-mTimeStart))/1000;
+        return (int)(GAME_DURATION-(mCurrentTime-mTimeStart))/1000;
+    }
+
+    public void addPlayer(String playerId) {
+        mFragManager.addPlayer(playerId);
     }
 
     public void handleFrag(String dead, String killer, double time) {
@@ -59,6 +65,10 @@ public class GameContext {
         ArrayList<GameNotification> gameNotifications = new ArrayList<>();
         mGameNotificationManager.getNotificationsToDisplay(gameNotifications);
         return gameNotifications;
+    }
+
+    public Map<String, GameScore> getScores() {
+        return mFragManager.getScores();
     }
 
     public void purgeNotifications(double time) {
