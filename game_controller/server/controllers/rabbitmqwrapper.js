@@ -67,6 +67,9 @@ function startGameCreationWorker(consume_callback) {
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://server:server@broker.wargame.ingenious-cm.fr";
+if(process.env.AMQP_VIRTUAL_HOST) {
+rabbitmquri += process.env.AMQP_VIRTUAL_HOST;
+}
 rabbitmquri += "?heartbeat=60";
 exports.initServerChannel = function(consume_callback, on_channel_ready) {
     console.log("Connection to " + rabbitmquri);
