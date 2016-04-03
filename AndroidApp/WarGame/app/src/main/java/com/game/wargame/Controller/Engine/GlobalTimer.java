@@ -47,6 +47,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
                     mUpdateCallback.update(mEntities, mTicks, UPDATE_SAMPLE_TIME);
                     mUpdateCallback.update(mGameContext, mTicks, UPDATE_SAMPLE_TIME);
+                    mUpdateCallback.update(mCurrentPlayer, mTicks, UPDATE_SAMPLE_TIME);
 
                     mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
                             mCurrentPlayer,
