@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Created by sergei on 14/03/16.
  */
-public class BitmapHolder {
+public class BitmapCache {
     private HashMap<Integer, BitmapDescriptor> mBitmaps;
     private IAnimationFactory mAnimationFactory;
     private IBitmapFactory mBitmapFactory;
@@ -19,7 +19,7 @@ public class BitmapHolder {
         return mBitmaps.get(resourceID);
     }
 
-    public BitmapHolder(IAnimationFactory animationFactory, IBitmapFactory bitmapFactory) {
+    public BitmapCache(IAnimationFactory animationFactory, IBitmapFactory bitmapFactory) {
         mAnimationFactory = animationFactory;
         mBitmapFactory = bitmapFactory;
     }

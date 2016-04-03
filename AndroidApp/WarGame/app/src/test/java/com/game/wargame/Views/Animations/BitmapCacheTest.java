@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
  * Created by sergei on 20/03/16.
  */
 
-public class BitmapHolderTest {
+public class BitmapCacheTest {
 
     @Mock
     BitmapDescriptor mBitmapDescriptor1;
@@ -62,16 +62,16 @@ public class BitmapHolderTest {
 
     @Test
     public void testThatBitmapHolderContainsAllBitmapsDescriptors() {
-        BitmapHolder bitmapHolder = new BitmapHolder(new DummyAnimationFactory(), new DummyBitmapFactory());
-        bitmapHolder.loadBitmaps();
+        BitmapCache bitmapCache = new BitmapCache(new DummyAnimationFactory(), new DummyBitmapFactory());
+        bitmapCache.loadBitmaps();
 
-        BitmapDescriptor bitmapDescriptor = bitmapHolder.getBitmap(1);
+        BitmapDescriptor bitmapDescriptor = bitmapCache.getBitmap(1);
         assertEquals(mBitmapDescriptor1, bitmapDescriptor);
 
-        bitmapDescriptor = bitmapHolder.getBitmap(2);
+        bitmapDescriptor = bitmapCache.getBitmap(2);
         assertEquals(mBitmapDescriptor2, bitmapDescriptor);
 
-        bitmapDescriptor = bitmapHolder.getBitmap(3);
+        bitmapDescriptor = bitmapCache.getBitmap(3);
         assertEquals(mBitmapDescriptor3, bitmapDescriptor);
 
     }

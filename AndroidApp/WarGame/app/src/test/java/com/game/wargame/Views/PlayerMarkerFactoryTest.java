@@ -17,18 +17,19 @@ import static org.mockito.Mockito.verify;
 public class PlayerMarkerFactoryTest {
 
     @Mock PlayerMarker mMockPlayerMarker;
-    @Mock GoogleMapWrapper mMockGoogleMapWrapper;
+    @Mock
+    GoogleMap mMockGoogleMap;
     @Mock BitmapDescriptorFactory mMockBitmapDescriptorFactory;
 
     @Test
     public void create_a_player_marker_on_map() {
 
-        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockGoogleMapWrapper, mMockBitmapDescriptorFactory);
+        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockGoogleMap, mMockBitmapDescriptorFactory);
 
         PlayerMarker playerMarker = factory.create(4);
 
         verify(mMockBitmapDescriptorFactory).load(4);
-        verify(mMockGoogleMapWrapper).addGroundOverlay(Matchers.<GroundOverlayOptions>any());
+        verify(mMockGoogleMap).addPlayerMarker(Matchers.<GroundOverlayOptions>any());
     }
 
 }

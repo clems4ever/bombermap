@@ -16,6 +16,7 @@ import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
@@ -31,7 +32,6 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 
@@ -40,10 +40,11 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
 
-    private Map<String, PlayerModel> mPlayersById;
+    private java.util.Map<String, PlayerModel> mPlayersById;
     private LocalPlayerModel mCurrentPlayer;
 
     private GameView mGameView;
+    private Map mVirtualMap;
 
     private LocationRetriever mLocationRetriever;
 
@@ -64,11 +65,12 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
+    public void onStart(GameView gameView, GameSocket gameSocket, Map virtualMap, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
         mLocationRetriever = locationRetriever;
+        mVirtualMap = virtualMap;
 
         mGameSocket.setOnPlayerEventListener(this);
         mGameSocket.setOnClockEventListener(mGlobalTimer);
@@ -76,6 +78,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
+        mGameView.updateVirtualMapOverlay(mVirtualMap, new LatLng(48.8870407, 2.3228797));
 
         Set<String> playerIds = mPlayersById.keySet();
         FragManager fragManager = new FragManager(playerIds);
@@ -160,7 +163,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 15);
+                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 17);
             }
         });
     }

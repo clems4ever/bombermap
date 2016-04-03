@@ -40,10 +40,11 @@ public class RabbitMQConnectionThread extends Thread {
     private Map<String, ISocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
     private Map<String, ISocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
-    public RabbitMQConnectionThread(String host) {
+    public RabbitMQConnectionThread(String host, String virtualHost) {
         mConnectionFactory = new ConnectionFactory();
         mConnectionFactory.setAutomaticRecoveryEnabled(false);
         mConnectionFactory.setHost(host);
+        mConnectionFactory.setVirtualHost(virtualHost);
         mConnectionFactory.setUsername("player");
         mConnectionFactory.setPassword("player");
         mConnectionFactory.setHandshakeTimeout(600000);

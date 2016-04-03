@@ -9,6 +9,7 @@ import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Views.MapView;
 
@@ -24,39 +25,23 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class GameEngineViewUpdaterTest {
 
-    @Mock
-    private GameView mMockGameView;
-
-    @Mock
-    private MapView mMockMapView;
-
-    @Mock
-    private Context mMockContext;
-
-    @Mock
-    private GameSocket mMockGameSocket;
-
-    @Mock
-    private LocationRetriever mMockLocationRetriever;
-
-    @Mock
-    private LocalPlayerSocket mMockPlayerSocket;
-
-    @Mock
-    private RemotePlayerSocket mMockRemotePlayerSocket;
-
-    @Mock
-    private ISocketFactory mMockSocketFactory;
-
-    @Mock
-    private GlobalTimer mMockGlobalTimer;
+    @Mock private GameView mMockGameView;
+    @Mock private MapView mMockMapView;
+    @Mock private Context mMockContext;
+    @Mock private GameSocket mMockGameSocket;
+    @Mock private LocationRetriever mMockLocationRetriever;
+    @Mock private LocalPlayerSocket mMockPlayerSocket;
+    @Mock private RemotePlayerSocket mMockRemotePlayerSocket;
+    @Mock private ISocketFactory mMockSocketFactory;
+    @Mock private GlobalTimer mMockGlobalTimer;
+    @Mock private Map mMockVirtualMap;
 
     private GameEngine mGameEngine;
 
     @Before
     public void setUp() {
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockVirtualMap, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
     }
 
     @Test
