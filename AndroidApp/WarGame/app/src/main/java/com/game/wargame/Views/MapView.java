@@ -222,7 +222,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
         mGoogleMap.addBlock(new GroundOverlayOptions()
                 .position(blockPosition, 800, 800)
                 .anchor(0.5f, 0.5f)
-                .zIndex(100)
+                .zIndex(-100)
+                .bearing(45)
                 .image(groundBitmapDescriptor));
     }
 

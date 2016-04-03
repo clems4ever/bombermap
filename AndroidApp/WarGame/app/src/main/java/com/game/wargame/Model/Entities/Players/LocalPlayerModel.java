@@ -39,8 +39,9 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
 
             mRespawnCounter = TIME_TO_RESPAWN;
 
-            if (mOnPlayerDiedListener != null)
+            if (mOnPlayerDiedListener != null) {
                 mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
+            }
         }
     }
 

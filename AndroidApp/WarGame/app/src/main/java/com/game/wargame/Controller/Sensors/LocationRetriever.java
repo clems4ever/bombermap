@@ -34,6 +34,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         init(googleApiClient, LocationServices.FusedLocationApi);
     }
 
+    // For test
     public LocationRetriever(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
         init(googleApiClient, fusedLocationProviderApi);
     }

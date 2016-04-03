@@ -19,7 +19,6 @@ public abstract class Entity {
     protected double mDirection;
     protected String mUUID;
     protected boolean mToRemove;
-    private ReentrantLock mLock;
     protected double mRadius;
     protected String mOwner;
 

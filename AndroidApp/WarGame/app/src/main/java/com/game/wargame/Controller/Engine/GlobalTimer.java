@@ -35,7 +35,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     public final int SERVER_SAMPLE_TIME = 1000;
     public final int GAME_TOTAL_TIME = 60000;
 
-    private void startTimer(IUpdateCallback updateCallback) {
+    private void startTimer() {
         mTimer = new Timer(false);
 
         mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -72,7 +72,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     }
 
     public void start() {
-        startTimer(mUpdateCallback);
+        startTimer();
     }
 
     public void stop() {

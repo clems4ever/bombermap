@@ -24,14 +24,14 @@ public class CollisionManager {
     {
         ArrayList<Entity> entities = entitiesModel.getEntities();
         for (Entity entity : entities) {
-            if (areColliding(entity, player))
+            if (areColliding(player, entity))
             {
                 entity.onCollision(player, time);
             }
         }
     }
 
-    private boolean areColliding(Entity e, PlayerModel p)
+    private boolean areColliding(PlayerModel p, Entity e)
     {
         float[] results = new float[1];
         LatLng entityPosition = e.getPosition();
