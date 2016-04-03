@@ -41,7 +41,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     public MapView(FragmentActivity fragmentActivity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
         init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory, null);
-        mPlayerMarkerFactory = new PlayerMarkerFactory(mGoogleMap, mBitmapDescriptorFactory);
     }
 
 
@@ -52,7 +51,6 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     private void init(FragmentActivity activity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
         mActivity = activity;
-        mGoogleMap = new GoogleMapWrapper();
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
 
@@ -73,6 +71,8 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
     public void onMapReady(GoogleMapWrapper googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setZoomControlEnabled(true);
+
+        mPlayerMarkerFactory = new PlayerMarkerFactory(mGoogleMap, mBitmapDescriptorFactory);
 
         if(mOnMapReadyListener != null) {
             mOnMapReadyListener.onMapReady();
