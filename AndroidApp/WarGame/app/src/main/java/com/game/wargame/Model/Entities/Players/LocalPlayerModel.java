@@ -34,13 +34,30 @@ public class LocalPlayerModel extends PlayerModel implements OnLocationUpdatedLi
     }
 
     public void die(String killerId, double time) {
-        mPlayerSocket.die(this.getPlayerId(), killerId, time);
+        if (mRespawnCounter == 0) {
+            mPlayerSocket.die(this.getPlayerId(), killerId, time);
 
-        if (mOnPlayerDiedListener != null)
-            mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
+            mRespawnCounter = TIME_TO_RESPAWN;
+
+            if (mOnPlayerDiedListener != null)
+                mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
+        }
+    }
+
+    public void respawn(double time) {
+        mPlayerSocket.respawn(time);
     }
 
     public void leave() {
         mPlayerSocket.leave();
+    }
+
+    public void update(long ticks, int increment) {
+        if (mRespawnCounter > increment)
+            mRespawnCounter -= increment;
+        else if (mRespawnCounter > 0) {
+            respawn(ticks*increment);
+            mRespawnCounter = 0;
+        }
     }
 }
