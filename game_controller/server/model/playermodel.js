@@ -47,3 +47,9 @@ exports.removePlayersForGame = function(game_id, callback) {
     var game = {'game_id':game_id}
     PlayerModel.remove(game, callback);
 }
+
+var DEBUG = 1;
+if (DEBUG) {
+    console.log("DEBUG mode, wiping database");
+    PlayerModel.remove({}, function() {});
+}

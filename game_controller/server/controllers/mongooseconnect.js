@@ -10,10 +10,12 @@ var moment    = require('moment');
 *
 */
 
+var DEBUG = 1;
+
 var uristring =
 process.env.MONGOLAB_URI ||
 process.env.MONGOHQ_URL ||
-'mongodb://localhost/BomberMap';
+'mongodb://localhost/BomberMap'+DEBUG;
 
 var db = mongoose.connect(uristring, function (err, res) {
   if (err) {

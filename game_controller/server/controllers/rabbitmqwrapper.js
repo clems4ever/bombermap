@@ -51,6 +51,7 @@ exports.replyToClient = function(client_queue, receivedMsg, msgToSend) {
     server_channel.sendToQueue(client_queue,
         new Buffer(msgToSend),
         {correlationId: receivedMsg.properties.correlationId});
+    server_channel.ack(receivedMsg);
 }
 
 exports.assertRoomExchange = function(room_exchange) {
