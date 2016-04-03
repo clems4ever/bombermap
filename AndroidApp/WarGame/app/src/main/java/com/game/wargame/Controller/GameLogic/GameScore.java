@@ -24,4 +24,8 @@ public class GameScore {
         mDeaths = deaths;
     }
 
+    public String toString() {
+        return mFrags+" "+mDeaths;
+    }
+
 }

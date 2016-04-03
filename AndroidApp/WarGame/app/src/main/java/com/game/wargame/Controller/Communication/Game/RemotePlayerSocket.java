@@ -10,6 +10,7 @@ public class RemotePlayerSocket extends PlayerSocket {
     private OnMoveEventListener mOnMoveEventListener;
     private OnFireEventListener mOnFireEventListener;
     private OnDieEventListener mOnDieEventListener;
+    private OnRespawnEventListener mOnRespawnEventListener;
 
     /**
      * @param playerId
@@ -32,6 +33,10 @@ public class RemotePlayerSocket extends PlayerSocket {
         mOnDieEventListener = onDieEventListener;
     }
 
+    public void setOnRespawnEventListener(OnRespawnEventListener onRespawnEventListener) {
+        mOnRespawnEventListener = onRespawnEventListener;
+    }
+
    public void onMove(double latitude, double longitude) {
         if(mOnMoveEventListener != null) {
             mOnMoveEventListener.onMoveEvent(latitude, longitude);
@@ -50,6 +55,11 @@ public class RemotePlayerSocket extends PlayerSocket {
         }
     }
 
+    public void onRespawn(double time) {
+        if (mOnRespawnEventListener != null)
+            mOnRespawnEventListener.onRespawnEvent(this.getPlayerId(), time);
+    }
+
     public interface OnMoveEventListener {
         public void onMoveEvent(double latitude, double longitude);
     }
@@ -60,5 +70,9 @@ public class RemotePlayerSocket extends PlayerSocket {
 
     public interface OnDieEventListener {
         public void onDieEvent(String playerId, String killerId, double time);
+    }
+
+    public interface OnRespawnEventListener {
+        public void onRespawnEvent(String playerId, double time);
     }
 }

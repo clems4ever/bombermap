@@ -12,9 +12,12 @@ public class PlayerMarkerFactory {
     private GoogleMap mGoogleMap;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
 
-    public PlayerMarkerFactory(GoogleMap googleMap, BitmapDescriptorFactory bitmapDescriptorFactory) {
-        mGoogleMap = googleMap;
+    public PlayerMarkerFactory(BitmapDescriptorFactory bitmapDescriptorFactory) {
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
+    }
+
+    public void setGoogleMap(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
     }
 
     public PlayerMarker create(int bitmapResId) {

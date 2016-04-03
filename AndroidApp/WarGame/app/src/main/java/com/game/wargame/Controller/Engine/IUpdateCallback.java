@@ -1,5 +1,6 @@
 package com.game.wargame.Controller.Engine;
 
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 
@@ -9,4 +10,5 @@ import com.game.wargame.Model.Entities.EntitiesModel;
 public interface IUpdateCallback {
     public void update(EntitiesModel entities, long ticks, int increment);
     public void update(GameContext gameContext, long ticks, int increment);
+    public void update(LocalPlayerModel player, long ticks, int increment);
 }

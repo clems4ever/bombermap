@@ -45,12 +45,12 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     @Override
     public void freeze() {
-
+        mConnectionThread.freeze();
     }
 
     @Override
     public void unfreeze() {
-
+        mConnectionThread.unfreeze();
     }
 
     @Override

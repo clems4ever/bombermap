@@ -83,7 +83,8 @@
                 android:layout_alignStart="@+id/fire_button"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentStart="false"
-                android:text="60" />
+                android:text="60"
+                android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -93,7 +94,8 @@
                 android:id="@+id/game_notif_1"
                 android:layout_below="@+id/gps_button"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -103,7 +105,8 @@
                 android:id="@+id/game_notif_2"
                 android:layout_below="@+id/game_notif_1"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="#000000" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -113,7 +116,41 @@
                 android:id="@+id/game_notif_3"
                 android:layout_below="@+id/game_notif_2"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="score"
+                android:id="@+id/score1"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="score"
+                android:id="@+id/score2"
+                android:layout_below="@+id/score1"
+                android:layout_alignLeft="@+id/score1"
+                android:layout_alignStart="@+id/score1"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="score"
+                android:id="@+id/score3"
+                android:layout_below="@+id/score2"
+                android:layout_alignLeft="@+id/score2"
+                android:layout_alignStart="@+id/score2"
+                android:textColor="#000000" />
 
         </RelativeLayout>
 

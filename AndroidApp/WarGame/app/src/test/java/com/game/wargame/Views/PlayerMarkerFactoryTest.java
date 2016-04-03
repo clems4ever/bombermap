@@ -17,14 +17,14 @@ import static org.mockito.Mockito.verify;
 public class PlayerMarkerFactoryTest {
 
     @Mock PlayerMarker mMockPlayerMarker;
-    @Mock
-    GoogleMap mMockGoogleMap;
+    @Mock GoogleMap mMockGoogleMap;
     @Mock BitmapDescriptorFactory mMockBitmapDescriptorFactory;
 
     @Test
     public void create_a_player_marker_on_map() {
 
-        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockGoogleMap, mMockBitmapDescriptorFactory);
+        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockBitmapDescriptorFactory);
+        factory.setGoogleMap(mMockGoogleMap);
 
         PlayerMarker playerMarker = factory.create(4);
 

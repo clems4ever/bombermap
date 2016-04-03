@@ -66,9 +66,19 @@ public class LocalPlayerSocket extends PlayerSocket {
         }
     }
 
+    public void respawn(double time) {
+        try {
+            JSONObject respawnJson = buildClientJson();
+            respawnJson.put("time", time);
+            mSocket.emit("respawn", respawnJson);
+        } catch (JSONException e) {
+        }
+    }
+
     public void leave() {
         try {
             JSONObject data = buildClientJson();
+
             mSocket.emit("player_leave", data);
         } catch (JSONException e) {
         }

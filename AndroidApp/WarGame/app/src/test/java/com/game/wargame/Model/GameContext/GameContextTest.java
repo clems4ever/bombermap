@@ -18,6 +18,8 @@ public class GameContextTest {
 
     GameContext mGameContext;
 
+    GameNotification gn;
+
     @Before
     public void setUp() {
         mGameContext = new GameContext(mFragManager, new GameNotificationManager());
@@ -42,7 +44,7 @@ public class GameContextTest {
     public void testThatNotificationsArePurged() {
         mGameContext.handleFrag("killer", "killee", 0);
         mGameContext.handleFrag("killer", "killee", 1);
-        mGameContext.update(0, 200);
+        mGameContext.update(1, gn.TIME_TO_DISPLAY);
         assertEquals(1, mGameContext.getNotificationsToDisplay().size());
     }
 

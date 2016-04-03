@@ -16,14 +16,15 @@ import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
-import com.game.wargame.Model.Entities.VirtualMap.Map;
-import com.game.wargame.Model.Entities.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.GameContext.FragManager;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotificationManager;
@@ -32,10 +33,9 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
-import java.util.Set;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, OnPlayerDiedListener, GameSocket.OnPlayerEventListener, OnExplosionListener {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, OnPlayerDiedListener, GameSocket.OnPlayerEventListener, OnExplosionListener, OnPlayerRespawnListener {
 
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
@@ -75,15 +75,14 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mGameSocket.setOnPlayerEventListener(this);
         mGameSocket.setOnClockEventListener(mGlobalTimer);
 
+        FragManager fragManager = new FragManager();
+        GameNotificationManager gameNotificationManager = new GameNotificationManager();
+        mGameContext = new GameContext(fragManager, gameNotificationManager);
+
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
         mGameView.updateVirtualMapOverlay(mVirtualMap, new LatLng(48.8870407, 2.3228797));
-
-        Set<String> playerIds = mPlayersById.keySet();
-        FragManager fragManager = new FragManager(playerIds);
-        GameNotificationManager gameNotificationManager = new GameNotificationManager();
-        mGameContext = new GameContext(fragManager, gameNotificationManager);
 
         startSensors();
         initializeView();
@@ -175,6 +174,8 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void addPlayer(PlayerModel player) {
         player.setOnPlayerPositionChangedListener(this);
         player.setOnPlayerWeaponTriggeredListener(this);
+        player.setOnPlayerDiedListener(this);
+        mGameContext.addPlayer(player.getPlayerId());
         mPlayersById.put(player.getPlayerId(), player);
     }
 
@@ -224,5 +225,10 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     @Override
     public void onDied(String dead, String killer, double time) {
         mGameContext.handleFrag(dead, killer, time);
+    }
+
+    @Override
+    public void onRespawn(String playerId, double time) {
+
     }
 }

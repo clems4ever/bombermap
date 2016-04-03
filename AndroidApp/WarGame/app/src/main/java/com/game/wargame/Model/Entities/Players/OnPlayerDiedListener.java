@@ -1,4 +1,4 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Model.Entities.Players.Player;
 

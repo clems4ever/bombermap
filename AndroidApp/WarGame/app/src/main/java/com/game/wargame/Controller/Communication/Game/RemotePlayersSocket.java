@@ -58,7 +58,16 @@ public class RemotePlayersSocket {
                 double time = message.getDouble("time");
                 RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
                 player.onDie(killerId, time);
+            }
+        });
 
+        mSocket.on("respawn", new ISocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                String playerId = message.getString("player_id");
+                double time = message.getDouble("time");
+                RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
+                player.onRespawn(time);
             }
         });
     }

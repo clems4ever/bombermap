@@ -4,7 +4,7 @@ package com.game.wargame.Model.GameContext;
  * Created by sergei on 02/04/16.
  */
 public class GameNotification implements Comparable {
-    public static final int TIME_TO_DISPLAY = 200;
+    public static final int TIME_TO_DISPLAY = 2000;
 
     private double mStartTime;
     private String mText;

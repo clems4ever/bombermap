@@ -14,20 +14,27 @@ public class FragManager {
 
     private Map<String, GameScore> mScoresByPlayerId;
 
-    public FragManager(Set<String> playersId){
+    public FragManager() {
         mScoresByPlayerId = new HashMap<>();
-        for (String id : playersId) {
-            mScoresByPlayerId.put(id, new GameScore());
-        }
     }
 
-    public void addFrag(String playerId) {
-        GameScore gameScore = mScoresByPlayerId.get(playerId);
-        gameScore.setFrags(gameScore.getFrags()+1);
+    public void addPlayer(String playerId) {
+        mScoresByPlayerId.put(playerId, new GameScore());
     }
 
-    public void addDeath(String playerId) {
-        GameScore gameScore = mScoresByPlayerId.get(playerId);
-        gameScore.setDeaths(gameScore.getDeaths() + 1);
+    public void addFrag(String id) {
+        GameScore gameScore = mScoresByPlayerId.get(id);
+        if (gameScore != null)
+            gameScore.setFrags(gameScore.getFrags()+1);
+    }
+
+    public void addDeath(String id) {
+        GameScore gameScore = mScoresByPlayerId.get(id);
+        if (gameScore != null)
+            gameScore.setDeaths(gameScore.getDeaths() + 1);
+    }
+
+    public Map<String, GameScore> getScores() {
+        return mScoresByPlayerId;
     }
 }

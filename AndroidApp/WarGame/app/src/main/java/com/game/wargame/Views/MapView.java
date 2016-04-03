@@ -48,6 +48,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
 
     public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
         init(fragmentActivity, googleMapView, bitmapDescriptorFactory, null);
+        mPlayerMarkerFactory = new PlayerMarkerFactory(mBitmapDescriptorFactory);
     }
 
 
@@ -78,7 +79,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setZoomControlEnabled(true);
-        mPlayerMarkerFactory = new PlayerMarkerFactory(mGoogleMap, mBitmapDescriptorFactory);
+        mPlayerMarkerFactory.setGoogleMap(mGoogleMap);
 
         if(mOnMapReadyListener != null) {
             mOnMapReadyListener.onMapReady();
@@ -159,6 +160,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
         for (Entity entity : entities) {
             display(entity);
             if (entity.isToRemove())
+                //The View should not update the model directly
                 entitiesModel.removeEntity(entity);
         }
     }
