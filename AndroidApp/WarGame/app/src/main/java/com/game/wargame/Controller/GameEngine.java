@@ -13,18 +13,20 @@ import com.game.wargame.Controller.Engine.UpdateCallback;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Sensors.OnSensorLocationUpdatedListener;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
-import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.FragManager;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotificationManager;
@@ -35,16 +37,22 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.HashMap;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, OnPlayerDiedListener, GameSocket.OnPlayerEventListener, OnExplosionListener, OnPlayerRespawnListener {
+public class GameEngine implements OnPlayerWeaponTriggeredListener,
+        OnPlayerDiedListener,
+        GameSocket.OnPlayerEventListener,
+        OnExplosionListener,
+        OnPlayerRespawnListener,
+        OnRemotePlayerPositionUpdated,
+        OnSensorLocationUpdatedListener {
 
-    private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
 
     private java.util.Map<String, PlayerModel> mPlayersById;
     private LocalPlayerModel mCurrentPlayer;
+    private boolean mCurrentPlayerLocked;
 
     private GameView mGameView;
-    private Map mVirtualMap;
+    private RealMap mVirtualMap;
 
     private LocationRetriever mLocationRetriever;
 
@@ -54,18 +62,20 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private EntitiesModel mEntitiesModel;
     private GameContext mGameContext;
 
+
     /**
      * @brief Constructor
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
         mEntitiesModel = new EntitiesModel();
+        mCurrentPlayerLocked = false;
     }
 
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, Map virtualMap, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
+    public void onStart(GameView gameView, GameSocket gameSocket, RealMap virtualMap, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
@@ -82,7 +92,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
-        mGameView.updateVirtualMapOverlay(mVirtualMap, new LatLng(48.8870407, 2.3228797));
+        mGameView.updateVirtualMapOverlay(mVirtualMap);
 
         startSensors();
         initializeView();
@@ -102,7 +112,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Starts the sensors and listen to events
      */
     private void startSensors() {
-        mLocationRetriever.start(mCurrentPlayer);
+        mLocationRetriever.start(this);
     }
 
     private void startGlobalUpdateTimer() {
@@ -171,17 +181,43 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Adding a player to the game
      * @param player
      */
-    public void addPlayer(PlayerModel player) {
-        player.setOnPlayerPositionChangedListener(this);
+    private void addPlayer(PlayerModel player) {
         player.setOnPlayerWeaponTriggeredListener(this);
         player.setOnPlayerDiedListener(this);
         mGameContext.addPlayer(player.getPlayerId());
         mPlayersById.put(player.getPlayerId(), player);
     }
 
+    public void addLocalPlayer(LocalPlayerModel p) {
+        addPlayer(p);
+    }
+
+    public void addRemotePlayer(RemotePlayerModel p) {
+        p.setOnRemotePlayerPositionUpdated(this);
+        addPlayer(p);
+    }
+
     @Override
-    public void onPlayerPositionChanged(PlayerModel player) {
+    public void onRemotePlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player);
+    }
+
+    @Override
+    public void onSensorLocationUpdated(double latitude, double longitude) {
+        // If the new position is on the map, then lock the user and move its shadow only
+        if(isPositionOnVirtualMap(latitude, longitude)) {
+            mCurrentPlayer.moveShadow(latitude, longitude);
+            mCurrentPlayerLocked = true;
+        }
+
+        if(!mCurrentPlayerLocked) {
+            mCurrentPlayer.move(latitude, longitude);
+            mGameView.movePlayer(mCurrentPlayer);
+        }
+    }
+
+    private boolean isPositionOnVirtualMap(double latitude, double longitude) {
+        return false;
     }
 
     @Override
@@ -219,7 +255,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     @Override
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
-        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
+        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double) time, entity.getPosition(), entity.getDirection()));
     }
 
     @Override

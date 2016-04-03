@@ -13,6 +13,7 @@ import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Views.GameView;
 
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class GameEngineTest {
     @Mock private RemotePlayerSocket mMockRemotePlayerSocket2;
     @Mock private ISocket mMockSocket;
     @Mock private ISocketFactory mMockSocketFactory;
-    @Mock private Map mMockMap;
+    @Mock private RealMap mMockMap;
     @Mock private GlobalTimer mMockGlobalTimer;
 
     private GameEngine mGameEngine;

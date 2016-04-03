@@ -10,6 +10,7 @@ import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Views.MapView;
 
@@ -34,7 +35,7 @@ public class GameEngineViewUpdaterTest {
     @Mock private RemotePlayerSocket mMockRemotePlayerSocket;
     @Mock private ISocketFactory mMockSocketFactory;
     @Mock private GlobalTimer mMockGlobalTimer;
-    @Mock private Map mMockVirtualMap;
+    @Mock private RealMap mMockVirtualMap;
 
     private GameEngine mGameEngine;
 
@@ -45,9 +46,9 @@ public class GameEngineViewUpdaterTest {
     }
 
     @Test
-    public void testThatPositionOfMovingCurrentPlayerIsUpdated() {
+    public void position_of_moving_current_player_is_updated() {
         RemotePlayerModel player = new RemotePlayerModel("player_name", mMockRemotePlayerSocket);
-        mGameEngine.onPlayerPositionChanged(player);
+        mGameEngine.onRemotePlayerPositionChanged(player);
         verify(mMockGameView).movePlayer(player);
     }
 

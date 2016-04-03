@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
@@ -106,8 +107,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.moveCameraTo(position, zoom);
     }
 
-    public void updateVirtualMapOverlay(Map virtualMap, LatLng position) {
-        mMapView.updateVirtualMapOverlay(virtualMap, position);
+    public void updateVirtualMapOverlay(RealMap virtualMap) {
+        mMapView.updateVirtualMapOverlay(virtualMap);
     }
 
     public void setWeaponController(AbstractWeaponControllerView weaponController) {

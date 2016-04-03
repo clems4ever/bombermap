@@ -2,7 +2,6 @@ package com.game.wargame.Model.Players;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,8 +19,6 @@ public class LocalPlayerTest {
     private LocalPlayerSocket mMockLocalPlayerSocket;
 
     @Mock
-    private OnPlayerPositionChangedListener mMockOnPlayerPositionChangedListener;
-    @Mock
     private OnPlayerWeaponTriggeredListener mMockOnPlayerWeaponTriggeredListener;
 
     @Test
@@ -34,43 +31,25 @@ public class LocalPlayerTest {
     }
 
     @Test
-    public void testThatWhenLocationIsUpdatedPlayerUpdatesHisPosition() {
+    public void when_player_move_it_updates_its_position() {
 
         LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
-        LatLng initialPosition = new LatLng(10, 20);
-        localPlayerModel.setPosition(initialPosition);
+        localPlayerModel.move(30, 40);
 
-        localPlayerModel.onLocationUpdated(30, 40);
         LatLng newPosition = new LatLng(30, 40);
 
         assertEquals(localPlayerModel.getPosition(), newPosition);
     }
 
     @Test
-    public void testThatWhenLocationIsUpdatedPlayerBroadcastsTheMoveToEveryone() {
+    public void when_location_is_updated_player_broadcasts_the_move_to_everyone() {
 
         LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
-        LatLng initialPosition = new LatLng(10, 20);
-        localPlayerModel.setPosition(initialPosition);
-
-        localPlayerModel.onLocationUpdated(30, 40);
+        localPlayerModel.move(30, 40);
 
         verify(mMockLocalPlayerSocket).move(30, 40);
-    }
-
-    @Test
-    public void testThatWhenLocationIsUpdatedPlayerCallsItsSubscriber() {
-
-        LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
-
-        LatLng initialPosition = new LatLng(10, 20);
-        localPlayerModel.setPosition(initialPosition);
-        localPlayerModel.setOnPlayerPositionChangedListener(mMockOnPlayerPositionChangedListener);
-
-        localPlayerModel.onLocationUpdated(30, 40);
-        verify(mMockOnPlayerPositionChangedListener).onPlayerPositionChanged(localPlayerModel);
     }
 
     @Test

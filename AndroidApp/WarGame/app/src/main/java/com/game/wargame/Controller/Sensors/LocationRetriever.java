@@ -3,7 +3,6 @@ package com.game.wargame.Controller.Sensors;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,7 +18,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
     protected LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private FusedLocationProviderApi mLocationServices;
-    private OnLocationUpdatedListener mOnLocationUpdatedListener;
+    private OnSensorLocationUpdatedListener mOnSensorLocationUpdatedListener;
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -45,8 +44,8 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         createLocationRequest();
     }
 
-    public void start(OnLocationUpdatedListener onLocationUpdatedListener) {
-        mOnLocationUpdatedListener = onLocationUpdatedListener;
+    public void start(OnSensorLocationUpdatedListener onSensorLocationUpdatedListener) {
+        mOnSensorLocationUpdatedListener = onSensorLocationUpdatedListener;
         mGoogleApiClient.connect();
     }
 
@@ -73,8 +72,8 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         mLocationServices.requestLocationUpdates(mGoogleApiClient, mLocationRequest, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if(mOnLocationUpdatedListener != null) {
-                    mOnLocationUpdatedListener.onLocationUpdated(location.getLatitude(), location.getLongitude());
+                if(mOnSensorLocationUpdatedListener != null) {
+                    mOnSensorLocationUpdatedListener.onSensorLocationUpdated(location.getLatitude(), location.getLongitude());
                 }
             }
         });

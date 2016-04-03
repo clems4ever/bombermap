@@ -11,6 +11,7 @@ import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
@@ -191,39 +192,39 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
-    public void updateVirtualMapOverlay(Map virtualMap, LatLng position) {
+    public void updateVirtualMapOverlay(RealMap virtualMap) {
         Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
         Bitmap scaledBlock = Bitmap.createScaledBitmap(block, 32, 32, false);
 
         int blockWidth = scaledBlock.getWidth();
         int blockHeight = scaledBlock.getHeight();
 
-        int imageWidth = blockWidth * virtualMap.width();
-        int imageHeight = blockHeight * virtualMap.height();
+        int imageWidth = blockWidth * virtualMap.getMap().width();
+        int imageHeight = blockHeight * virtualMap.getMap().height();
 
         Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
         Bitmap groundImage = Bitmap.createBitmap(imageWidth, imageHeight, conf);
         Canvas canvas = new Canvas(groundImage);
         Paint p = new Paint();
 
-        for(int i=0; i< virtualMap.width(); ++i)
+        for(int i=0; i< virtualMap.getMap().width(); ++i)
         {
-            for(int j=0; j< virtualMap.height(); ++j) {
+            for(int j=0; j< virtualMap.getMap().height(); ++j) {
 
-                if(virtualMap.cell(i, j).type() == CellTypeEnum.BLOCK) {
+                if(virtualMap.getMap().cell(i, j).type() == CellTypeEnum.BLOCK) {
                     canvas.drawBitmap(scaledBlock, i * blockWidth, j * blockHeight, p);
                 }
             }
         }
 
         BitmapDescriptor groundBitmapDescriptor = mBitmapDescriptorFactory.fromBitmap(groundImage);
-        LatLng blockPosition = new LatLng(position.latitude, position.longitude);
+        LatLng blockPosition = virtualMap.getRealCenter();
 
         mGoogleMap.addBlock(new GroundOverlayOptions()
-                .position(blockPosition, 800, 800)
+                .position(blockPosition, virtualMap.getRealWidth(), virtualMap.getRealHeight())
                 .anchor(0.5f, 0.5f)
                 .zIndex(-100)
-                .bearing(45)
+                .bearing(virtualMap.getRealRotation())
                 .image(groundBitmapDescriptor));
     }
 

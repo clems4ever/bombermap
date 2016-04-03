@@ -12,6 +12,8 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
 
     protected RemotePlayerSocket mPlayerSocket;
 
+    protected OnRemotePlayerPositionUpdated mOnRemotePlayerPositionUpdated;
+
     public RemotePlayerModel(String playerName, RemotePlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);
 
@@ -21,6 +23,10 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
         mPlayerSocket.setOnMoveEventListener(this);
         mPlayerSocket.setOnDieEventListener(this);
         mPlayerSocket.setOnRespawnEventListener(this);
+    }
+
+    public void setOnRemotePlayerPositionUpdated(OnRemotePlayerPositionUpdated onRemotePlayerPositionUpdated) {
+        mOnRemotePlayerPositionUpdated = onRemotePlayerPositionUpdated;
     }
 
     @Override
@@ -34,8 +40,8 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
     public void onMoveEvent(double latitude, double longitude) {
         mPosition = new LatLng(latitude, longitude);
 
-        if(mOnPlayerPositionChangedListener != null) {
-            mOnPlayerPositionChangedListener.onPlayerPositionChanged(this);
+        if(mOnRemotePlayerPositionUpdated != null) {
+            mOnRemotePlayerPositionUpdated.onRemotePlayerPositionChanged(this);
         }
     }
 
