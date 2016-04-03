@@ -1,4 +1,4 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Sensors.OnLocationUpdatedListener;

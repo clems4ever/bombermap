@@ -1,19 +1,18 @@
 package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
-import com.game.wargame.Model.Entities.Projectile;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.TreeMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by sergei on 20/03/16.

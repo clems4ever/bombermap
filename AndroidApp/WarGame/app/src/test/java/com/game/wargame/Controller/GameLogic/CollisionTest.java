@@ -2,20 +2,18 @@ package com.game.wargame.Controller.GameLogic;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
-import com.game.wargame.Controller.Utils.Location;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Explosion;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Player;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import static org.junit.Assert.assertEquals;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.junit.*;
-import static org.mockito.Mockito.verify;
+
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Created by sergei on 20/03/16.

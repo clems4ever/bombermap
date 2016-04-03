@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
-import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
@@ -19,9 +19,7 @@ import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
@@ -38,10 +36,11 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
     public GameView(final FragmentActivity activity, View view) {
-        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) view.findViewById(R.id.map);
-
         mActivity = activity;
-        mMapView = new MapView(mActivity, new GoogleMapViewWrapper(mapView), new BitmapDescriptorFactory());
+
+        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) view.findViewById(R.id.map);
+        GoogleMapViewWrapper googleMap = new GoogleMapViewWrapper(mapView);
+        mMapView = new MapView(mActivity, googleMap, new BitmapDescriptorFactory());
         final GameView that = this;
 
         mFireButton = (Button) mActivity.findViewById(R.id.fire_button);
@@ -84,7 +83,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     }
 
     public void removePlayer(PlayerModel player) {
-        mMapView.removePlayer(player);
+        mMapView.removePlayer(player.getPlayerId());
     }
 
     public void moveCameraTo(LatLng position) {

@@ -1,17 +1,17 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Projectiles;
 
 import android.location.Location;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.GameLogic.OnCollisionListener;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
+import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 

@@ -1,5 +1,8 @@
 package com.game.wargame.Model.Entities;
 
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.PlayerException;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
 

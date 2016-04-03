@@ -1,8 +1,5 @@
 package com.game.wargame.Views.Animations;
 
-import com.game.wargame.Model.Entities.Explosion;
-import com.game.wargame.Model.Entities.Projectile;
-
 import java.util.ArrayList;
 
 /**

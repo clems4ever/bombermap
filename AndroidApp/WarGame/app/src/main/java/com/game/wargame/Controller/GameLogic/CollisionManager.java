@@ -1,13 +1,10 @@
 package com.game.wargame.Controller.GameLogic;
 
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
-import com.game.wargame.Controller.Utils.Location;
-
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Player;
-import com.game.wargame.Model.Entities.PlayerModel;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;

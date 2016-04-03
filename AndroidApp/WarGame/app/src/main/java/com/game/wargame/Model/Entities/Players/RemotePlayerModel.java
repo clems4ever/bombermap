@@ -1,6 +1,7 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.google.android.gms.maps.model.LatLng;
 
 /**

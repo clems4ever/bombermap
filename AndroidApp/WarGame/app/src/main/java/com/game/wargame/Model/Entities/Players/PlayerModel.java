@@ -1,4 +1,6 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Players;
+
+import com.game.wargame.Model.Entities.OnPlayerDiedListener;
 
 /**
  * Created by clement on 19/02/16.

@@ -1,7 +1,8 @@
-package com.game.wargame.Controller;
+package com.game.wargame.Model.Players;
 
-import com.game.wargame.Model.Entities.Player;
-import com.game.wargame.Model.Entities.PlayerException;
+import com.game.wargame.AppConstant;
+import com.game.wargame.Model.Entities.Players.Player;
+import com.game.wargame.Model.Entities.Players.PlayerException;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;
@@ -60,5 +61,14 @@ public class PlayerTest {
         player.setRotation(80);
 
         assertEquals(80, player.getRotation(), 0.01f);
+    }
+
+    @Test
+    public void testThatPlayerPositionIsCorrectlyInitialized() {
+        Player player = new Player("p", "p");
+
+        assertEquals(AppConstant.INITIAL_LATITUDE, player.getPosition().latitude, 0.00001);
+        assertEquals(AppConstant.INITIAL_LONGITUDE, player.getPosition().longitude, 0.00001);
+
     }
 }

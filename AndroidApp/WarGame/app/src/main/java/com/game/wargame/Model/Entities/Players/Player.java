@@ -1,5 +1,6 @@
-package com.game.wargame.Model.Entities;
+package com.game.wargame.Model.Entities.Players;
 
+import com.game.wargame.AppConstant;
 import com.google.android.gms.maps.model.LatLng;
 
 
@@ -17,7 +18,7 @@ public class Player {
         mPlayerId = playerId;
         mPlayerName = playerName;
 
-        mPosition = new LatLng(0, 0);
+        mPosition = new LatLng(AppConstant.INITIAL_LATITUDE, AppConstant.INITIAL_LONGITUDE);
         mRotation = 0;
     }
 

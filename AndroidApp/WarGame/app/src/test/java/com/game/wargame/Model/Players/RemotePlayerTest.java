@@ -1,9 +1,9 @@
-package com.game.wargame.Controller;
+package com.game.wargame.Model.Players;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
-import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;

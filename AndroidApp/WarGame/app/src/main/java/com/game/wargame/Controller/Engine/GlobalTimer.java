@@ -3,9 +3,9 @@ package com.game.wargame.Controller.Engine;
 import android.app.Activity;
 
 import com.game.wargame.Controller.GameLogic.CollisionManager;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Views.GameView;
 
 import java.util.Timer;

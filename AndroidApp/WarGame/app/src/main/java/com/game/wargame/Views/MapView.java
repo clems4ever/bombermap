@@ -4,7 +4,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.PlayerModel;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
@@ -13,7 +12,6 @@ import com.game.wargame.Views.Animations.BitmapHolder;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,10 +28,11 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
     private GoogleMapWrapper mGoogleMap;
     private GoogleMapViewWrapper mGoogleMapViewWrapper;
 
-    private HashMap<String, Marker> mPlayerLocations;
+    private HashMap<String, PlayerMarker> mPlayerLocations;
     private HashMap<String, Marker> mEntityMarkers;
     private BitmapHolder mBitmapHolder;
 
+    private PlayerMarkerFactory mPlayerMarkerFactory;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
     private OnMapReadyListener mOnMapReadyListener;
 
@@ -41,13 +40,23 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
 
     public MapView(FragmentActivity fragmentActivity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
-        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory);
+        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory, null);
+        mPlayerMarkerFactory = new PlayerMarkerFactory(mGoogleMap, mBitmapDescriptorFactory);
     }
 
-    private void init(FragmentActivity activity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
+
+    // For test
+    public MapView(FragmentActivity fragmentActivity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
+        init(fragmentActivity, googleMapViewWrapper, bitmapDescriptorFactory, playerMarkerFactory);
+    }
+
+    private void init(FragmentActivity activity, GoogleMapViewWrapper googleMapViewWrapper, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
         mActivity = activity;
+        mGoogleMap = new GoogleMapWrapper();
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
+
+        mPlayerMarkerFactory = playerMarkerFactory;
         mEntityMarkers = new HashMap<>();
 
         mGoogleMapViewWrapper = googleMapViewWrapper;
@@ -79,13 +88,7 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BitmapDescriptor bmp = mBitmapDescriptorFactory.load(LOCAL_PLAYER_MARKER_RES_ID);
-                Marker playerMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(0, 0))
-                        .anchor(0.5f, 0.35f)
-                        .flat(true)
-                        .icon(bmp));
-
+                PlayerMarker playerMarker = mPlayerMarkerFactory.create(LOCAL_PLAYER_MARKER_RES_ID);
                 mPlayerLocations.put(playerId, playerMarker);
             }
         });
@@ -95,34 +98,27 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                BitmapDescriptor bmp = mBitmapDescriptorFactory.load(REMOTE_PLAYER_MARKER_RES_ID);
-                Marker playerMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(0, 0))
-                        .anchor(0.5f, 0.35f)
-                        .flat(true)
-                        .icon(bmp));
-
+                PlayerMarker playerMarker = mPlayerMarkerFactory.create(REMOTE_PLAYER_MARKER_RES_ID);
                 mPlayerLocations.put(playerId, playerMarker);
             }
         });
     }
 
     public void movePlayerTo(final String playerId, final LatLng position) {
-        if(mGoogleMap == null) return;
+        if (mGoogleMap == null) return;
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mPlayerLocations.get(playerId);
+                PlayerMarker marker = mPlayerLocations.get(playerId);
                 if (marker != null) {
-                    marker.setPosition(position);
+                    marker.move(position);
                 }
             }
         });
     }
 
-    public void addEntityMarker(Entity entity)
-    {
+    public void addEntityMarker(Entity entity) {
         Animation animation = entity.getAnimation();
         Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(entity.getPosition())
@@ -165,12 +161,11 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
 
     }
 
-    public void removePlayer(final PlayerModel player) {
+    public void removePlayer(final String playerId) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Marker marker = mPlayerLocations.get(player.getPlayerId());
-
+                PlayerMarker marker = mPlayerLocations.get(playerId);
                 if (marker != null) {
                     marker.remove();
                 }

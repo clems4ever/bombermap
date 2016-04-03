@@ -1,14 +1,10 @@
-package com.game.wargame.Model;
+package com.game.wargame.Model.Players;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Controller.Communication.Game.RemotePlayersSocket;
-import com.game.wargame.Controller.Communication.ISocket;
-import com.game.wargame.Model.Entities.OnPlayerPositionChangedListener;
-import com.game.wargame.Model.Entities.OnPlayerWeaponTriggeredListener;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

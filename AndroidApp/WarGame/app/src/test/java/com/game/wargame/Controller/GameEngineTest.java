@@ -10,24 +10,17 @@ import com.game.wargame.Controller.Communication.ISocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
-import com.game.wargame.Model.Entities.LocalPlayerModel;
-import com.game.wargame.Model.Entities.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Views.GameView;
-import com.game.wargame.Views.MapView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.refEq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
