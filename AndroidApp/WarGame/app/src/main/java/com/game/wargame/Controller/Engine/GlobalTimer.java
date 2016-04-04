@@ -6,6 +6,7 @@ import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.GameContext.GameContext;
+import com.game.wargame.Views.Activities.GameMainFragment;
 import com.game.wargame.Views.GameView;
 
 import java.util.Timer;
@@ -19,6 +20,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class GlobalTimer extends Timer implements OnClockEventListener {
 
     private Timer mTimer;
+    private TimerTask mTimerTask;
     private long mTicks = 0;
     private Lock mLock = new ReentrantLock();
     private Activity mActivity;
@@ -26,19 +28,20 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private IUpdateCallback mUpdateCallback;
     private CollisionManager mCollisionManager;
     private GameView mGameView;
+    private boolean isStopped = false;
 
     private EntitiesModel mEntities;
     private LocalPlayerModel mCurrentPlayer;
     private GameContext mGameContext;
 
+    private GameMainFragment.Callback mGameCallback;
+
     public final int UPDATE_SAMPLE_TIME = 50;
     public final int SERVER_SAMPLE_TIME = 1000;
-    public final int GAME_TOTAL_TIME = 60000;
 
     private void startTimer() {
         mTimer = new Timer(false);
-
-        mTimer.scheduleAtFixedRate(new TimerTask() {
+        mTimerTask = new TimerTask() {
             @Override
             public void run() {
                 if (!mGameContext.toEnd()) {
@@ -61,10 +64,21 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                         }
                     });
                 } else {
-                    //TODO: end the game
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isStopped && mGameCallback != null) { //TODO : find a way around this, UGLY
+                                mGameCallback.onGameFinish(mGameContext);
+                                stop();
+                                isStopped = true;
+                            }
+                        }
+                    });
                 }
             }
-        }, 0, UPDATE_SAMPLE_TIME);
+        };
+
+        mTimer.scheduleAtFixedRate(mTimerTask, 0, UPDATE_SAMPLE_TIME);
     }
 
     public GlobalTimer(Activity activity) {
@@ -91,6 +105,10 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     }
 
     private void stopTimer() {
+        if (mTimerTask != null) {
+            mTimerTask.cancel();
+        }
+
         if(mTimer != null) {
             mTimer.cancel();
             mTimer.purge();
@@ -100,6 +118,8 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     public void setClock(long ticks) {
         mLock.lock();
         mTicks = ticks*(SERVER_SAMPLE_TIME/UPDATE_SAMPLE_TIME);
+        if (!mGameContext.isStarted())
+            mGameContext.start(ticks*SERVER_SAMPLE_TIME);
         mLock.unlock();
     }
 
@@ -128,5 +148,9 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
     public void setUpdateCallback(IUpdateCallback updateCallback) {
         mUpdateCallback = updateCallback;
+    }
+
+    public void setGameCallback(GameMainFragment.Callback gameCallback) {
+        this.mGameCallback = gameCallback;
     }
 }

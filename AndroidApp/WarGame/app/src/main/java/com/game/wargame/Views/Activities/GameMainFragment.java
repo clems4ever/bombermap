@@ -3,6 +3,7 @@ package com.game.wargame.Views.Activities;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.Entities.VirtualMap.Repository;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.game.wargame.Views.BundleExtractor;
@@ -58,6 +60,8 @@ public class GameMainFragment extends Fragment {
         mBundleExtractor = bundleExtractor;
     }
 
+    private Callback mGameCallback;
+
     public void setConnectionManager(IConnectionManager connectionManager) {
         mConnectionManager = connectionManager;
     }
@@ -87,11 +91,12 @@ public class GameMainFragment extends Fragment {
         Map virtualMap = mVirtualMapRepository.get(0);
 
         final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 800, 800, 0);
+        mGameEngine = new GameEngine();
+        mGameEngine.setCallback(mGameCallback);
 
         mGameView.start(new MapView.OnMapReadyListener() {
             @Override
             public void onMapReady() {
-                mGameEngine = new GameEngine();
                 mGameEngine.onStart(mGameView,
                         gameSocket,
                         realMap,
@@ -118,5 +123,14 @@ public class GameMainFragment extends Fragment {
         mConnectionManager.clear();
 
         super.onStop();
+    }
+
+    public void setCallback(Callback callback) {
+        mGameCallback = callback;
+    }
+
+    public interface Callback {
+        public void onGameFinish(GameContext gameContext);
+        public void onGamePaused(GameContext gameContext);
     }
 }

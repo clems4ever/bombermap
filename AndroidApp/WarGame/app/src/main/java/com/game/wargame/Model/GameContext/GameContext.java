@@ -1,6 +1,7 @@
 package com.game.wargame.Model.GameContext;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.Players.Player;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class GameContext {
 
-    private static final int GAME_DURATION = 10*60*1000;
+    private static final int GAME_DURATION = 5*1000;
 
     private boolean mStarted;
     private double mTimeStart;
@@ -38,12 +39,10 @@ public class GameContext {
     }
 
     public void update(long ticks, int increment) {
-        if (!isStarted()) {
-            mTimeStart = ticks*increment;
-            mStarted = true;
+        if (isStarted() && !toEnd()) {
+            mCurrentTime = ticks * increment;
+            purgeNotifications(mCurrentTime);
         }
-        mCurrentTime = ticks*increment;
-        purgeNotifications(mCurrentTime);
     }
 
     public int getRemainingTime() {
@@ -54,10 +53,10 @@ public class GameContext {
         mFragManager.addPlayer(playerId);
     }
 
-    public void handleFrag(String dead, String killer, double time) {
-        mFragManager.addFrag(killer);
-        mFragManager.addDeath(dead);
-        GameNotification gameNotification = new GameNotification(killer+" killed "+dead+" savagely", time);
+    public void handleFrag(Player dead, Player killer, double time) {
+        mFragManager.addFrag(killer.getPlayerId());
+        mFragManager.addDeath(dead.getPlayerId());
+        GameNotification gameNotification = new GameNotification(killer.getPlayerName()+" killed "+dead.getPlayerName()+" savagely", time);
         mGameNotificationManager.pushNotification(gameNotification);
     }
 
@@ -75,4 +74,8 @@ public class GameContext {
         mGameNotificationManager.removeUnusedNotifications(time);
     }
 
+    public void start(double time) {
+        mTimeStart = time;
+        mStarted = true;
+    }
 }

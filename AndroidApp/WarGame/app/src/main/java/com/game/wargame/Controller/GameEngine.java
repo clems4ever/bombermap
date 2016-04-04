@@ -22,6 +22,7 @@ import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
+import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
@@ -30,6 +31,7 @@ import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.FragManager;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotificationManager;
+import com.game.wargame.Views.Activities.GameMainFragment;
 import com.game.wargame.Views.GameView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
@@ -62,6 +64,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     private EntitiesModel mEntitiesModel;
     private GameContext mGameContext;
 
+    private GameMainFragment.Callback mGameCallback;
 
     /**
      * @brief Constructor
@@ -122,6 +125,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mGlobalTimer.setGameView(mGameView);
         mGlobalTimer.setGameContext(mGameContext);
         mGlobalTimer.setUpdateCallback(new UpdateCallback());
+        mGlobalTimer.setGameCallback(mGameCallback);
         mGlobalTimer.start();
     }
 
@@ -260,11 +264,17 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
     @Override
     public void onDied(String dead, String killer, double time) {
-        mGameContext.handleFrag(dead, killer, time);
+        Player playerKiller = mPlayersById.get(killer);
+        Player playerDead = mPlayersById.get(dead);
+        mGameContext.handleFrag(playerDead, playerKiller, time);
     }
 
     @Override
     public void onRespawn(String playerId, double time) {
 
+    }
+
+    public void setCallback(GameMainFragment.Callback callback) {
+        this.mGameCallback = callback;
     }
 }

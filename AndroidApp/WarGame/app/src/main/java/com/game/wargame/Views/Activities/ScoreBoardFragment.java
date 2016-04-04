@@ -27,9 +27,12 @@ public class ScoreBoardFragment extends Fragment {
 
     GameContext mGameContext;
 
+    LinearLayout mScoreLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View fragment = inflater.inflate(R.layout.game_entry, container, false);
+        View fragment = inflater.inflate(R.layout.score_board, container, false);
+        mScoreLayout = (LinearLayout)fragment.findViewById(R.id.score_holder);
         return fragment;
     }
 
@@ -39,13 +42,11 @@ public class ScoreBoardFragment extends Fragment {
 
         Map<String, GameScore> scores = mGameContext.getScores();
 
-        LinearLayout scoreLayout =  (LinearLayout) getActivity().findViewById(R.id.score_holder);
-
         Set<String> playersId = scores.keySet();
         for (String playerId : playersId) {
             TextView scoreTextView = new TextView(getActivity());
             scoreTextView.setText(scores.get(playerId).toString());
-            scoreLayout.addView(scoreTextView);
+            mScoreLayout.addView(scoreTextView);
         }
     }
 
