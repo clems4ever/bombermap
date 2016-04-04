@@ -1,5 +1,7 @@
 package com.game.wargame.Views;
 
+import android.graphics.Bitmap;
+
 import com.game.wargame.Views.Animations.IBitmapFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
@@ -13,6 +15,10 @@ public class BitmapDescriptorFactory implements IBitmapFactory {
 
     public BitmapDescriptor load(int resId) {
         return com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(resId);
+    }
+
+    public BitmapDescriptor fromBitmap(Bitmap bitmap) {
+        return com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
 }

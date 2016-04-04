@@ -12,29 +12,29 @@ import java.util.Set;
 
 public class FragManager {
 
-    private Map<String, GameScore> mScoresById;
+    private Map<String, GameScore> mScoresByPlayerId;
 
     public FragManager() {
-        mScoresById = new HashMap<>();
+        mScoresByPlayerId = new HashMap<>();
     }
 
     public void addPlayer(String playerId) {
-        mScoresById.put(playerId, new GameScore());
+        mScoresByPlayerId.put(playerId, new GameScore());
     }
 
     public void addFrag(String id) {
-        GameScore gameScore = mScoresById.get(id);
+        GameScore gameScore = mScoresByPlayerId.get(id);
         if (gameScore != null)
             gameScore.setFrags(gameScore.getFrags()+1);
     }
 
     public void addDeath(String id) {
-        GameScore gameScore = mScoresById.get(id);
+        GameScore gameScore = mScoresByPlayerId.get(id);
         if (gameScore != null)
             gameScore.setDeaths(gameScore.getDeaths() + 1);
     }
 
     public Map<String, GameScore> getScores() {
-        return mScoresById;
+        return mScoresByPlayerId;
     }
 }

@@ -73,8 +73,4 @@ public class Player {
     public float getRotation() {
         return mRotation;
     }
-
-    public boolean isVisible() {
-        return mIsVisible;
-    }
 }

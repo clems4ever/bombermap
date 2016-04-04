@@ -2,17 +2,16 @@ package com.game.wargame.Views;
 
 import android.os.Bundle;
 
-import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.MapView;
 
 /**
  * Created by developer on 3/13/16.
  */
-public class GoogleMapViewWrapper {
+public class GoogleMapView implements IGoogleMapView {
 
     private MapView mMapView;
 
-    public GoogleMapViewWrapper(MapView mapView) {
+    public GoogleMapView(MapView mapView) {
         mMapView = mapView;
     }
 
@@ -27,15 +26,11 @@ public class GoogleMapViewWrapper {
     public void getMapAsync(final OnMapReadyCallback onMapReadyCallback) {
         mMapView.getMapAsync(new com.google.android.gms.maps.OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
-                GoogleMapWrapper googleMapWrapper = new GoogleMapWrapper(googleMap);
+            public void onMapReady(com.google.android.gms.maps.GoogleMap googleMap) {
+                GoogleMap googleMapWrapper = new GoogleMap(googleMap);
                 onMapReadyCallback.onMapReady(googleMapWrapper);
             }
         });
     }
-
-    public interface OnMapReadyCallback {
-        public void onMapReady(GoogleMapWrapper googleMap);
-    }
-
 }
+

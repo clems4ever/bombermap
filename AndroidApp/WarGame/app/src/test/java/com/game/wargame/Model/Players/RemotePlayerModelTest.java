@@ -1,8 +1,8 @@
 package com.game.wargame.Model.Players;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class RemotePlayerModelTest {
     private RemotePlayerSocket mMockRemotePlayerSocket;
 
     @Mock
-    private OnPlayerPositionChangedListener mMockOnPlayerPositionChangedListener;
+    private OnRemotePlayerPositionUpdated mMockOnPlayerPositionChangedListener;
 
     @Mock
     private OnPlayerWeaponTriggeredListener mMockOnPlayerWeaponTriggeredListener;
@@ -33,13 +33,13 @@ public class RemotePlayerModelTest {
         RemotePlayerModel remotePlayerModel = new RemotePlayerModel("player_id", mMockRemotePlayerSocket);
 
         // Set the listener to the player
-        remotePlayerModel.setOnPlayerPositionChangedListener(mMockOnPlayerPositionChangedListener);
+        remotePlayerModel.setOnRemotePlayerPositionUpdated(mMockOnPlayerPositionChangedListener);
 
         verify(mMockRemotePlayerSocket).setOnMoveEventListener(listener.capture());
 
         listener.getValue().onMoveEvent(5.0f, 10.0f);
 
-        verify(mMockOnPlayerPositionChangedListener).onPlayerPositionChanged(Matchers.refEq(remotePlayerModel));
+        verify(mMockOnPlayerPositionChangedListener).onRemotePlayerPositionChanged(Matchers.refEq(remotePlayerModel));
     }
 
     @Test

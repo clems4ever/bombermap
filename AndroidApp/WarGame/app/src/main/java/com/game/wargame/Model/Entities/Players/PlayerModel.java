@@ -5,7 +5,6 @@ package com.game.wargame.Model.Entities.Players;
  */
 public abstract class PlayerModel extends Player {
 
-    protected OnPlayerPositionChangedListener mOnPlayerPositionChangedListener;
     protected OnPlayerWeaponTriggeredListener mOnPlayerWeaponTriggeredListener;
     protected OnPlayerDiedListener mOnPlayerDiedListener;
     protected OnPlayerRespawnListener mOnPlayerRespawnListener;
@@ -16,10 +15,6 @@ public abstract class PlayerModel extends Player {
 
     public void setOnPlayerWeaponTriggeredListener(OnPlayerWeaponTriggeredListener onPlayerWeaponTriggeredListener) {
         mOnPlayerWeaponTriggeredListener = onPlayerWeaponTriggeredListener;
-    }
-
-    public void setOnPlayerPositionChangedListener(OnPlayerPositionChangedListener onPlayerPositionChangedListener) {
-        mOnPlayerPositionChangedListener = onPlayerPositionChangedListener;
     }
 
     public void setOnPlayerDiedListener(OnPlayerDiedListener onPlayerDiedListener)

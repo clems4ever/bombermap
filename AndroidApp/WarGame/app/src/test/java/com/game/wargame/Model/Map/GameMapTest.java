@@ -1,8 +1,8 @@
 package com.game.wargame.Model.Map;
 
-import com.game.wargame.Model.Entities.Map.GameMap;
-import com.game.wargame.Model.Entities.Map.MapCell;
-import com.game.wargame.Model.Entities.Map.MapCellType;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.Cell;
+import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,10 +22,10 @@ public class GameMapTest {
 
     @Test
     public void testThatSizeIsCorrect() {
-        GameMap gameMap = new GameMap(10, 20);
+        Map virtualMap = new Map(10, 20);
 
-        assertEquals(10, gameMap.width());
-        assertEquals(20, gameMap.height());
+        assertEquals(10, virtualMap.width());
+        assertEquals(20, virtualMap.height());
     }
 
     @Test
@@ -33,25 +33,25 @@ public class GameMapTest {
         int width = 10;
         int height = 14;
 
-        GameMap gameMap = new GameMap(10, 14);
+        Map virtualMap = new Map(10, 14);
 
         for(int i=0; i<width; ++i) {
             for(int j=0; j<height; ++j) {
-                assertNotNull(gameMap.cell(i, j));
-                assertEquals(MapCellType.EMPTY, gameMap.cell(i, j).type());
+                assertNotNull(virtualMap.cell(i, j));
+                assertEquals(CellTypeEnum.EMPTY, virtualMap.cell(i, j).type());
             }
         }
     }
 
     @Test
     public void testThatCellsAreCorrectlySet() {
-        GameMap gameMap = new GameMap(3, 3);
-        MapCell mapCell = new MapCell(MapCellType.BLOCK);
+        Map virtualMap = new Map(3, 3);
+        Cell mapCell = new Cell(CellTypeEnum.BLOCK);
 
-        gameMap.setCell(0, 2, mapCell);
+        virtualMap.setCell(0, 2, mapCell);
 
-        assertEquals(mapCell, gameMap.cell(0, 2));
-        assertNotEquals(mapCell, gameMap.cell(1, 1));
+        assertEquals(mapCell, virtualMap.cell(0, 2));
+        assertNotEquals(mapCell, virtualMap.cell(1, 1));
     }
 
 }

@@ -20,7 +20,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConnectionManager = new RabbitMQConnectionManager();
+        mConnectionManager = new RabbitMQConnectionManager(AppConstant.VIRTUAL_HOST);
 
         GameEntryFragment gameEntryFragment = new GameEntryFragment();
         gameEntryFragment.setConnectionManager(mConnectionManager);
