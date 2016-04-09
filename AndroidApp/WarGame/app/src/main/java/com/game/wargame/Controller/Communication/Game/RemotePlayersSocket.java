@@ -1,5 +1,7 @@
 package com.game.wargame.Controller.Communication.Game;
 
+import android.util.Log;
+
 import com.game.wargame.Controller.Communication.ISocket;
 
 import org.json.JSONException;
@@ -29,7 +31,10 @@ public class RemotePlayersSocket {
                 if(player != null) {
                     double latitude = message.getDouble("lat");
                     double longitude = message.getDouble("long");
-                    player.onMove(latitude, longitude);
+                    if (player != null)
+                        player.onMove(latitude, longitude);
+                    else
+                        Log.w("move", "remote player " + playerId + " is null");
                 }
             }
         });
@@ -45,7 +50,10 @@ public class RemotePlayersSocket {
                     double longitude = message.getDouble("long");
                     double time = message.getDouble("time");
 
-                    player.onFire(latitude, longitude, time);
+                    if (player != null)
+                        player.onFire(latitude, longitude, time);
+                    else
+                        Log.w("fire", "remote player " + playerId + " is null");
                 }
             }
         });
@@ -57,7 +65,11 @@ public class RemotePlayersSocket {
                 String killerId = message.getString("killer_id");
                 double time = message.getDouble("time");
                 RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
-                player.onDie(killerId, time);
+
+                if (player != null)
+                    player.onDie(killerId, time);
+                else
+                    Log.w("died", "remote player " + playerId + " is null");
             }
         });
 
@@ -67,7 +79,10 @@ public class RemotePlayersSocket {
                 String playerId = message.getString("player_id");
                 double time = message.getDouble("time");
                 RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
-                player.onRespawn(time);
+                if (player != null)
+                    player.onRespawn(time);
+                else
+                    Log.w("respawn", "remote player " + playerId + " is null");
             }
         });
     }

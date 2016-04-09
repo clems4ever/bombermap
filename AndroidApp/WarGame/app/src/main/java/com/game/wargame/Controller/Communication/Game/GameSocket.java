@@ -61,6 +61,19 @@ public class GameSocket {
                 }
             }
         });
+
+        mSocket.on("game_start_sync", new ISocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) {
+                try {
+                    double time = message.getDouble("time");
+                    if (mOnClockEventListener != null)
+                        mOnClockEventListener.setGameStartTime(time);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public String getGameId() {
