@@ -1,10 +1,12 @@
 package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.AppConstant;
+import com.game.wargame.Model.Entities.Updatable;
+import com.game.wargame.Views.Animations.Animation;
 import com.google.android.gms.maps.model.LatLng;
 
 
-public class Player {
+public class Player implements Updatable {
 
     protected final static int TIME_TO_RESPAWN = 2000;
 
@@ -13,6 +15,7 @@ public class Player {
     protected int mHealth = 100;
     protected boolean mIsVisible = true;
     protected int mRespawnCounter = 0;
+    protected Animation mAnimation;
 
     protected LatLng mPosition;
     protected float mRotation;
@@ -72,5 +75,14 @@ public class Player {
 
     public float getRotation() {
         return mRotation;
+    }
+
+    public void update(long ticks, int increment) {
+        if (mAnimation != null)
+            mAnimation.addTime(increment);
+    }
+
+    public Animation getAnimation() {
+        return mAnimation;
     }
 }

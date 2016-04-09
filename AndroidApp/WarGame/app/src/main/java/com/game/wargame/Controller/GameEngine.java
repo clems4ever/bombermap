@@ -8,8 +8,8 @@ import android.view.View;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
+import com.game.wargame.Controller.Engine.DisplayCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
-import com.game.wargame.Controller.Engine.UpdateCallback;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
@@ -103,7 +103,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mGameContext = new GameContext(fragManager, gameNotificationManager);
 
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
-        addPlayer(mCurrentPlayer);
+        addLocalPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
         mGameView.updateVirtualMapOverlay(mVirtualMap);
 
@@ -140,9 +140,9 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mGlobalTimer.setEntitiesModel(mEntitiesModel);
         mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
         mGlobalTimer.setCollisionManager(new CollisionManager(new com.game.wargame.Controller.Utils.Location()));
-        mGlobalTimer.setGameView(mGameView);
+        DisplayCallback displayCallback = new DisplayCallback(mGameView, mGameContext, mCurrentPlayer, mEntitiesModel);
+        mGlobalTimer.setDisplayCallback(displayCallback);
         mGlobalTimer.setGameContext(mGameContext);
-        mGlobalTimer.setUpdateCallback(new UpdateCallback());
         mGlobalTimer.setGameCallback(mGameCallback);
         mGlobalTimer.start();
     }
@@ -282,8 +282,9 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     @Override
     public void onPlayerJoined(RemotePlayerSocket playerSocket) {
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
-        addPlayer(player);
+        addRemotePlayer(player);
         mGameView.addRemotePlayer(player);
+        mCurrentPlayer.syncGameStart(mGameContext.getTimeStart());
     }
 
     // A remote player has left the game
@@ -306,7 +307,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     public void onDied(String dead, String killer, double time) {
         Player playerKiller = mPlayersById.get(killer);
         Player playerDead = mPlayersById.get(dead);
-        mGameContext.handleFrag(playerDead, playerKiller, time);
+        if (playerDead != null && playerKiller != null)
+            mGameContext.handleFrag(playerDead, playerKiller, time);
     }
 
     @Override

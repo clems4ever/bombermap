@@ -98,9 +98,9 @@ public class Projectile extends Entity {
     @Override
     public void update(long ticks, int increment)
     {
+        super.update(ticks, increment);
         double time = ticks*increment;
         Double newTimestamp = mTrajectory.ceilingKey(time);
-        mAnimation.addTime(increment);
 
         if (newTimestamp != null) {
             LatLng newPosition = mTrajectory.get(newTimestamp);

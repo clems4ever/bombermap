@@ -25,14 +25,13 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private Lock mLock = new ReentrantLock();
     private Activity mActivity;
 
-    private IUpdateCallback mUpdateCallback;
     private CollisionManager mCollisionManager;
-    private GameView mGameView;
     private boolean isStopped = false;
 
     private EntitiesModel mEntities;
     private LocalPlayerModel mCurrentPlayer;
     private GameContext mGameContext;
+    private IDisplayCallback mDisplayCallback;
 
     private GameMainFragment.Callback mGameCallback;
 
@@ -48,9 +47,9 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                     mTicks++;
                     double time = mTicks * UPDATE_SAMPLE_TIME;
 
-                    mUpdateCallback.update(mEntities, mTicks, UPDATE_SAMPLE_TIME);
-                    mUpdateCallback.update(mGameContext, mTicks, UPDATE_SAMPLE_TIME);
-                    mUpdateCallback.update(mCurrentPlayer, mTicks, UPDATE_SAMPLE_TIME);
+                    mEntities.update(mTicks, UPDATE_SAMPLE_TIME);
+                    mGameContext.update(mTicks, UPDATE_SAMPLE_TIME);
+                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME);
 
                     mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
                             mCurrentPlayer,
@@ -59,8 +58,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mGameView.display(mEntities);
-                            mGameView.display(mGameContext);
+                            mDisplayCallback.display();
                         }
                     });
                 } else {
@@ -77,7 +75,6 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                 }
             }
         };
-
         mTimer.scheduleAtFixedRate(mTimerTask, 0, UPDATE_SAMPLE_TIME);
     }
 
@@ -123,6 +120,17 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mLock.unlock();
     }
 
+    @Override
+    public void setGameStartTime(double time) {
+        mLock.lock();
+        if ((int)time != -1) {
+            if ((int)mGameContext.getTimeStart() != -1)
+                time = Math.min(time, mGameContext.getTimeStart());
+            mGameContext.setTimeStart(time);
+        }
+        mLock.unlock();
+    }
+
     public void setEntitiesModel(EntitiesModel entities)
     {
         mEntities = entities;
@@ -133,11 +141,6 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mCurrentPlayer = player;
     }
 
-    public void setGameView(GameView gameView)
-    {
-        mGameView = gameView;
-    }
-
     public void setCollisionManager(CollisionManager collisionManager) {
         mCollisionManager = collisionManager;
     }
@@ -146,11 +149,11 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mGameContext = gameContext;
     }
 
-    public void setUpdateCallback(IUpdateCallback updateCallback) {
-        mUpdateCallback = updateCallback;
-    }
-
     public void setGameCallback(GameMainFragment.Callback gameCallback) {
         this.mGameCallback = gameCallback;
+    }
+
+    public void setDisplayCallback(IDisplayCallback displayCallback) {
+        mDisplayCallback = displayCallback;
     }
 }

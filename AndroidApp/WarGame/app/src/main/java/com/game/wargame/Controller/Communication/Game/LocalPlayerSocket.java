@@ -83,4 +83,13 @@ public class LocalPlayerSocket extends PlayerSocket {
         } catch (JSONException e) {
         }
     }
+
+    public void gameStart(double time) {
+        try {
+            JSONObject data = buildClientJson();
+            data.put("time", time);
+            mSocket.emit("game_start_sync", data);
+        } catch (JSONException e) {
+        }
+    }
 }

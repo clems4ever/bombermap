@@ -1,7 +1,12 @@
 package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
+import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.Animations.AnimationFactory;
+import com.game.wargame.Views.Animations.IAnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONObject;
 
 /**
  * This local player can be locked
@@ -11,6 +16,8 @@ public class LocalPlayerModel extends PlayerModel {
     private LocalPlayerSocket mPlayerSocket;
 
     private LatLng mShadowPosition;
+
+    protected Animation mAnimation;
 
     public LocalPlayerModel(String playerName, LocalPlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);
@@ -46,13 +53,20 @@ public class LocalPlayerModel extends PlayerModel {
 
             mRespawnCounter = TIME_TO_RESPAWN;
 
+            mAnimation = AnimationFactory.buildPlayerDeadAnimation(false);
+
             if (mOnPlayerDiedListener != null) {
                 mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
             }
         }
     }
 
+    public void syncGameStart(double time) {
+        mPlayerSocket.gameStart(time);
+    }
+
     public void respawn(double time) {
+        mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
         mPlayerSocket.respawn(time);
     }
 
@@ -61,6 +75,7 @@ public class LocalPlayerModel extends PlayerModel {
     }
 
     public void update(long ticks, int increment) {
+        super.update(ticks, increment);
         if (mRespawnCounter > increment)
             mRespawnCounter -= increment;
         else if (mRespawnCounter > 0) {
