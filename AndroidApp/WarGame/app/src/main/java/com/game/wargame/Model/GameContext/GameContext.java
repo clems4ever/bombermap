@@ -3,6 +3,7 @@ package com.game.wargame.Model.GameContext;
 import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.GameLogic.GameScore;
 import com.game.wargame.Model.Entities.Players.Player;
+import com.game.wargame.Model.Entities.Updatable;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -10,12 +11,12 @@ import java.util.Map;
 /**
  * Created by sergei on 18/03/16.
  */
-public class GameContext {
+public class GameContext implements Updatable {
 
     private static final int GAME_DURATION = AppConstant.GAME_DURATION * 1000;
 
     private boolean mStarted;
-    private double mTimeStart;
+    private double mTimeStart = -1;
     private double mCurrentTime;
     private FragManager mFragManager;
     private GameNotificationManager mGameNotificationManager;
@@ -25,8 +26,12 @@ public class GameContext {
         mGameNotificationManager = gameNotificationManager;
     }
 
-    public void setTimeStart(int timeStart) {
+    public void setTimeStart(double timeStart) {
         mTimeStart = timeStart;
+    }
+
+    public double getTimeStart() {
+        return mTimeStart;
     }
 
     public void setCurrentTime(int currentTime) {
