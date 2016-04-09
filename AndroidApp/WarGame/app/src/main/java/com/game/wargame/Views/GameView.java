@@ -139,6 +139,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         return mMapView.getMapProjection();
     }
 
+    public MapView getMapView() {
+        return mMapView;
+    }
+
     public interface OnWeaponTargetDefinedListener {
         public void onWeaponTargetDefined(float x, float y);
     }

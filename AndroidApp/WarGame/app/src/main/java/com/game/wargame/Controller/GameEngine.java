@@ -12,7 +12,9 @@ import com.game.wargame.Controller.Engine.EntitiesUpdateCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
+import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Sensors.OnLocationRetrievedListener;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
@@ -23,14 +25,21 @@ import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Views.GameView;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener, OnExplosionListener {
+public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener, OnExplosionListener, OnLocationRetrievedListener {
 
     private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
@@ -40,7 +49,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private GameView mGameView;
 
-    private LocationRetriever mLocationRetriever;
+    private AbstractLocationRetriever mLocationRetriever;
 
     private GlobalTimer mGlobalTimer;
     private GameSocket mGameSocket;
@@ -48,18 +57,22 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private EntitiesModel mEntitiesModel;
     private CollisionManager mCollisionManager;
 
+    // Path Editor for debug
+    private LinkedList<LatLng> mPathEditor;
+
     /**
      * @brief Constructor
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
         mEntitiesModel = new EntitiesModel();
+        mPathEditor = new LinkedList<>();
     }
 
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, LocationRetriever locationRetriever, GlobalTimer globalTimer) {
+    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, AbstractLocationRetriever locationRetriever, GlobalTimer globalTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
@@ -72,7 +85,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
 
-        startSensors();
+        startLocationRetriever();
         initializeView();
         startEntitiesUpdateTimer();
     }
@@ -82,15 +95,23 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      */
     public void onStop() {
         mCurrentPlayer.leave();
-        stopSensors();
+        stopLocationRetriever();
         stopGameTimers();
     }
 
     /**
      * @brief Starts the sensors and listen to events
      */
-    private void startSensors() {
-        mLocationRetriever.start(mCurrentPlayer);
+    private void startLocationRetriever() {
+        mLocationRetriever.setOnLocationRetrievedListener(this);
+        mLocationRetriever.start();
+    }
+
+    /**
+     * @brief Stops listening to the sensors
+     */
+    private void stopLocationRetriever() {
+        mLocationRetriever.stop();
     }
 
     private void startEntitiesUpdateTimer() {
@@ -108,13 +129,6 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
 
     private double getTime() {
         return (double) mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME;
-    }
-
-    /**
-     * @brief Stops listening to the sensors
-     */
-    private void stopSensors() {
-        mLocationRetriever.stop();
     }
 
     /**
@@ -152,6 +166,35 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
                 mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 15);
             }
         });
+
+        mGameView.getMapView().setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng position) {
+                mPathEditor.push(position);
+            }
+        });
+
+        mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng _) {
+                Iterator<LatLng> it = mPathEditor.iterator();
+                JSONArray jsonArray = new JSONArray();
+
+                while (it.hasNext()) {
+                    LatLng position = it.next();
+
+                    JSONObject latLngJson = new JSONObject();
+                    try {
+                        latLngJson.put("lat", position.latitude);
+                        latLngJson.put("long", position.longitude);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    jsonArray.put(latLngJson);
+                }
+                Log.d("MapView touch debug", jsonArray.toString());
+            }
+        });
     }
 
     /**
@@ -167,6 +210,10 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     @Override
     public void onPlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player);
+    }
+
+    private boolean isPositionOnVirtualMap(double latitude, double longitude) {
+        return false;
     }
 
     @Override
@@ -205,5 +252,10 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
         mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
+    }
+
+    @Override
+    public void onLocationRetrieved(double latitude, double longitude) {
+
     }
 }

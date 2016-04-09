@@ -41,13 +41,14 @@ public class LocationRetrieverTest {
     private Bundle mMockBundle;
 
     @Mock
-    private OnLocationUpdatedListener mMockOnLocationUpdatedListener;
+    private OnLocationRetrievedListener mMockOnLocationRetrievedListener;
 
     @Test
     public void testThatLocationRetrieverCallsTheGoogleApi() {
         LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.start(mMockOnLocationUpdatedListener);
+        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        locationRetriever.start();
 
         locationRetriever.stop();
 
@@ -59,7 +60,8 @@ public class LocationRetrieverTest {
     public void testThatWhenConnectedListenerStartsListening() {
         LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.start(mMockOnLocationUpdatedListener);
+        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        locationRetriever.start();
 
         locationRetriever.onConnected(mMockBundle);
 
@@ -71,7 +73,8 @@ public class LocationRetrieverTest {
         ArgumentCaptor<LocationListener> captor = ArgumentCaptor.forClass(LocationListener.class);
         LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.start(mMockOnLocationUpdatedListener);
+        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        locationRetriever.start();
 
         locationRetriever.onConnected(mMockBundle);
 
@@ -84,14 +87,15 @@ public class LocationRetrieverTest {
 
         listener.onLocationChanged(mMockLocation);
 
-        verify(mMockOnLocationUpdatedListener).onLocationUpdated(eq(5.0d), eq(10.0d));
+        verify(mMockOnLocationRetrievedListener).onLocationRetrieved(eq(5.0d), eq(10.0d));
     }
 
     @Test
     public void testReconnectionWhenServiceConnectionIsSuspended() {
         LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.start(mMockOnLocationUpdatedListener);
+        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        locationRetriever.start();
         locationRetriever.onConnectionSuspended(5);
 
         verify(mMockGoogleApiClient, times(2)).connect();

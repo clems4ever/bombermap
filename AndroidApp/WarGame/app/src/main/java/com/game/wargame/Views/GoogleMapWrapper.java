@@ -47,4 +47,12 @@ public class GoogleMapWrapper {
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
+    public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {
+        mGoogleMap.setOnMapClickListener(onMapClickListener);
+    }
+
+    public void setOnMapLongClickListener(com.google.android.gms.maps.GoogleMap.OnMapLongClickListener onMapLongClickListener) {
+        mGoogleMap.setOnMapLongClickListener(onMapLongClickListener);
+    }
+
 }

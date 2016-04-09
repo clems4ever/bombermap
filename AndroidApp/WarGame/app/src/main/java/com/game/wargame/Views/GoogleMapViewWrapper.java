@@ -1,6 +1,7 @@
 package com.game.wargame.Views;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.MapView;

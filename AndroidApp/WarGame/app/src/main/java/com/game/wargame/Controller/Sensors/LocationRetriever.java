@@ -13,13 +13,12 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LocationRetriever extends AbstractLocationRetriever implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
     private Location mCurrentLocation;
     private FusedLocationProviderApi mLocationServices;
-    private OnLocationUpdatedListener mOnLocationUpdatedListener;
 
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
@@ -44,8 +43,7 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         createLocationRequest();
     }
 
-    public void start(OnLocationUpdatedListener onLocationUpdatedListener) {
-        mOnLocationUpdatedListener = onLocationUpdatedListener;
+    public void start() {
         mGoogleApiClient.connect();
     }
 
@@ -72,8 +70,8 @@ public class LocationRetriever implements GoogleApiClient.ConnectionCallbacks, G
         mLocationServices.requestLocationUpdates(mGoogleApiClient, mLocationRequest, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                if(mOnLocationUpdatedListener != null) {
-                    mOnLocationUpdatedListener.onLocationUpdated(location.getLatitude(), location.getLongitude());
+                if(mOnLocationRetrievedListener != null) {
+                    mOnLocationRetrievedListener.onLocationRetrieved(location.getLatitude(), location.getLongitude());
                 }
             }
         });

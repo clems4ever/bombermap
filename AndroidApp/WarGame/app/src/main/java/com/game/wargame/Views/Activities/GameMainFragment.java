@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameEngine;
+import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Sensors.PathPlayer;
 import com.game.wargame.R;
 import com.game.wargame.Views.GameView;
 import com.game.wargame.Views.MapView;
@@ -50,7 +53,7 @@ public class GameMainFragment extends Fragment {
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-
+        final AbstractLocationRetriever locationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
 
         mGameView.start(new MapView.OnMapReadyListener() {
             @Override
@@ -59,8 +62,8 @@ public class GameMainFragment extends Fragment {
                 mGameEngine.onStart(mGameView,
                         gameSocket,
                         localPlayerSocket,
-                        new LocationRetriever(getActivity()),
-                        new GlobalTimer((FragmentActivity) getActivity())
+                        locationRetriever,
+                        new GlobalTimer(getActivity())
                 );
 
                 // Unfreeze messages when view is loaded

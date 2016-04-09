@@ -1,6 +1,7 @@
 package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
@@ -175,6 +176,14 @@ public class MapView implements GoogleMapViewWrapper.OnMapReadyCallback, EntityD
     public void moveCameraTo(LatLng position, float zoom) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, zoom);
         mGoogleMap.animateCamera(cameraUpdate);
+    }
+
+    public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {
+        mGoogleMap.setOnMapClickListener(onMapClickListener);
+    }
+
+    public void setOnMapLongClickListener(com.google.android.gms.maps.GoogleMap.OnMapLongClickListener onMapLongClickListener) {
+        mGoogleMap.setOnMapLongClickListener(onMapLongClickListener);
     }
 
     public interface OnMapReadyListener {
