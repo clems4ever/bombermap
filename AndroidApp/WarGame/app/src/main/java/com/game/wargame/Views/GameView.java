@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
@@ -183,6 +184,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
 
         mMapView.display(gameContext);
+    }
+
+    public void display(Player player) {
+        mMapView.display(player);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {

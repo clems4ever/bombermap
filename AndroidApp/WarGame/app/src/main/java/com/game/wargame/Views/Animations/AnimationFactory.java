@@ -22,7 +22,20 @@ public class AnimationFactory implements IAnimationFactory{
         ArrayList<Animation> animations = new ArrayList<>();
         animations.add(buildProjectileAnimation());
         animations.add(buildExplosionAnimation());
+        animations.add(buildPlayerDeadAnimation(true));
+        animations.add(buildPlayerDeadAnimation(false));
         return animations;
     }
 
+    public static Animation buildPlayerDeadAnimation(boolean isRemote) {
+        PlayerDeadAnimation playerDeadAnimation = new PlayerDeadAnimation(isRemote);
+        playerDeadAnimation.first();
+        return playerDeadAnimation;
+    }
+
+    public static Animation buildPlayerAliveAnimation(boolean isRemote) {
+        PlayerAliveAnimation playerAliveAnimation = new PlayerAliveAnimation(isRemote);
+        playerAliveAnimation.first();
+        return playerAliveAnimation;
+    }
 }

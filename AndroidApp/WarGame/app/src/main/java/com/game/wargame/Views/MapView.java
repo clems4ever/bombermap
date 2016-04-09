@@ -10,6 +10,8 @@ import android.view.View;
 
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
@@ -137,35 +139,49 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
         mEntityMarkers.put(entity.getUUID(), marker);
     }
 
-    public void display(final Entity entity) {
+    public void display(final Player player) {
+        final String playerId = player.getPlayerId();
+        final Animation playerAnimation = player.getAnimation();
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Animation animation = entity.getAnimation();
-                Marker marker = mEntityMarkers.get(entity.getUUID());
-                if (marker == null && !entity.isToRemove()) {
-                    addEntityMarker(entity);
-                } else if (marker != null) {
-                    if (entity.isToRemove()) {
-                        marker.remove();
-                        mEntityMarkers.remove(entity.getUUID());
-                    } else {
-                        marker.setPosition(entity.getPosition());
-                        marker.setIcon(mBitmapCache.getBitmap(animation.current()));
-                    }
+                PlayerMarker marker = mPlayerLocations.get(playerId);
+                if (marker != null && playerAnimation != null) {
+                    marker.setIcon(mBitmapCache.getBitmap(playerAnimation.current()));
                 }
             }
         });
     }
 
-    public void display(EntitiesModel entitiesModel) {
-        ArrayList<Entity> entities = entitiesModel.getEntities();
-        for (Entity entity : entities) {
-            display(entity);
-            if (entity.isToRemove())
-                //The View should not update the model directly
-                entitiesModel.removeEntity(entity);
+    public void display(final Entity entity) {
+        Animation animation = entity.getAnimation();
+        Marker marker = mEntityMarkers.get(entity.getUUID());
+        if (marker == null && !entity.isToRemove()) {
+            addEntityMarker(entity);
+        } else if (marker != null) {
+            if (entity.isToRemove()) {
+                marker.remove();
+                mEntityMarkers.remove(entity.getUUID());
+            } else {
+                marker.setPosition(entity.getPosition());
+                marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+            }
         }
+    }
+
+    public void display(final EntitiesModel entitiesModel) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run(){
+                ArrayList<Entity>entities=entitiesModel.getEntities();
+                for(Entity entity : entities){
+                    display(entity);
+                    if(entity.isToRemove() && mEntityMarkers.get(entity.getUUID()) == null){
+                        entitiesModel.setDisplayed(entity, false);
+                    }
+                }
+            }
+        });
     }
 
     public void display(GameContext gameContext) {
