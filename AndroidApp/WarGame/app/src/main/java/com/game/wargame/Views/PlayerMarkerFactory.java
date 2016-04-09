@@ -24,7 +24,7 @@ public class PlayerMarkerFactory {
         BitmapDescriptor bmp = mBitmapDescriptorFactory.load(bitmapResId);
         return mGoogleMap.addPlayerMarker(new GroundOverlayOptions()
                 .position(new LatLng(0, 0), 20, 20)
-                .anchor(0.5f, 0.35f)
+                .anchor(0.5f, 0.5f)
                 .zIndex(-100)
                 .image(bmp));
     }

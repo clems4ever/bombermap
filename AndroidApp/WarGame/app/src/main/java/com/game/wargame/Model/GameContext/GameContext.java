@@ -1,5 +1,6 @@
 package com.game.wargame.Model.GameContext;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.GameLogic.GameScore;
 import com.game.wargame.Model.Entities.Players.Player;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class GameContext {
 
-    private static final int GAME_DURATION = 5*1000;
+    private static final int GAME_DURATION = AppConstant.GAME_DURATION * 1000;
 
     private boolean mStarted;
     private double mTimeStart;

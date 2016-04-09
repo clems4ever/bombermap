@@ -32,8 +32,8 @@ import java.util.HashMap;
 
 public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplayer {
 
-    public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.marker_current;
-    public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.marker;
+    public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.player_current;
+    public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.player;
 
     private FragmentActivity mActivity;
     private GoogleMap mGoogleMap;
