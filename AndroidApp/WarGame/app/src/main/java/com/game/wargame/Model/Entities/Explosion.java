@@ -28,12 +28,9 @@ public class Explosion extends Entity {
     }
 
     public void update(long ticks, int increment) {
+        super.update(ticks, increment);
         long time = ticks*increment;
-        if (time < mTimeEnd)
-        {
-            mAnimation.addTime(increment);
-        }
-        else
+        if (time >= mTimeEnd)
         {
             setToRemove(true);
         }
