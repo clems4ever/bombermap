@@ -15,6 +15,7 @@ import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
+import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Controller.Sensors.PathPlayer;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
@@ -85,12 +86,13 @@ public class GameMainFragment extends Fragment {
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-        final AbstractLocationRetriever locationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
+        //final AbstractLocationRetriever locationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
+        final AbstractLocationRetriever locationRetriever = new LocationRetriever(getActivity());
 
         // Get map 0
         Map virtualMap = mVirtualMapRepository.get(0);
 
-        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 800, 800, 0);
+        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 800, 800, 45);
         mGameEngine = new GameEngine();
         mGameEngine.setCallback(mGameCallback);
 

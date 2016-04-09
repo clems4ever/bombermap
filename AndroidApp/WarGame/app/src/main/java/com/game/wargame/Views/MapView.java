@@ -197,38 +197,54 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
     public void updateVirtualMapOverlay(RealMap virtualMap) {
         Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
         Bitmap scaledBlock = Bitmap.createScaledBitmap(block, 32, 32, false);
+        float blockSize = 50;
 
-        int blockWidth = scaledBlock.getWidth();
-        int blockHeight = scaledBlock.getHeight();
-
-        int imageWidth = blockWidth * virtualMap.getMap().width();
-        int imageHeight = blockHeight * virtualMap.getMap().height();
-
-        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-        Bitmap groundImage = Bitmap.createBitmap(imageWidth, imageHeight, conf);
-        Canvas canvas = new Canvas(groundImage);
-        Paint p = new Paint();
+        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(scaledBlock);
 
         for(int i=0; i< virtualMap.getMap().width(); ++i)
         {
             for(int j=0; j< virtualMap.getMap().height(); ++j) {
 
                 if(virtualMap.getMap().cell(i, j).type() == CellTypeEnum.BLOCK) {
-                    canvas.drawBitmap(scaledBlock, i * blockWidth, j * blockHeight, p);
+
+                    LatLng x = getDestinationPoint(virtualMap.getRealCenter(), virtualMap.getRealRotation(), i * 50);
+                    LatLng y = getDestinationPoint(x, virtualMap.getRealRotation() + 90, j * 50);
+
+                    mGoogleMap.addBlock(new GroundOverlayOptions()
+                            .position(y, 50, 50)
+                            .anchor(0.5f, 0.5f)
+                            .zIndex(-100)
+                            .bearing(virtualMap.getRealRotation())
+                            .image(scaledBlockDescriptor));
                 }
             }
         }
-
-        BitmapDescriptor groundBitmapDescriptor = mBitmapDescriptorFactory.fromBitmap(groundImage);
-        LatLng blockPosition = virtualMap.getRealCenter();
-
-        mGoogleMap.addBlock(new GroundOverlayOptions()
-                .position(blockPosition, virtualMap.getRealWidth(), virtualMap.getRealHeight())
-                .anchor(0.5f, 0.5f)
-                .zIndex(-100)
-                .bearing(virtualMap.getRealRotation())
-                .image(groundBitmapDescriptor));
     }
+
+    public static LatLng getDestinationPoint(LatLng startLoc, float bearing, float depth)
+    {
+        LatLng newLocation = null;
+
+        double radius = 6371000.0; // earth's mean radius in km
+        double lat1 = Math.toRadians(startLoc.latitude);
+        double lng1 = Math.toRadians(startLoc.longitude);
+        double brng = Math.toRadians(bearing);
+        double lat2 = Math.asin( Math.sin(lat1)*Math.cos(depth/radius) + Math.cos(lat1)*Math.sin(depth/radius)*Math.cos(brng) );
+        double lng2 = lng1 + Math.atan2(Math.sin(brng)*Math.sin(depth/radius)*Math.cos(lat1), Math.cos(depth/radius)-Math.sin(lat1)*Math.sin(lat2));
+        lng2 = (lng2+Math.PI)%(2*Math.PI) - Math.PI;
+
+        // normalize to -180...+180
+        if (lat2 == 0 || lng2 == 0)
+        {
+            newLocation = new LatLng(0.0f, 0.0f);
+        }
+        else
+        {
+            newLocation = new LatLng(Math.toDegrees(lat2), Math.toDegrees(lng2));
+        }
+
+        return newLocation;
+    };
 
     public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {
         mGoogleMap.setOnMapClickListener(onMapClickListener);
