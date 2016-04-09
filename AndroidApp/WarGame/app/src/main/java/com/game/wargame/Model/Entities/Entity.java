@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by sergei on 14/03/16.
  */
-public abstract class Entity {
+public abstract class Entity implements Updatable {
 
     protected Animation mAnimation;
     protected LatLng mPosition;
@@ -21,6 +21,7 @@ public abstract class Entity {
     protected boolean mToRemove;
     protected double mRadius;
     protected String mOwner;
+    protected boolean mIsDisplayed = true;
 
     public Entity() {
         mUUID = UUID.randomUUID().toString();
@@ -54,11 +55,23 @@ public abstract class Entity {
         return mToRemove;
     }
 
-    public abstract void update(long ticks, int increment);
+    @Override
+    public void update(long ticks, int increment) {
+        if (mAnimation != null)
+            mAnimation.addTime(increment);
+    }
 
     public double getRadius() {return mRadius;}
 
     public String getOwner() {return mOwner;}
+
+    public void setDisplayed(boolean displayed) {
+        mIsDisplayed = displayed;
+    }
+
+    public boolean isDisplayed() {
+        return mIsDisplayed;
+    }
 
     public abstract void onCollision(LocalPlayerModel player, double time);
 }

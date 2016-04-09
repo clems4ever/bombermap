@@ -5,4 +5,5 @@ package com.game.wargame.Controller.Engine;
  */
 public interface OnClockEventListener {
     public void setClock(long ticks);
+    public void setGameStartTime(double ticks);
 }
