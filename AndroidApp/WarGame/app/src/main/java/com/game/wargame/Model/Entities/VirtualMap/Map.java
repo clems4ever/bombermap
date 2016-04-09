@@ -1,32 +1,32 @@
-package com.game.wargame.Model.Entities.Map;
+package com.game.wargame.Model.Entities.VirtualMap;
 
 /**
  * Created by developer on 3/20/16.
  */
-public class GameMap {
+public class Map {
 
     int m_width;
     int m_height;
-    MapCell[][] m_map;
+    Cell[][] m_map;
 
-    public GameMap(int width, int height) {
+    public Map(int width, int height) {
         m_width = width;
         m_height = height;
 
-        m_map = new MapCell[m_width][m_height];
+        m_map = new Cell[m_width][m_height];
 
         for(int x=0; x<m_width; ++x) {
             for(int y=0; y<m_height; ++y) {
-                m_map[x][y] = new MapCell(MapCellType.EMPTY);
+                m_map[x][y] = new Cell(CellTypeEnum.EMPTY);
             }
         }
     }
 
-    public void setCell(int x, int y, MapCell cell) {
+    public void setCell(int x, int y, Cell cell) {
         m_map[x][y] = cell;
     }
 
-    public MapCell cell(int x, int y) {
+    public Cell cell(int x, int y) {
         return m_map[x][y];
     }
 

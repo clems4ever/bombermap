@@ -3,7 +3,6 @@ package com.game.wargame.Controller.Sensors;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,6 +32,7 @@ public class LocationRetriever extends AbstractLocationRetriever implements Goog
         init(googleApiClient, LocationServices.FusedLocationApi);
     }
 
+    // For test
     public LocationRetriever(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
         init(googleApiClient, fusedLocationProviderApi);
     }

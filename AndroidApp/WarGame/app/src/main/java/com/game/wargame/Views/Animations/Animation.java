@@ -45,7 +45,7 @@ public abstract class Animation {
     public void addTime(int millis) {
         int previousCounter = mCounterMillis;
         mCounterMillis += millis;
-        if (mCounterMillis%mFrameRateMillis > previousCounter%mFrameRateMillis)
+        if (mCounterMillis/mFrameRateMillis > previousCounter/mFrameRateMillis)
         {
             next();
         }

@@ -16,4 +16,6 @@
 #   public *;
 #}
 -keepattributes EnclosingMethod
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
 

@@ -7,15 +7,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.GameContext.GameContext;
+import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.Set;
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
@@ -26,19 +35,35 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private AbstractWeaponControllerView mWeaponControllerInterface;
     private Button mFireButton;
     private ImageButton mGpsButton;
+    private TextView mTimeText;
+    private TextView[] mNotificationsBuffer;
+    private TextView[] mScoreBoard;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
 
-    public GameView(final FragmentActivity activity, View view) {
+    public GameView(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorFactory bitmapDescriptorFactory) {
+        init(activity, view, googleMapView, bitmapDescriptorFactory);
+    }
+
+    private void init(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorFactory bitmapDescriptorFactory) {
         mActivity = activity;
 
-        com.google.android.gms.maps.MapView mapView = (com.google.android.gms.maps.MapView) view.findViewById(R.id.map);
-        GoogleMapViewWrapper googleMap = new GoogleMapViewWrapper(mapView);
-        mMapView = new MapView(mActivity, googleMap, new BitmapDescriptorFactory());
+        mMapView = new MapView(mActivity, googleMapView, bitmapDescriptorFactory);
         final GameView that = this;
 
         mFireButton = (Button) view.findViewById(R.id.fire_button);
         mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
+        mTimeText = (TextView) view.findViewById(R.id.time_text);
+
+        mNotificationsBuffer = new TextView[3];
+        mNotificationsBuffer[0] = (TextView) view.findViewById(R.id.game_notif_1);
+        mNotificationsBuffer[1] = (TextView) view.findViewById(R.id.game_notif_2);
+        mNotificationsBuffer[2] = (TextView) view.findViewById(R.id.game_notif_3);
+
+        mScoreBoard = new TextView[3];
+        mScoreBoard [0] = (TextView) view.findViewById(R.id.score1);
+        mScoreBoard [1] = (TextView) view.findViewById(R.id.score2);
+        mScoreBoard [2] = (TextView) view.findViewById(R.id.score3);
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +105,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void moveCameraTo(LatLng position, float zoom) {
         mMapView.moveCameraTo(position, zoom);
+    }
+
+    public void updateVirtualMapOverlay(RealMap virtualMap) {
+        mMapView.updateVirtualMapOverlay(virtualMap);
     }
 
     public void setWeaponController(AbstractWeaponControllerView weaponController) {
@@ -129,6 +158,31 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void display(EntitiesModel entities) {
         mMapView.display(entities);
+    }
+
+    public void display(GameContext gameContext) {
+        mTimeText.setText(""+gameContext.getRemainingTime());
+
+        ArrayList<GameNotification> gameNotifications = gameContext.getNotificationsToDisplay();
+
+        for (int i=0; i<3; i++) {
+            mNotificationsBuffer[i].setText("");
+            if (i < gameNotifications.size())
+                mNotificationsBuffer[i].setText(gameNotifications.get(i).getText());
+        }
+
+        java.util.Map<String, GameScore> scores = gameContext.getScores();
+        Set<String> playersId = scores.keySet();
+        int i = 0;
+        for (String playerId : playersId)
+        {
+            GameScore gameScore = scores.get(playerId);
+            if (i<3)
+               mScoreBoard[i].setText(gameScore.toString());
+            i++;
+        }
+
+        mMapView.display(gameContext);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {

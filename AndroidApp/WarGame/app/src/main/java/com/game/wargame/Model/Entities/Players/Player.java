@@ -6,10 +6,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Player {
 
+    protected final static int TIME_TO_RESPAWN = 2000;
 
     protected String mPlayerId;
     protected String mPlayerName;
     protected int mHealth = 100;
+    protected boolean mIsVisible = true;
+    protected int mRespawnCounter = 0;
 
     protected LatLng mPosition;
     protected float mRotation;

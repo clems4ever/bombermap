@@ -9,9 +9,10 @@ import android.support.v4.app.FragmentActivity;
 import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQConnectionManager;
+import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 
-public class MainActivity extends FragmentActivity implements GameEntryFragment.Callback {
+public class MainActivity extends FragmentActivity implements GameEntryFragment.Callback, GameMainFragment.Callback {
 
     private IConnectionManager mConnectionManager;
 
@@ -20,7 +21,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConnectionManager = new RabbitMQConnectionManager();
+        mConnectionManager = new RabbitMQConnectionManager(AppConstant.VIRTUAL_HOST);
 
         GameEntryFragment gameEntryFragment = new GameEntryFragment();
         gameEntryFragment.setConnectionManager(mConnectionManager);
@@ -76,6 +77,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         GameMainFragment gameFragment = new GameMainFragment();
         mConnectionManager.initSocketFactory();
         gameFragment.setConnectionManager(mConnectionManager);
+        gameFragment.setCallback(this);
 
         Bundle args = new Bundle();
         args.putString("game_id", gameId);
@@ -83,5 +85,19 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         gameFragment.setArguments(args);
 
         replaceFragment(gameFragment);
+    }
+
+    @Override
+    public void onGameFinish(GameContext gameContext) {
+        ScoreBoardFragment scoreBoardFragment = new ScoreBoardFragment();
+
+        scoreBoardFragment.setGameContext(gameContext);
+
+        replaceFragment(scoreBoardFragment);
+    }
+
+    @Override
+    public void onGamePaused(GameContext gameContext) {
+
     }
 }

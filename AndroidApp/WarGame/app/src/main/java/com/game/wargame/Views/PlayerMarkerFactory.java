@@ -1,7 +1,6 @@
 package com.game.wargame.Views;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -10,23 +9,24 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class PlayerMarkerFactory {
 
-    private GoogleMapWrapper mGoogleMapWrapper;
+    private GoogleMap mGoogleMap;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
 
-    public PlayerMarkerFactory(GoogleMapWrapper googleMapWrapper, BitmapDescriptorFactory bitmapDescriptorFactory) {
-        mGoogleMapWrapper = googleMapWrapper;
+    public PlayerMarkerFactory(BitmapDescriptorFactory bitmapDescriptorFactory) {
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
     }
 
-    public PlayerMarker create(int bitmapResId) {
-        BitmapDescriptor bmp = mBitmapDescriptorFactory.fromResource(bitmapResId);
-        GroundOverlay marker = mGoogleMapWrapper.addGroundOverlay(new GroundOverlayOptions()
-                .position(new LatLng(0, 0), 400000, 400000)
-                .anchor(0.5f, 0.35f)
-                .zIndex(100)
-                .image(bmp));
+    public void setGoogleMap(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+    }
 
-        return new PlayerMarker(marker);
+    public PlayerMarker create(int bitmapResId) {
+        BitmapDescriptor bmp = mBitmapDescriptorFactory.load(bitmapResId);
+        return mGoogleMap.addPlayerMarker(new GroundOverlayOptions()
+                .position(new LatLng(0, 0), 20, 20)
+                .anchor(0.5f, 0.35f)
+                .zIndex(-100)
+                .image(bmp));
     }
 
 }

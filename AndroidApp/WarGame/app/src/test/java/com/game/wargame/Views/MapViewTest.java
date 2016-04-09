@@ -3,26 +3,16 @@ package com.game.wargame.Views;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.GroundOverlay;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,10 +24,10 @@ import static org.mockito.Mockito.when;
 public class MapViewTest {
 
     @Mock private FragmentActivity mMockFragmentActivity;
-    @Mock private GoogleMapViewWrapper mMockGoogleMapView;
+    @Mock private GoogleMapView mMockGoogleMapView;
     @Mock private MapView.OnMapReadyListener mMockOnMapReadyListener;
     @Mock private Bundle mMockBundle;
-    @Mock private GoogleMapWrapper mMockGoogleMap;
+    @Mock private GoogleMap mMockGoogleMap;
     @Mock private BitmapDescriptorFactory mMockBitmapDescriptorFactory;
     @Mock private PlayerMarkerFactory mMockPlayerMarkerFactory;
     @Mock private PlayerMarker mMockPlayerMarker;
@@ -53,7 +43,7 @@ public class MapViewTest {
 
     @Test
     public void mapReady_callback_is_called_when_map_is_loaded() {
-        ArgumentCaptor<GoogleMapViewWrapper.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapViewWrapper.OnMapReadyCallback.class);
+        ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
         MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
 
         // We request the service to load the map
@@ -61,7 +51,7 @@ public class MapViewTest {
 
         verify(mMockGoogleMapView).getMapAsync(onMapReadyCallbackArgumentCaptor.capture());
 
-        GoogleMapViewWrapper.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
+        GoogleMapView.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
 
         onMapReadyCallback.onMapReady(mMockGoogleMap);
 
@@ -74,10 +64,10 @@ public class MapViewTest {
 
         MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
 
-        ArgumentCaptor<GoogleMapViewWrapper.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapViewWrapper.OnMapReadyCallback.class);
+        ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
         mapView.startAsync(mMockOnMapReadyListener);
         verify(mMockGoogleMapView).getMapAsync(onMapReadyCallbackArgumentCaptor.capture());
-        GoogleMapViewWrapper.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
+        GoogleMapView.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
         onMapReadyCallback.onMapReady(mMockGoogleMap);
 
         mapView.addLocalPlayer("player_id");
@@ -96,10 +86,10 @@ public class MapViewTest {
 
         MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
 
-        ArgumentCaptor<GoogleMapViewWrapper.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapViewWrapper.OnMapReadyCallback.class);
+        ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
         mapView.startAsync(mMockOnMapReadyListener);
         verify(mMockGoogleMapView).getMapAsync(onMapReadyCallbackArgumentCaptor.capture());
-        GoogleMapViewWrapper.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
+        GoogleMapView.OnMapReadyCallback onMapReadyCallback = onMapReadyCallbackArgumentCaptor.getValue();
         onMapReadyCallback.onMapReady(mMockGoogleMap);
 
         mapView.addRemotePlayer("player_id");
@@ -173,7 +163,7 @@ public class MapViewTest {
         Runnable uiTask2 = captor2.getValue();
         uiTask2.run();
 
-        // Check that the move has been done
+        // Check that the removing has been done
         verify(mMockPlayerMarker).remove();
     }
 }

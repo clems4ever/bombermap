@@ -7,9 +7,12 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by clement on 19/02/16.
  */
-public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener{
+public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener,
+                                                              RemotePlayerSocket.OnDieEventListener, RemotePlayerSocket.OnRespawnEventListener {
 
     protected RemotePlayerSocket mPlayerSocket;
+
+    protected OnRemotePlayerPositionUpdated mOnRemotePlayerPositionUpdated;
 
     public RemotePlayerModel(String playerName, RemotePlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);
@@ -18,6 +21,12 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
 
         mPlayerSocket.setOnFireEventListener(this);
         mPlayerSocket.setOnMoveEventListener(this);
+        mPlayerSocket.setOnDieEventListener(this);
+        mPlayerSocket.setOnRespawnEventListener(this);
+    }
+
+    public void setOnRemotePlayerPositionUpdated(OnRemotePlayerPositionUpdated onRemotePlayerPositionUpdated) {
+        mOnRemotePlayerPositionUpdated = onRemotePlayerPositionUpdated;
     }
 
     @Override
@@ -31,8 +40,23 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
     public void onMoveEvent(double latitude, double longitude) {
         mPosition = new LatLng(latitude, longitude);
 
-        if(mOnPlayerPositionChangedListener != null) {
-            mOnPlayerPositionChangedListener.onPlayerPositionChanged(this);
+        if(mOnRemotePlayerPositionUpdated != null) {
+            mOnRemotePlayerPositionUpdated.onRemotePlayerPositionChanged(this);
         }
+    }
+
+    @Override
+    public void onDieEvent(String playerId, String killerId, double time)
+    {
+        mIsVisible = false;
+        if(mOnPlayerDiedListener != null)
+            mOnPlayerDiedListener.onDied(playerId, killerId, time);
+    }
+
+    @Override
+    public void onRespawnEvent(String playerId, double time) {
+        mIsVisible = true;
+        if (mOnPlayerRespawnListener != null)
+            mOnPlayerRespawnListener.onRespawn(playerId, time);
     }
 }

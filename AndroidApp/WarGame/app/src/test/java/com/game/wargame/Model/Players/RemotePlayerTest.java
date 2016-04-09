@@ -1,8 +1,8 @@
 package com.game.wargame.Model.Players;
 
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -21,7 +21,7 @@ public class RemotePlayerTest {
     private RemotePlayerSocket mMockRemotePlayerSocket;
 
     @Mock
-    private OnPlayerPositionChangedListener mMockOnPlayerPositionChangedListener;
+    private OnRemotePlayerPositionUpdated mMockOnPlayerPositionChangedListener;
     @Mock
     private OnPlayerWeaponTriggeredListener mMockOnPlayerWeaponTriggeredListener;
 
@@ -47,11 +47,11 @@ public class RemotePlayerTest {
 
         LatLng initialPosition = new LatLng(10, 20);
         localPlayerModel.setPosition(initialPosition);
-        localPlayerModel.setOnPlayerPositionChangedListener(mMockOnPlayerPositionChangedListener);
+        localPlayerModel.setOnRemotePlayerPositionUpdated(mMockOnPlayerPositionChangedListener);
 
         localPlayerModel.onMoveEvent(30, 40);
 
-        verify(mMockOnPlayerPositionChangedListener).onPlayerPositionChanged(localPlayerModel);
+        verify(mMockOnPlayerPositionChangedListener).onRemotePlayerPositionChanged(localPlayerModel);
     }
 
     @Test

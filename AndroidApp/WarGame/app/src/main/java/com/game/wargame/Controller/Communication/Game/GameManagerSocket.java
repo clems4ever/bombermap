@@ -76,16 +76,6 @@ public class GameManagerSocket {
         }
     }
 
-    private void sendPlayerJoinMessage(final String playerId) {
-        JSONObject message = new JSONObject();
-        try {
-            message.put("player_id", playerId);
-            mSocket.emit("player_join", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public interface OnGameCreatedListener {
         public void onGameCreated(String gameId);
     }

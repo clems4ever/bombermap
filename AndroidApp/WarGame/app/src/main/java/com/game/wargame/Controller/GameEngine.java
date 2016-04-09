@@ -8,22 +8,29 @@ import android.view.View;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Controller.Engine.EntitiesUpdateCallback;
 import com.game.wargame.Controller.Engine.GlobalTimer;
+import com.game.wargame.Controller.Engine.UpdateCallback;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
-import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Controller.Sensors.OnLocationRetrievedListener;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Players.OnPlayerPositionChangedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
+import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
+import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
+import com.game.wargame.Model.GameContext.FragManager;
+import com.game.wargame.Model.GameContext.GameContext;
+import com.game.wargame.Model.GameContext.GameNotificationManager;
+import com.game.wargame.Views.Activities.GameMainFragment;
 import com.game.wargame.Views.GameView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
@@ -36,18 +43,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 
-public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeaponTriggeredListener, GameSocket.OnPlayerEventListener, OnExplosionListener, OnLocationRetrievedListener {
+public class GameEngine implements OnPlayerWeaponTriggeredListener,
+        OnPlayerDiedListener,
+        GameSocket.OnPlayerEventListener,
+        OnExplosionListener,
+        OnPlayerRespawnListener,
+        OnRemotePlayerPositionUpdated,
+        OnLocationRetrievedListener {
 
-    private static final int WEAPON_TIME = 100;
     private static final int WEAPON_RANGE = 1000;
 
-    private Map<String, PlayerModel> mPlayersById;
+    private java.util.Map<String, PlayerModel> mPlayersById;
     private LocalPlayerModel mCurrentPlayer;
+    private boolean mCurrentPlayerLocked;
 
     private GameView mGameView;
+    private RealMap mVirtualMap;
 
     private AbstractLocationRetriever mLocationRetriever;
 
@@ -55,7 +68,9 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     private GameSocket mGameSocket;
 
     private EntitiesModel mEntitiesModel;
-    private CollisionManager mCollisionManager;
+    private GameContext mGameContext;
+
+    private GameMainFragment.Callback mGameCallback;
 
     // Path Editor for debug
     private LinkedList<LatLng> mPathEditor;
@@ -67,27 +82,34 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mPlayersById = new HashMap<>();
         mEntitiesModel = new EntitiesModel();
         mPathEditor = new LinkedList<>();
+        mCurrentPlayerLocked = false;
     }
 
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, LocalPlayerSocket localPlayerSocket, AbstractLocationRetriever locationRetriever, GlobalTimer globalTimer) {
+    public void onStart(GameView gameView, GameSocket gameSocket, RealMap virtualMap, LocalPlayerSocket localPlayerSocket, AbstractLocationRetriever locationRetriever, GlobalTimer globalTimer) {
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
         mLocationRetriever = locationRetriever;
+        mVirtualMap = virtualMap;
 
         mGameSocket.setOnPlayerEventListener(this);
         mGameSocket.setOnClockEventListener(mGlobalTimer);
 
+        FragManager fragManager = new FragManager();
+        GameNotificationManager gameNotificationManager = new GameNotificationManager();
+        mGameContext = new GameContext(fragManager, gameNotificationManager);
+
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
+        mGameView.updateVirtualMapOverlay(mVirtualMap);
 
         startLocationRetriever();
         initializeView();
-        startEntitiesUpdateTimer();
+        startGlobalUpdateTimer();
     }
 
     /**
@@ -114,12 +136,14 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mLocationRetriever.stop();
     }
 
-    private void startEntitiesUpdateTimer() {
+    private void startGlobalUpdateTimer() {
         mGlobalTimer.setEntitiesModel(mEntitiesModel);
-        mGlobalTimer.setPlayersModel(mCurrentPlayer);
-        mGlobalTimer.setCollisionManager(new CollisionManager());
+        mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
+        mGlobalTimer.setCollisionManager(new CollisionManager(new com.game.wargame.Controller.Utils.Location()));
         mGlobalTimer.setGameView(mGameView);
-        mGlobalTimer.setUpdateCallback(new EntitiesUpdateCallback());
+        mGlobalTimer.setGameContext(mGameContext);
+        mGlobalTimer.setUpdateCallback(new UpdateCallback());
+        mGlobalTimer.setGameCallback(mGameCallback);
         mGlobalTimer.start();
     }
 
@@ -163,7 +187,7 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
         mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 15);
+                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 17);
             }
         });
 
@@ -201,19 +225,43 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
      * @brief Adding a player to the game
      * @param player
      */
-    public void addPlayer(PlayerModel player) {
-        player.setOnPlayerPositionChangedListener(this);
+    private void addPlayer(PlayerModel player) {
         player.setOnPlayerWeaponTriggeredListener(this);
+        player.setOnPlayerDiedListener(this);
+        mGameContext.addPlayer(player.getPlayerId());
         mPlayersById.put(player.getPlayerId(), player);
     }
 
+    public void addLocalPlayer(LocalPlayerModel p) {
+        addPlayer(p);
+    }
+
+    public void addRemotePlayer(RemotePlayerModel p) {
+        p.setOnRemotePlayerPositionUpdated(this);
+        addPlayer(p);
+    }
+
     @Override
-    public void onPlayerPositionChanged(PlayerModel player) {
+    public void onRemotePlayerPositionChanged(PlayerModel player) {
         mGameView.movePlayer(player);
     }
 
     private boolean isPositionOnVirtualMap(double latitude, double longitude) {
         return false;
+    }
+
+    @Override
+    public void onLocationRetrieved(double latitude, double longitude) {
+        // If the new position is on the map, then lock the user and move its shadow only
+        if(isPositionOnVirtualMap(latitude, longitude)) {
+            mCurrentPlayer.moveShadow(latitude, longitude);
+            mCurrentPlayerLocked = true;
+        }
+
+        if(!mCurrentPlayerLocked) {
+            mCurrentPlayer.move(latitude, longitude);
+            mGameView.movePlayer(mCurrentPlayer);
+        }
     }
 
     @Override
@@ -251,11 +299,22 @@ public class GameEngine implements OnPlayerPositionChangedListener, OnPlayerWeap
     @Override
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
-        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double)time, entity.getPosition(), entity.getDirection()));
+        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double) time, entity.getPosition(), entity.getDirection()));
     }
 
     @Override
-    public void onLocationRetrieved(double latitude, double longitude) {
+    public void onDied(String dead, String killer, double time) {
+        Player playerKiller = mPlayersById.get(killer);
+        Player playerDead = mPlayersById.get(dead);
+        mGameContext.handleFrag(playerDead, playerKiller, time);
+    }
 
+    @Override
+    public void onRespawn(String playerId, double time) {
+
+    }
+
+    public void setCallback(GameMainFragment.Callback callback) {
+        this.mGameCallback = callback;
     }
 }

@@ -51,6 +51,7 @@ exports.replyToClient = function(client_queue, receivedMsg, msgToSend) {
     server_channel.sendToQueue(client_queue,
         new Buffer(msgToSend),
         {correlationId: receivedMsg.properties.correlationId});
+    server_channel.ack(receivedMsg);
 }
 
 exports.assertRoomExchange = function(room_exchange) {
@@ -67,6 +68,9 @@ function startGameCreationWorker(consume_callback) {
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://server:server@broker.wargame.ingenious-cm.fr";
+if(process.env.AMQP_VIRTUAL_HOST) {
+rabbitmquri += process.env.AMQP_VIRTUAL_HOST;
+}
 rabbitmquri += "?heartbeat=60";
 exports.initServerChannel = function(consume_callback, on_channel_ready) {
     console.log("Connection to " + rabbitmquri);

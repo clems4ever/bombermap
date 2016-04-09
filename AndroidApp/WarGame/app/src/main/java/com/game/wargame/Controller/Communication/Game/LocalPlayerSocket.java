@@ -40,15 +40,37 @@ public class LocalPlayerSocket extends PlayerSocket {
         }
     }
 
-    public void fire(double latitude, double longitude, double velocity) {
+    public void fire(double latitude, double longitude, double time) {
         try {
             JSONObject fireJsonObject = buildClientJson();
 
             fireJsonObject.put("lat", latitude);
             fireJsonObject.put("long", longitude);
-            fireJsonObject.put("speed", velocity);
+            fireJsonObject.put("time", time);
 
             mSocket.emit("fire", fireJsonObject);
+        } catch (JSONException e) {
+        }
+    }
+
+    public void die(String playerId, String killerId, double time) {
+        try {
+            JSONObject diedJsonObject = buildClientJson();
+
+            diedJsonObject.put("player_id", playerId);
+            diedJsonObject.put("killer_id", killerId);
+            diedJsonObject.put("time", time);
+
+            mSocket.emit("died", diedJsonObject);
+        } catch (JSONException e) {
+        }
+    }
+
+    public void respawn(double time) {
+        try {
+            JSONObject respawnJson = buildClientJson();
+            respawnJson.put("time", time);
+            mSocket.emit("respawn", respawnJson);
         } catch (JSONException e) {
         }
     }
@@ -56,6 +78,7 @@ public class LocalPlayerSocket extends PlayerSocket {
     public void leave() {
         try {
             JSONObject data = buildClientJson();
+
             mSocket.emit("player_leave", data);
         } catch (JSONException e) {
         }

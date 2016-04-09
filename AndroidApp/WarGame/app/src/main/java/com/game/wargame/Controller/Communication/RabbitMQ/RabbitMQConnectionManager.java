@@ -7,14 +7,16 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     private RabbitMQConnectionThread mConnectionThread;
     private RabbitMQSocketFactory mSocketFactory;
+    private String mVirtualHost;
 
 
-    public RabbitMQConnectionManager() {
+    public RabbitMQConnectionManager(String virtualHost) {
+        mVirtualHost = virtualHost;
     }
 
     @Override
     public void connect(String host) {
-        mConnectionThread = new RabbitMQConnectionThread(host);
+        mConnectionThread = new RabbitMQConnectionThread(host, mVirtualHost);
         mConnectionThread.start();
         mSocketFactory = new RabbitMQSocketFactory(mConnectionThread);
     }
@@ -43,12 +45,12 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     @Override
     public void freeze() {
-
+        mConnectionThread.freeze();
     }
 
     @Override
     public void unfreeze() {
-
+        mConnectionThread.unfreeze();
     }
 
     @Override

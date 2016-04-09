@@ -97,7 +97,7 @@ public class RemotePlayersSocketTest {
             message.put("player_id", "player_id");
             message.put("lat", 5.0f);
             message.put("long", 10.0f);
-            message.put("speed", 100);
+            message.put("time", 100);
 
             listener.getValue().onRemoteEventReceived(message);
 
@@ -125,7 +125,7 @@ public class RemotePlayersSocketTest {
             message.put("player_id", "player_id");
             message.put("lat", 5.0f);
             message.put("long", 10.0f);
-            message.put("speed", 100);
+            message.put("time", 100);
 
             remotePlayersSocket.removePlayer(remotePlayerSocket);
 

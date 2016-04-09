@@ -1,6 +1,7 @@
 package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Controller.Engine.GlobalTimer;
+import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Views.Animations.Animation;
 import com.google.android.gms.maps.model.LatLng;
@@ -18,13 +19,10 @@ public abstract class Entity {
     protected double mDirection;
     protected String mUUID;
     protected boolean mToRemove;
-    protected boolean mDirty;
-    private ReentrantLock mLock;
     protected double mRadius;
     protected String mOwner;
 
     public Entity() {
-        mDirty = true;
         mUUID = UUID.randomUUID().toString();
     }
 
@@ -48,14 +46,6 @@ public abstract class Entity {
         return mUUID;
     }
 
-    public boolean isDirty() {
-        return mDirty;
-    }
-
-    public void setDirty(boolean dirty) {
-        mDirty = dirty;
-    }
-
     public void setToRemove(boolean toRemove) {
         mToRemove = toRemove;
     }
@@ -68,8 +58,8 @@ public abstract class Entity {
 
     public double getRadius() {return mRadius;}
 
-    public abstract void onCollision(PlayerModel player, double time);
-
     public String getOwner() {return mOwner;}
+
+    public abstract void onCollision(LocalPlayerModel player, double time);
 }
 
