@@ -8,6 +8,7 @@ import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
@@ -37,6 +38,7 @@ public class GameEngineViewUpdaterTest {
     @Mock private ISocketFactory mMockSocketFactory;
     @Mock private GlobalTimer mMockGlobalTimer;
     @Mock private RealMap mMockVirtualMap;
+    @Mock private Settings mMockSettings;
 
     private GameEngine mGameEngine;
 
@@ -45,7 +47,7 @@ public class GameEngineViewUpdaterTest {
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockVirtualMap, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockVirtualMap, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
     }
 
     @Test

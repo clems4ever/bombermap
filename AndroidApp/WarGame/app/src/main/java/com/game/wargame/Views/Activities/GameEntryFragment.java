@@ -13,12 +13,14 @@ import android.widget.EditText;
 import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.IConnectionManager;
+import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.R;
 
 public class GameEntryFragment extends Fragment {
 
     private Callback mEntryCallback;
     private IConnectionManager mConnectionManager;
+    private Settings mSettings;
 
 
     public void setGameEntryCallbacks(GameEntryFragment.Callback callbacks) {
@@ -27,6 +29,10 @@ public class GameEntryFragment extends Fragment {
 
     public void setConnectionManager(IConnectionManager connectionManager) {
         mConnectionManager = connectionManager;
+    }
+
+    public void setSettings(Settings settings) {
+        mSettings = settings;
     }
 
     @Override

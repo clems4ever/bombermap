@@ -28,7 +28,7 @@ public class GameContextTest {
 
     @Before
     public void setUp() {
-        mGameContext = new GameContext(mFragManager, new GameNotificationManager());
+        mGameContext = new GameContext(mFragManager, new GameNotificationManager(), 10);
         mGameContext.start(0);
         mKiller = new Player("killer", "killer");
         mKillee = new Player("killee", "killee");

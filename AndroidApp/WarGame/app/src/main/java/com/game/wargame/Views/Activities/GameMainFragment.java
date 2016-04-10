@@ -17,6 +17,7 @@ import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Controller.Sensors.PathPlayer;
+import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.Entities.VirtualMap.Repository;
@@ -33,6 +34,7 @@ public class GameMainFragment extends Fragment {
 
     private IConnectionManager mConnectionManager;
     private GameEngine mGameEngine;
+    private AbstractLocationRetriever mLocationRetriever;
 
     private String mGameId;
     private String mPlayerId;
@@ -43,6 +45,8 @@ public class GameMainFragment extends Fragment {
     private GoogleMapViewFactory mGoogleMapViewFactory;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
     private BundleExtractor mBundleExtractor;
+
+    private Settings mSettings;
 
 
 
@@ -63,6 +67,10 @@ public class GameMainFragment extends Fragment {
 
     public void setConnectionManager(IConnectionManager connectionManager) {
         mConnectionManager = connectionManager;
+    }
+
+    public void setSettings(Settings settings) {
+        mSettings = settings;
     }
 
     @Override
@@ -86,13 +94,17 @@ public class GameMainFragment extends Fragment {
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-        //final AbstractLocationRetriever locationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
-        final AbstractLocationRetriever locationRetriever = new LocationRetriever(getActivity());
+        if(mSettings.mode == Settings.GameEngineMode.SCENARIO_REPLAYER) {
+            mLocationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
+        }
+        else {
+            mLocationRetriever = new LocationRetriever(getActivity());
+        }
 
         // Get map 0
         Map virtualMap = mVirtualMapRepository.get(0);
 
-        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 800, 800, 45);
+        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 1000, 1000, 0);
         mGameEngine = new GameEngine();
         mGameEngine.setCallback(mGameCallback);
 
@@ -103,8 +115,9 @@ public class GameMainFragment extends Fragment {
                         gameSocket,
                         realMap,
                         localPlayerSocket,
-                        locationRetriever,
-                        new GlobalTimer(getActivity())
+                        mLocationRetriever,
+                        new GlobalTimer(getActivity()),
+                        mSettings
                 );
 
                 // Unfreeze messages when view is loaded

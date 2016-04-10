@@ -10,6 +10,7 @@ import com.game.wargame.Controller.Communication.ISocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
@@ -38,6 +39,7 @@ public class GameEngineTest {
     @Mock private Context mMockContext;
     @Mock private GameSocket mMockGameSocket;
     @Mock private LocationRetriever mMockLocationRetriever;
+    @Mock private Settings mMockSettings;
 
     @Mock private LocalPlayerSocket mMockLocalPlayerSocket;
     @Mock private RemotePlayerSocket mMockRemotePlayerSocket1;
@@ -54,7 +56,7 @@ public class GameEngineTest {
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
         assertEquals(1, mGameEngine.getPlayersCount());
     }
 
@@ -63,7 +65,7 @@ public class GameEngineTest {
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
 
         mGameEngine.onStop();
 
@@ -76,7 +78,7 @@ public class GameEngineTest {
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
 
         RemotePlayersSocket remotePlayersSocket = new RemotePlayersSocket(mMockSocket);
         RemotePlayerSocket playerSocket1 = new RemotePlayerSocket("player_id", remotePlayersSocket);
@@ -99,7 +101,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket1.getPlayerId()).thenReturn("player2");
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);
@@ -116,7 +118,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket2.getPlayerId()).thenReturn("player2");
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);
@@ -138,7 +140,7 @@ public class GameEngineTest {
         when(mMockRemotePlayerSocket2.getPlayerId()).thenReturn("player2");
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockMap, mMockLocalPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
 
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket1);
         mGameEngine.onPlayerJoined(mMockRemotePlayerSocket2);

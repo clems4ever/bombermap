@@ -212,10 +212,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
 
     public void updateVirtualMapOverlay(RealMap virtualMap) {
         Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
-        Bitmap scaledBlock = Bitmap.createScaledBitmap(block, 32, 32, false);
-        float blockSize = 50;
 
-        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(scaledBlock);
+        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
 
         for(int i=0; i< virtualMap.getMap().width(); ++i)
         {
@@ -223,8 +221,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
 
                 if(virtualMap.getMap().cell(i, j).type() == CellTypeEnum.BLOCK) {
 
-                    LatLng x = getDestinationPoint(virtualMap.getRealCenter(), virtualMap.getRealRotation(), i * 50);
-                    LatLng y = getDestinationPoint(x, virtualMap.getRealRotation() + 90, j * 50);
+                    LatLng x = getDestinationPoint(virtualMap.getRealCenter(), virtualMap.getRealRotation() + 90, i * 50 - virtualMap.getRealWidth() / 2);
+                    LatLng y = getDestinationPoint(x, virtualMap.getRealRotation() + 180, j * 50 - virtualMap.getRealHeight() / 2);
 
                     mGoogleMap.addBlock(new GroundOverlayOptions()
                             .position(y, 50, 50)
