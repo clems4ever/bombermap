@@ -1,6 +1,5 @@
 package com.game.wargame.Model.GameContext;
 
-import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.GameLogic.GameScore;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Updatable;
@@ -13,17 +12,17 @@ import java.util.Map;
  */
 public class GameContext implements Updatable {
 
-    private static final int GAME_DURATION = AppConstant.GAME_DURATION * 1000;
-
     private boolean mStarted;
     private double mTimeStart = -1;
     private double mCurrentTime;
+    private int mGameDurationMilliseconds;
     private FragManager mFragManager;
     private GameNotificationManager mGameNotificationManager;
 
-    public GameContext(FragManager fragManager, GameNotificationManager gameNotificationManager) {
+    public GameContext(FragManager fragManager, GameNotificationManager gameNotificationManager, int gameDurationSeconds) {
         mFragManager = fragManager;
         mGameNotificationManager = gameNotificationManager;
+        mGameDurationMilliseconds = gameDurationSeconds * 1000;
     }
 
     public void setTimeStart(double timeStart) {
@@ -34,14 +33,10 @@ public class GameContext implements Updatable {
         return mTimeStart;
     }
 
-    public void setCurrentTime(int currentTime) {
-        mCurrentTime = currentTime;
-    }
-
     public boolean isStarted() { return mStarted; }
 
     public boolean toEnd() {
-        return (mCurrentTime - mTimeStart) > GAME_DURATION;
+        return (mCurrentTime - mTimeStart) > mGameDurationMilliseconds;
     }
 
     public void update(long ticks, int increment) {
@@ -52,7 +47,7 @@ public class GameContext implements Updatable {
     }
 
     public int getRemainingTime() {
-        return (int)(GAME_DURATION-(mCurrentTime-mTimeStart))/1000;
+        return (int)(mGameDurationMilliseconds -(mCurrentTime-mTimeStart))/1000;
     }
 
     public void addPlayer(String playerId) {

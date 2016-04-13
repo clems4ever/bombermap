@@ -14,6 +14,7 @@ import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.OnLocationRetrievedListener;
+import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
@@ -88,7 +89,14 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     /**
      * @brief Starts the game engine
      */
-    public void onStart(GameView gameView, GameSocket gameSocket, RealMap virtualMap, LocalPlayerSocket localPlayerSocket, AbstractLocationRetriever locationRetriever, GlobalTimer globalTimer) {
+    public void onStart(GameView gameView,
+                        GameSocket gameSocket,
+                        RealMap virtualMap,
+                        LocalPlayerSocket localPlayerSocket,
+                        AbstractLocationRetriever locationRetriever,
+                        GlobalTimer globalTimer,
+                        Settings settings) {
+
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
@@ -100,7 +108,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
         FragManager fragManager = new FragManager();
         GameNotificationManager gameNotificationManager = new GameNotificationManager();
-        mGameContext = new GameContext(fragManager, gameNotificationManager);
+        mGameContext = new GameContext(fragManager, gameNotificationManager, settings.gameDuration);
 
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addLocalPlayer(mCurrentPlayer);

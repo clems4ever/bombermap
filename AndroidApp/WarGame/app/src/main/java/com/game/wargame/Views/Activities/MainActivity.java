@@ -4,28 +4,51 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.RabbitMQ.RabbitMQConnectionManager;
+import com.game.wargame.Controller.Settings.Settings;
+import com.game.wargame.Controller.Settings.SettingsReader;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class MainActivity extends FragmentActivity implements GameEntryFragment.Callback, GameMainFragment.Callback {
 
     private IConnectionManager mConnectionManager;
+    private Settings mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mConnectionManager = new RabbitMQConnectionManager(AppConstant.VIRTUAL_HOST);
+        mSettings = new Settings();
+
+        SettingsReader settingsReader = new SettingsReader();
+        try {
+            mSettings = settingsReader.read(Environment.getExternalStorageDirectory().getPath() + "/default.conf");
+        } catch(java.io.FileNotFoundException e) {
+            Log.d("WarGame settings", "File not found:" + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mConnectionManager = new RabbitMQConnectionManager(mSettings.virtualHost);
 
         GameEntryFragment gameEntryFragment = new GameEntryFragment();
         gameEntryFragment.setConnectionManager(mConnectionManager);
         gameEntryFragment.setGameEntryCallbacks(this);
+        gameEntryFragment.setSettings(mSettings);
         addFragment(gameEntryFragment);
 
         /*
@@ -38,7 +61,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
     protected void onStart() {
         super.onStart();
 
-        mConnectionManager.connect(AppConstant.HOST);
+        mConnectionManager.connect(mSettings.hostname);
     }
 
     @Override
@@ -83,6 +106,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         mConnectionManager.initSocketFactory();
         gameFragment.setConnectionManager(mConnectionManager);
         gameFragment.setCallback(this);
+        gameFragment.setSettings(mSettings);
 
         Bundle args = new Bundle();
         args.putString("game_id", gameId);
