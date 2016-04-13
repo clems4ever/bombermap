@@ -48,8 +48,6 @@ public class GameMainFragment extends Fragment {
 
     private Settings mSettings;
 
-
-
     public GameMainFragment() {
         mGoogleMapViewFactory = new GoogleMapViewFactory();
         mBitmapDescriptorFactory = new BitmapDescriptorFactory();
@@ -76,9 +74,6 @@ public class GameMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.game_map, container, false);
-        IGoogleMapView googleMapView = mGoogleMapViewFactory.create(fragment);
-
-        mGameView = new GameView((FragmentActivity) getActivity(), fragment, googleMapView, mBitmapDescriptorFactory);
         mVirtualMapRepository = new Repository();
 
         Bundle args = mBundleExtractor.getBundle();
@@ -90,6 +85,11 @@ public class GameMainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        View fragment = getView();
+        IGoogleMapView googleMapView = mGoogleMapViewFactory.create(fragment);
+        mGameView = new GameView((FragmentActivity) getActivity(), fragment, googleMapView, mBitmapDescriptorFactory);
+
 
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);

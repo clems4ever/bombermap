@@ -125,6 +125,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
      */
     public void onStop() {
         mCurrentPlayer.leave();
+        mGameView.removePlayer(mCurrentPlayer);
+
         stopLocationRetriever();
         stopGameTimers();
     }
@@ -255,11 +257,14 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     }
 
     private boolean isPositionOnVirtualMap(double latitude, double longitude) {
+        LatLng position = new LatLng(latitude, longitude);
+
         return false;
     }
 
     @Override
     public void onLocationRetrieved(double latitude, double longitude) {
+
         // If the new position is on the map, then lock the user and move its shadow only
         if(isPositionOnVirtualMap(latitude, longitude)) {
             mCurrentPlayer.moveShadow(latitude, longitude);
