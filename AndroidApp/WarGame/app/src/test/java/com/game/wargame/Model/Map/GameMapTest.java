@@ -22,30 +22,15 @@ public class GameMapTest {
 
     @Test
     public void testThatSizeIsCorrect() {
-        Map virtualMap = new Map(10, 20);
+        Map virtualMap = new Map(10, 20, null);
 
         assertEquals(10, virtualMap.width());
         assertEquals(20, virtualMap.height());
     }
 
     @Test
-    public void testThatInitializedMapHasOnlyEmptyCells() {
-        int width = 10;
-        int height = 14;
-
-        Map<Cell> virtualMap = new Map(10, 14);
-
-        for(int i=0; i<width; ++i) {
-            for(int j=0; j<height; ++j) {
-                assertNotNull(virtualMap.get(i, j));
-                assertEquals(CellTypeEnum.EMPTY, virtualMap.get(i, j).type());
-            }
-        }
-    }
-
-    @Test
     public void testThatCellsAreCorrectlySet() {
-        Map virtualMap = new Map(3, 3);
+        Map virtualMap = new Map(3, 3, null);
         Cell mapCell = new Cell(CellTypeEnum.BLOCK);
 
         virtualMap.set(0, 2, mapCell);
