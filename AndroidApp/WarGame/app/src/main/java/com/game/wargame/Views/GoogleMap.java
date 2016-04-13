@@ -19,9 +19,6 @@ public class GoogleMap {
         mGoogleMap = googleMap;
     }
 
-    public GoogleMap() {
-    }
-
     public void setGoogleMap(com.google.android.gms.maps.GoogleMap googleMap) {
         mGoogleMap = googleMap;
     }

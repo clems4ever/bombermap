@@ -27,6 +27,9 @@ import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.Cell;
+import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
+import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.FragManager;
 import com.game.wargame.Model.GameContext.GameContext;
@@ -36,6 +39,7 @@ import com.game.wargame.Views.GameView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -126,6 +130,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
      */
     public void onStop() {
         mCurrentPlayer.leave();
+        mGameView.removePlayer(mCurrentPlayer);
+
         stopLocationRetriever();
         stopGameTimers();
     }
@@ -259,15 +265,28 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     }
 
     private boolean isPositionOnVirtualMap(double latitude, double longitude) {
-        return false;
+        LatLng position = new LatLng(latitude, longitude);
+        boolean collision = false;
+
+        for(int x=0; x < mVirtualMap.width() && !collision; ++x) {
+            for(int y=0; y<mVirtualMap.height() && !collision; ++y) {
+                RealCell realCell = mVirtualMap.getRealCell(x, y);
+                if(realCell.type() == CellTypeEnum.BLOCK) {
+                    collision |= PolyUtil.containsLocation(position, realCell.vertices(), false);
+                }
+            }
+        }
+        return collision;
     }
 
     @Override
     public void onLocationRetrieved(double latitude, double longitude) {
+
         // If the new position is on the map, then lock the user and move its shadow only
         if(isPositionOnVirtualMap(latitude, longitude)) {
             mCurrentPlayer.moveShadow(latitude, longitude);
-            mCurrentPlayerLocked = true;
+            //mCurrentPlayerLocked = true;
+            Log.d("Collision", "Collision has been detected.");
         }
 
         if(!mCurrentPlayerLocked) {
