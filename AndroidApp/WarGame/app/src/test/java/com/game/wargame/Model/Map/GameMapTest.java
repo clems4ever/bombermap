@@ -33,12 +33,12 @@ public class GameMapTest {
         int width = 10;
         int height = 14;
 
-        Map virtualMap = new Map(10, 14);
+        Map<Cell> virtualMap = new Map(10, 14);
 
         for(int i=0; i<width; ++i) {
             for(int j=0; j<height; ++j) {
-                assertNotNull(virtualMap.cell(i, j));
-                assertEquals(CellTypeEnum.EMPTY, virtualMap.cell(i, j).type());
+                assertNotNull(virtualMap.get(i, j));
+                assertEquals(CellTypeEnum.EMPTY, virtualMap.get(i, j).type());
             }
         }
     }
@@ -48,10 +48,10 @@ public class GameMapTest {
         Map virtualMap = new Map(3, 3);
         Cell mapCell = new Cell(CellTypeEnum.BLOCK);
 
-        virtualMap.setCell(0, 2, mapCell);
+        virtualMap.set(0, 2, mapCell);
 
-        assertEquals(mapCell, virtualMap.cell(0, 2));
-        assertNotEquals(mapCell, virtualMap.cell(1, 1));
+        assertEquals(mapCell, virtualMap.get(0, 2));
+        assertNotEquals(mapCell, virtualMap.get(1, 1));
     }
 
 }

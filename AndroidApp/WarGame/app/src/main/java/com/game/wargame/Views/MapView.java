@@ -8,12 +8,14 @@ import android.graphics.Paint;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import com.game.wargame.Controller.Utils.Location;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
+import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplayer {
 
@@ -215,50 +218,29 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
 
         BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
 
-        for(int i=0; i< virtualMap.getMap().width(); ++i)
-        {
-            for(int j=0; j< virtualMap.getMap().height(); ++j) {
+        for (int i = 0; i < virtualMap.width(); ++i) {
+            for (int j = 0; j < virtualMap.height(); ++j) {
 
-                if(virtualMap.getMap().cell(i, j).type() == CellTypeEnum.BLOCK) {
+                RealCell realCell = virtualMap.getRealCell(i, j);
 
-                    LatLng x = getDestinationPoint(virtualMap.getRealCenter(), virtualMap.getRealRotation() + 90, i * 50 - virtualMap.getRealWidth() / 2);
-                    LatLng y = getDestinationPoint(x, virtualMap.getRealRotation() + 180, j * 50 - virtualMap.getRealHeight() / 2);
+                if (realCell.type() == CellTypeEnum.BLOCK) {
 
                     mGoogleMap.addBlock(new GroundOverlayOptions()
-                            .position(y, 50, 50)
+                            .position(realCell.position(), 50, 50)
                             .anchor(0.5f, 0.5f)
                             .zIndex(-100)
                             .bearing(virtualMap.getRealRotation())
                             .image(scaledBlockDescriptor));
+
+                    Iterator<LatLng> it = realCell.vertices().iterator();
+                    while(it.hasNext()) {
+                        LatLng p = it.next();
+                        mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
+                    }
                 }
             }
         }
     }
-
-    public static LatLng getDestinationPoint(LatLng startLoc, float bearing, float depth)
-    {
-        LatLng newLocation = null;
-
-        double radius = 6371000.0; // earth's mean radius in km
-        double lat1 = Math.toRadians(startLoc.latitude);
-        double lng1 = Math.toRadians(startLoc.longitude);
-        double brng = Math.toRadians(bearing);
-        double lat2 = Math.asin( Math.sin(lat1)*Math.cos(depth/radius) + Math.cos(lat1)*Math.sin(depth/radius)*Math.cos(brng) );
-        double lng2 = lng1 + Math.atan2(Math.sin(brng)*Math.sin(depth/radius)*Math.cos(lat1), Math.cos(depth/radius)-Math.sin(lat1)*Math.sin(lat2));
-        lng2 = (lng2+Math.PI)%(2*Math.PI) - Math.PI;
-
-        // normalize to -180...+180
-        if (lat2 == 0 || lng2 == 0)
-        {
-            newLocation = new LatLng(0.0f, 0.0f);
-        }
-        else
-        {
-            newLocation = new LatLng(Math.toDegrees(lat2), Math.toDegrees(lng2));
-        }
-
-        return newLocation;
-    };
 
     public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {
         mGoogleMap.setOnMapClickListener(onMapClickListener);

@@ -104,7 +104,7 @@ public class GameMainFragment extends Fragment {
         // Get map 0
         Map virtualMap = mVirtualMapRepository.get(0);
 
-        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 1000, 1000, 0);
+        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 50, 50, 0);
         mGameEngine = new GameEngine();
         mGameEngine.setCallback(mGameCallback);
 
