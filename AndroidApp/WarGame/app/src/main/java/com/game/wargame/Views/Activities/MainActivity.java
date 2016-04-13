@@ -50,6 +50,11 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         gameEntryFragment.setGameEntryCallbacks(this);
         gameEntryFragment.setSettings(mSettings);
         addFragment(gameEntryFragment);
+
+        /*
+        RegisterFragment registerFragment = new RegisterFragment();
+        registerFragment.setConnectionManager(mConnectionManager);
+        addFragment(registerFragment);*/
     }
 
     @Override

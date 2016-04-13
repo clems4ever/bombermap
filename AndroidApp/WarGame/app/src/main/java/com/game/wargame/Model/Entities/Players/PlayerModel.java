@@ -11,7 +11,6 @@ public abstract class PlayerModel extends Player {
     protected OnPlayerWeaponTriggeredListener mOnPlayerWeaponTriggeredListener;
     protected OnPlayerDiedListener mOnPlayerDiedListener;
     protected OnPlayerRespawnListener mOnPlayerRespawnListener;
-    protected Animation mAnimation;
 
     public PlayerModel(String playerId, String playerName) {
         super(playerId, playerName);

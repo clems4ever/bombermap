@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Player implements Updatable {
 
-    protected final static int TIME_TO_RESPAWN = 2000;
+    protected final static int TIME_TO_RESPAWN = 6000;
 
     protected String mPlayerId;
     protected String mPlayerName;

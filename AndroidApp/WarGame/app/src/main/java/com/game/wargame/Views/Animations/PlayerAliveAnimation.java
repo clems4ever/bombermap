@@ -9,8 +9,8 @@ public class PlayerAliveAnimation extends Animation {
 
     public PlayerAliveAnimation(boolean isRemote) {
         if (isRemote)
-            mDrawablesId.add(R.mipmap.marker);
+            mDrawablesId.add(R.mipmap.player);
         else
-            mDrawablesId.add(R.mipmap.marker_current);
+            mDrawablesId.add(R.mipmap.player_current);
     }
 }
