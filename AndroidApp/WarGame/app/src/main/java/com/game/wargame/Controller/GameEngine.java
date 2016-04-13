@@ -69,6 +69,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     private GameSocket mGameSocket;
 
     private EntitiesModel mEntitiesModel;
+    private DisplayCallback mDisplayCallback;
     private GameContext mGameContext;
 
     private GameMainFragment.Callback mGameCallback;
@@ -149,7 +150,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
         mGlobalTimer.setCollisionManager(new CollisionManager(new com.game.wargame.Controller.Utils.Location()));
         DisplayCallback displayCallback = new DisplayCallback(mGameView, mGameContext, mCurrentPlayer, mEntitiesModel);
-        mGlobalTimer.setDisplayCallback(displayCallback);
+        mDisplayCallback = displayCallback;
+        mGlobalTimer.setDisplayCallback(mDisplayCallback);
         mGlobalTimer.setGameContext(mGameContext);
         mGlobalTimer.setGameCallback(mGameCallback);
         mGlobalTimer.start();
@@ -247,6 +249,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     public void addRemotePlayer(RemotePlayerModel p) {
         p.setOnRemotePlayerPositionUpdated(this);
         addPlayer(p);
+        mGlobalTimer.addRemotePlayer(p);
+        mDisplayCallback.addRemotePlayer(p);
     }
 
     @Override

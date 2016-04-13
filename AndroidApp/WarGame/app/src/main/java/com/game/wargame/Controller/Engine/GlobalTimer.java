@@ -5,10 +5,12 @@ import android.app.Activity;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Views.Activities.GameMainFragment;
 import com.game.wargame.Views.GameView;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
@@ -24,12 +26,13 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private long mTicks = 0;
     private Lock mLock = new ReentrantLock();
     private Activity mActivity;
+    private boolean isStopped = false;
 
     private CollisionManager mCollisionManager;
-    private boolean isStopped = false;
 
     private EntitiesModel mEntities;
     private LocalPlayerModel mCurrentPlayer;
+    private ArrayList<RemotePlayerModel> mRemotePlayerModels;
     private GameContext mGameContext;
     private IDisplayCallback mDisplayCallback;
 
@@ -50,6 +53,9 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                     mEntities.update(mTicks, UPDATE_SAMPLE_TIME);
                     mGameContext.update(mTicks, UPDATE_SAMPLE_TIME);
                     mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME);
+                    for (RemotePlayerModel remotePlayerModel : mRemotePlayerModels) {
+                        remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME);
+                    }
 
                     mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
                             mCurrentPlayer,
@@ -80,6 +86,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
     public GlobalTimer(Activity activity) {
         mActivity = activity;
+        mRemotePlayerModels = new ArrayList<>();
     }
 
     public void start() {
@@ -139,6 +146,10 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     public void setCurrentPlayerModel(LocalPlayerModel player)
     {
         mCurrentPlayer = player;
+    }
+
+    public void addRemotePlayer(RemotePlayerModel remotePlayerModel) {
+        mRemotePlayerModels.add(remotePlayerModel);
     }
 
     public void setCollisionManager(CollisionManager collisionManager) {
