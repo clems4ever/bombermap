@@ -58,7 +58,7 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
     @Override
     public void onRespawnEvent(String playerId, double time) {
         mIsVisible = true;
-        mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
+        mAnimation = AnimationFactory.buildPlayerAliveAnimation(true);
         if (mOnPlayerRespawnListener != null)
             mOnPlayerRespawnListener.onRespawn(playerId, time);
     }

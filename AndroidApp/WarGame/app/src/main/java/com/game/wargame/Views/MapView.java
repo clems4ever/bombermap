@@ -146,8 +146,9 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
             @Override
             public void run() {
                 PlayerMarker marker = mPlayerLocations.get(playerId);
-                if (marker != null && playerAnimation != null) {
+                if (marker != null && playerAnimation != null && playerAnimation.isDirty()) {
                     marker.setIcon(mBitmapCache.getBitmap(playerAnimation.current()));
+                    playerAnimation.clean();
                 }
             }
         });
@@ -162,9 +163,10 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
             if (entity.isToRemove()) {
                 marker.remove();
                 mEntityMarkers.remove(entity.getUUID());
-            } else {
+            } else if (animation.isDirty()) {
                 marker.setPosition(entity.getPosition());
                 marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+                animation.clean();
             }
         }
     }

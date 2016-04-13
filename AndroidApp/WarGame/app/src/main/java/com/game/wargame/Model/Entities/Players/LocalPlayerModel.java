@@ -17,8 +17,6 @@ public class LocalPlayerModel extends PlayerModel {
 
     private LatLng mShadowPosition;
 
-    protected Animation mAnimation;
-
     public LocalPlayerModel(String playerName, LocalPlayerSocket playerSocket) {
         super(playerSocket.getPlayerId(), playerName);
 

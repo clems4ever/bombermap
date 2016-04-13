@@ -20,7 +20,6 @@ public class GameEntryFragment extends Fragment {
     private Callback mEntryCallback;
     private IConnectionManager mConnectionManager;
 
-
     public void setGameEntryCallbacks(GameEntryFragment.Callback callbacks) {
         mEntryCallback = callbacks;
     }

@@ -21,6 +21,7 @@ public abstract class Animation {
     protected int mFrameRateMillis;
     protected int mCounterMillis;
     protected int mCurrentFrame;
+    protected boolean mIsDirty = true;
 
     protected Animation() {
         mDrawablesId = new LinkedList<>();
@@ -43,11 +44,13 @@ public abstract class Animation {
     }
 
     public void addTime(int millis) {
-        int previousCounter = mCounterMillis;
-        mCounterMillis += millis;
-        if (mCounterMillis/mFrameRateMillis > previousCounter/mFrameRateMillis)
-        {
-            next();
+        if (mDrawablesId.size() > 1) {
+            int previousCounter = mCounterMillis;
+            mCounterMillis += millis;
+            if (mCounterMillis/mFrameRateMillis > previousCounter/mFrameRateMillis) {
+                next();
+                mIsDirty = true;
+            }
         }
     }
 
@@ -57,5 +60,13 @@ public abstract class Animation {
 
     public boolean hasNext() {
         return mFrameIterator.hasNext();
+    }
+
+    public void clean() {
+        mIsDirty = false;
+    }
+
+    public boolean isDirty() {
+        return mIsDirty;
     }
 }
