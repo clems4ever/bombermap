@@ -11,8 +11,10 @@ import android.view.View;
 import com.game.wargame.Controller.Utils.Location;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.Player;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
@@ -35,7 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplayer {
+public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.player_current;
     public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.player;
@@ -174,15 +176,28 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
         }
     }
 
-    public void display(final EntitiesModel entitiesModel) {
+    public void displayProjectiles(final ArrayList<Projectile> projectiles) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run(){
-                ArrayList<Entity>entities=entitiesModel.getEntities();
-                for(Entity entity : entities){
-                    display(entity);
-                    if(entity.isToRemove() && mEntityMarkers.get(entity.getUUID()) == null){
-                        entitiesModel.setDisplayed(entity, false);
+                for(Projectile projectile : projectiles) {
+                    display(projectile);
+                    if(projectile.isToRemove() && mEntityMarkers.get(projectile.getUUID()) == null){
+                        projectile.setDisplayed(false);
+                    }
+                }
+            }
+        });
+    }
+
+    public void displayExplosions(final ArrayList<Explosion> explosions) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run(){
+                for(Explosion explosion : explosions) {
+                    display(explosion);
+                    if(explosion.isToRemove() && mEntityMarkers.get(explosion.getUUID()) == null){
+                        explosion.setDisplayed(false);
                     }
                 }
             }
@@ -191,6 +206,31 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
 
     public void display(GameContext gameContext) {
 
+    }
+
+    public void display(ArrayList<RealCell> realCells, float rotation) {
+        Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
+        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
+
+        Iterator<RealCell> it = realCells.iterator();
+        while(it.hasNext()) {
+            RealCell realCell = it.next();
+            if (realCell.cell().type() == CellTypeEnum.BLOCK) {
+
+                mGoogleMap.addBlock(new GroundOverlayOptions()
+                        .position(realCell.position(), 50, 50)
+                        .anchor(0.5f, 0.5f)
+                        .zIndex(-100)
+                        .bearing(rotation)
+                        .image(scaledBlockDescriptor));
+
+                Iterator<LatLng> vIt = realCell.vertices().iterator();
+                while(vIt.hasNext()) {
+                    LatLng p = vIt.next();
+                    mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
+                }
+            }
+        }
     }
 
     public void removePlayer(final String playerId) {
@@ -213,35 +253,6 @@ public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplaye
     public void moveCameraTo(LatLng position, float zoom) {
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(position, zoom);
         mGoogleMap.animateCamera(cameraUpdate);
-    }
-
-    public void updateVirtualMapOverlay(RealMap virtualMap) {
-        Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
-
-        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
-
-        for (int i = 0; i < virtualMap.width(); ++i) {
-            for (int j = 0; j < virtualMap.height(); ++j) {
-
-                RealCell realCell = virtualMap.getRealCell(i, j);
-
-                if (realCell.type() == CellTypeEnum.BLOCK) {
-
-                    mGoogleMap.addBlock(new GroundOverlayOptions()
-                            .position(realCell.position(), 50, 50)
-                            .anchor(0.5f, 0.5f)
-                            .zIndex(-100)
-                            .bearing(virtualMap.getRealRotation())
-                            .image(scaledBlockDescriptor));
-
-                    Iterator<LatLng> it = realCell.vertices().iterator();
-                    while(it.hasNext()) {
-                        LatLng p = it.next();
-                        mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
-                    }
-                }
-            }
-        }
     }
 
     public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {

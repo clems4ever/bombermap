@@ -96,25 +96,18 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void update(long ticks, int increment)
-    {
+    public void update(long ticks, int increment) {
         super.update(ticks, increment);
-        double time = ticks*increment;
+        double time = ticks * increment;
         Double newTimestamp = mTrajectory.ceilingKey(time);
 
         if (newTimestamp != null) {
             LatLng newPosition = mTrajectory.get(newTimestamp);
             super.setPosition(newPosition);
             //TODO: evaluateContacts
+        } else {
+            mOnExplosion.onExplosion(this, (long) time);
         }
-        else {
-            mOnExplosion.onExplosion(this, (long)time);
-        }
-    }
-
-    @Override
-    public void onCollision(LocalPlayerModel player, double time) {
-
     }
 
     protected double mTimeStart;

@@ -86,7 +86,6 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
      */
     public GameEngine() {
         mPlayersById = new HashMap<>();
-        mEntitiesModel = new EntitiesModel();
         mPathEditor = new LinkedList<>();
         mCurrentPlayerLocked = false;
     }
@@ -102,6 +101,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                         GlobalTimer globalTimer,
                         Settings settings) {
 
+        mEntitiesModel = new EntitiesModel();
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
@@ -118,11 +118,22 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addLocalPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
-        mGameView.updateVirtualMapOverlay(mVirtualMap);
+
+        addBlocksAsEntities(mVirtualMap);
 
         startLocationRetriever();
         initializeView();
         startGlobalUpdateTimer();
+    }
+
+    private void addBlocksAsEntities(RealMap map) {
+        for(int i=0; i < map.width(); ++i) {
+            for(int j=0; j < map.height(); ++j) {
+                if(map.getRealCell(i, j).cell().type() == CellTypeEnum.BLOCK) {
+                    mEntitiesModel.addRealCell(map.getRealCell(i, j));
+                }
+            }
+        }
     }
 
     /**
@@ -271,7 +282,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         for(int x=0; x < mVirtualMap.width() && !collision; ++x) {
             for(int y=0; y<mVirtualMap.height() && !collision; ++y) {
                 RealCell realCell = mVirtualMap.getRealCell(x, y);
-                if(realCell.type() == CellTypeEnum.BLOCK) {
+                if(realCell.cell().type() == CellTypeEnum.BLOCK) {
                     collision |= PolyUtil.containsLocation(position, realCell.vertices(), false);
                 }
             }
@@ -302,7 +313,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
         Projectile projectile = new Projectile(player.getPlayerId(), source, destination, timestamp);
         projectile.setOnExplosionListener(this);
-        mEntitiesModel.addEntity(projectile);
+        mEntitiesModel.addProjectile(projectile);
     }
 
     public int getPlayersCount() {
@@ -331,7 +342,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     @Override
     public void onExplosion(Entity entity, long time) {
         entity.setToRemove(true);
-        mEntitiesModel.addEntity(new Explosion(entity.getOwner(), (double) time, entity.getPosition(), entity.getDirection()));
+        mEntitiesModel.addExplosion(new Explosion(entity.getOwner(), (double) time, entity.getPosition(), entity.getDirection()));
     }
 
     @Override
