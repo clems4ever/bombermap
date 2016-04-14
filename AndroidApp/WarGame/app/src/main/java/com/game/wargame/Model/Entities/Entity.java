@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by sergei on 14/03/16.
  */
-public class Entity implements Updatable {
+public abstract class Entity implements Updatable {
 
     protected Animation mAnimation;
     protected LatLng mPosition;
@@ -72,5 +72,7 @@ public class Entity implements Updatable {
     public boolean isDisplayed() {
         return mIsDisplayed;
     }
+
+    public abstract void onCollision(LocalPlayerModel player, double time);
 }
 

@@ -46,7 +46,7 @@ public class CollisionTest {
 
         mEntitiesModel = new EntitiesModel();
         Explosion explosion = new Explosion("other", 100, new LatLng(50,50), 0);
-        mEntitiesModel.addExplosion(explosion);
+        mEntitiesModel.addEntity(explosion);
 
         mCollisionManager = new CollisionManager(new DummyLocation());
     }
@@ -55,7 +55,7 @@ public class CollisionTest {
     public void testThatTooFarFromExplosionToDie() {
         mPlayerModel.setPosition(new LatLng(60, 60));
 
-        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesModel, 100);
+        mCollisionManager.treatPlayerEntitiesCollisions(mEntitiesModel, mPlayerModel, 100);
         assertEquals(100, mPlayerModel.getHealth());
     }
 
@@ -63,7 +63,7 @@ public class CollisionTest {
     public void testThatCollisionKillsPlayer() {
      mPlayerModel.setPosition(new LatLng(51, 51));
 
-        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesModel, 100);
+        mCollisionManager.treatPlayerEntitiesCollisions(mEntitiesModel, mPlayerModel, 100);
         assertEquals(0, mPlayerModel.getHealth());
     }
 

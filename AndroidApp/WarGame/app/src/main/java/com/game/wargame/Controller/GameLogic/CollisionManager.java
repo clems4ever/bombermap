@@ -3,16 +3,10 @@ package com.game.wargame.Controller.GameLogic;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
 import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Players.PlayerException;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
-import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.PolyUtil;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -26,36 +20,13 @@ public class CollisionManager {
         mDistanceCalculator = distanceCalculator;
     }
 
-    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, EntitiesModel entitiesModel, double time) {
-        ArrayList<Explosion> explosions = entitiesModel.getExplosions();
-        for (Explosion explosion : explosions) {
-            if (areColliding(player, explosion))
+    public void treatPlayerEntitiesCollisions(EntitiesModel entitiesModel, LocalPlayerModel player, double time)
+    {
+        ArrayList<Entity> entities = entitiesModel.getEntities();
+        for (Entity entity : entities) {
+            if (areColliding(player, entity))
             {
-                try {
-                    //a collision with an explosion kills the player
-                    if (explosion.getOwner() != player.getPlayerId()) {
-                        player.setHealth(0);
-                        player.die(explosion.getOwner(), time);
-                    }
-                }
-                catch (PlayerException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void treatBlockCollisions(EntitiesModel entitiesModel) {
-        ArrayList<RealCell> realCells = entitiesModel.getRealCells();
-        ArrayList<Projectile> projectiles = entitiesModel.getProjectiles();
-        boolean collision = false;
-
-        for (RealCell realCell : realCells) {
-            for(Projectile projectile: projectiles) {
-                if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), false)) {
-                    realCell.setToRemove(true);
-                }
+                entity.onCollision(player, time);
             }
         }
     }

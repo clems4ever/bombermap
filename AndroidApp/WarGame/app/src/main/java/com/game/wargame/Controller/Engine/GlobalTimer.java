@@ -57,10 +57,9 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                         remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME);
                     }
 
-                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer,
-                            mEntities,
+                    mCollisionManager.treatPlayerEntitiesCollisions(mEntities,
+                            mCurrentPlayer,
                             time);
-                    mCollisionManager.treatBlockCollisions(mEntities);
 
                     mActivity.runOnUiThread(new Runnable() {
                         @Override

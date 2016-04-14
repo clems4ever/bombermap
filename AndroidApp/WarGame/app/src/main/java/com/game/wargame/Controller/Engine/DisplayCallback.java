@@ -34,11 +34,9 @@ public class DisplayCallback implements IDisplayCallback {
 
     @Override
     public void display() {
+        mGameView.display(mEntities);
         mGameView.display(mCurrentPlayer);
         mGameView.display(mGameContext);
-        mGameView.displayProjectiles(mEntities.getProjectiles());
-        mGameView.displayExplosions(mEntities.getExplosions());
-        mGameView.displayCells(mEntities.getRealCells());
         for (RemotePlayerModel remotePlayerModel : mRemotePlayers) {
             mGameView.display(remotePlayerModel);
         }
