@@ -19,44 +19,62 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="100%"
-                android:id="@+id/health_level_text"
-                android:background="#d2ffffff"
-                android:padding="8dp"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="100px"
                 android:layout_alignParentTop="true"
+                android:background="#000000"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:textColor="#000000" />
+                android:id="@+id/action_bar_container">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="30:00"
-                android:id="@+id/time_textview"
-                android:background="#d2ffffff"
-                android:padding="8dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:visibility="invisible" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/action_bar">
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/gps_button"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:src="@mipmap/gps"
-                android:layout_margin="10dp"
-                android:scaleType="fitXY"
-                android:background="#00ffffff"
-                android:padding="5dp" />
+                    <LinearLayout
+                        android:layout_width="200px"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        >
+                        <TextView
+                            android:layout_width="20px"
+                            android:layout_height="40px"
+                            android:="40px"
+                            android:id="@+id/life"
+                            android:background="@android:color/background_light"
+                            />
+                        </LinearLayout>
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/gps_button"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:src="@mipmap/gps_white"
+                        android:scaleType="fitXY"
+                        android:background="#ff666699"
+                        android:padding="5dp" />
+
+                    <TextView
+                        android:layout_width="150px"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:id="@+id/time_text"
+                        android:background="@android:color/background_light"
+                        android:layout_centerInParent="true"
+                        android:textAlignment="center"
+                        android:gravity="center"
+                        android:textSize="30dp"
+                        android:text="60"
+                        android:textColor="#000000" />
+
+                </RelativeLayout>
+            </FrameLayout>
 
             <Button
                 android:layout_width="wrap_content"
@@ -73,29 +91,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/time_text"
-                android:layout_alignBottom="@+id/health_level_text"
-                android:layout_alignRight="@+id/fire_button"
-                android:layout_alignEnd="@+id/fire_button"
-                android:layout_alignTop="@+id/gps_button"
-                android:layout_alignLeft="@+id/fire_button"
-                android:layout_alignStart="@+id/fire_button"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentStart="false"
-                android:text="60"
-                android:textColor="#000000" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="game_notif_1"
                 android:id="@+id/game_notif_1"
-                android:layout_below="@+id/gps_button"
+                android:layout_below="@+id/action_bar_container"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:textColor="#000000" />
+                android:background="#000000"
+                android:textColor="#ffffff" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,7 +109,8 @@
                 android:layout_below="@+id/game_notif_1"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:textColor="#000000" />
+                android:background="#000000"
+                android:textColor="#ffffff"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -117,7 +121,8 @@
                 android:layout_below="@+id/game_notif_2"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:textColor="#000000" />
+                android:background="#000000"
+                android:textColor="#ffffff"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -125,7 +130,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="score"
                 android:id="@+id/score1"
-                android:layout_centerVertical="true"
+                android:layout_below="@+id/action_bar_container"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textColor="#000000" />
@@ -151,6 +156,7 @@
                 android:layout_alignLeft="@+id/score2"
                 android:layout_alignStart="@+id/score2"
                 android:textColor="#000000" />
+
 
         </RelativeLayout>
 

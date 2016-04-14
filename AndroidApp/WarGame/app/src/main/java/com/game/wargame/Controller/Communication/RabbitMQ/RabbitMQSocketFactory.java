@@ -3,6 +3,7 @@ package com.game.wargame.Controller.Communication.RabbitMQ;
 import com.game.wargame.Controller.Communication.Game.GameManagerSocket;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
+import com.game.wargame.Controller.Communication.Game.RegistryManagerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayersSocket;
 import com.game.wargame.Controller.Communication.ISocket;
@@ -25,6 +26,10 @@ public class RabbitMQSocketFactory implements ISocketFactory {
 
     public GameManagerSocket buildGameManagerSocket() {
         return new GameManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""));
+    }
+
+    public RegistryManagerSocket buildRegistryManagerSocket() {
+        return new RegistryManagerSocket(new RabbitMQSocket(mConnectionThread, "", ""));
     }
 
     @Override
