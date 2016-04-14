@@ -38,14 +38,52 @@
                         android:layout_width="200px"
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
+                        android:orientation="horizontal"
                         >
                         <TextView
                             android:layout_width="20px"
                             android:layout_height="40px"
-                            android:id="@+id/life"
+                            android:layout_margin="5px"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/life1"
+                            android:background="#FF4141"
+                            />
+                        <TextView
+                            android:layout_width="20px"
+                            android:layout_height="40px"
+                            android:layout_margin="5px"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/life2"
+                            android:background="#FF4141"
+                            />
+
+                        <TextView
+                            android:layout_width="20px"
+                            android:layout_height="40px"
+                            android:layout_margin="5px"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/life3"
+                            android:background="#FF4141"
+                            />
+
+                        <TextView
+                            android:layout_width="20px"
+                            android:layout_height="40px"
+                            android:layout_margin="5px"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/life4"
                             android:background="@android:color/background_light"
                             />
-                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="20px"
+                            android:layout_height="40px"
+                            android:layout_margin="5px"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/life5"
+                            android:background="@android:color/background_light"
+                            />
+                    </LinearLayout>
 
                     <ImageButton
                         android:layout_width="50dp"
