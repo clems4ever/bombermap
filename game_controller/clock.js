@@ -3,7 +3,7 @@ var RabbitMQWrapper = require('./server/controllers/rabbitmqwrapper');
 var clock_exchange = "clock_exchange";
 
 function start() {
-    RabbitMQWrapper.initServerChannel(function(){}, function() {
+    RabbitMQWrapper.initServerChannel("global_queue", function(){}, function() {
         setInterval(GameManager.updateClock, 1000);
     });
 }

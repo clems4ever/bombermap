@@ -39,7 +39,7 @@ exports.addPlayer = function(player) {
 exports.removePlayer = function(player_id) {
     var player = {'player_id': player_id};
     PlayerModel.remove(player, function (err) {
-       console.log(err);
+        ErrorHandler.handleError(player_model_prefix, err);
     });
 }
 

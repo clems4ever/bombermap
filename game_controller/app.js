@@ -32,6 +32,6 @@ function consumeCallback(msg) {
 }
 
 function start() {
-    RabbitMQWrapper.initServerChannel(consumeCallback, function() {});
+    RabbitMQWrapper.initServerChannel('global_queue', consumeCallback, function() {});
 }
 start();

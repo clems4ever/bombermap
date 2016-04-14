@@ -59,12 +59,11 @@ exports.assertRoomExchange = function(room_exchange) {
 }
 
 
-var global_queue = "global_queue";
-function startGameCreationWorker(consume_callback) {
-    server_channel.assertQueue(global_queue, global_queue_config);
+function startGameCreationWorker(queue_name, consume_callback) {
+    server_channel.assertQueue(queue_name, global_queue_config);
     server_channel.assertExchange('clock_exchange', "fanout", clock_exchange_config);
 
-    server_channel.consume(global_queue, consume_callback);
+    server_channel.consume(queue_name, consume_callback);
 }
 
 var rabbitmquri = process.env.CLOUDAMQP_URL || "amqp://server:server@broker.wargame.ingenious-cm.fr";
@@ -72,7 +71,7 @@ if(process.env.AMQP_VIRTUAL_HOST) {
 rabbitmquri += process.env.AMQP_VIRTUAL_HOST;
 }
 rabbitmquri += "?heartbeat=60";
-exports.initServerChannel = function(consume_callback, on_channel_ready) {
+exports.initServerChannel = function(queue_name, consume_callback, on_channel_ready) {
     console.log("Connection to " + rabbitmquri);
     amqp.connect(rabbitmquri, function(err, conn) {
         ErrorHandler.handleError(ampq_prefix, err);
@@ -86,12 +85,12 @@ exports.initServerChannel = function(consume_callback, on_channel_ready) {
                 console.log(err);
             });
             on_channel_ready();
-            startGameCreationWorker(consume_callback);
+            startGameCreationWorker(queue_name, consume_callback);
         });
     });
 }
 
-exports.purgeGlobalQueue = function() {
+exports.purgeGlobalQueue = function(global_queue) {
     server_channel.purgeQueue(global_queue);
 }
 
