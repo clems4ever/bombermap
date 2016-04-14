@@ -10,11 +10,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
-import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.Player;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
+import com.game.wargame.Model.GameContext.GameContext;
+import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
-import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
@@ -26,7 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
+public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
 
     private FragmentActivity mActivity;
     private MapView mMapView;
@@ -107,6 +108,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.moveCameraTo(position, zoom);
     }
 
+    public void updateVirtualMapOverlay(RealMap virtualMap) {
+        mMapView.updateVirtualMapOverlay(virtualMap);
+    }
+
     public void setWeaponController(AbstractWeaponControllerView weaponController) {
 
         if(mWeaponControllerInterface == null) {
@@ -152,6 +157,10 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
     }
 
+    public void display(EntitiesModel entities) {
+        mMapView.display(entities);
+    }
+
     public void display(GameContext gameContext) {
         mTimeText.setText(""+gameContext.getRemainingTime());
 
@@ -179,18 +188,6 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void display(Player player) {
         mMapView.display(player);
-    }
-
-    public void displayCells(ArrayList<RealCell> realCells) {
-        mMapView.display(realCells, 0);
-    }
-
-    public void displayExplosions(ArrayList<Explosion> explosions) {
-        mMapView.displayExplosions(explosions);
-    }
-
-    public void displayProjectiles(ArrayList<Projectile> projectiles) {
-        mMapView.displayProjectiles(projectiles);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {
