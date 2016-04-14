@@ -35,20 +35,4 @@ public class Explosion extends Entity {
             setToRemove(true);
         }
     }
-
-    @Override
-    public void onCollision(LocalPlayerModel player, double time) {
-        try {
-            //a collision with an explosion kills the player
-            if (getOwner() != player.getPlayerId()) {
-                player.setHealth(0);
-                player.die(this.getOwner(), time);
-            }
-        }
-        catch (PlayerException e)
-        {
-            e.printStackTrace();
-        }
-
-    }
 }
