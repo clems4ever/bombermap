@@ -42,7 +42,6 @@
                         <TextView
                             android:layout_width="20px"
                             android:layout_height="40px"
-                            android:="40px"
                             android:id="@+id/life"
                             android:background="@android:color/background_light"
                             />
