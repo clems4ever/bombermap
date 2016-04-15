@@ -20,6 +20,20 @@ public class Player implements Updatable {
     protected LatLng mPosition;
     protected float mRotation;
 
+    protected boolean mIsShielded;
+
+    public boolean isShielded() {
+        return mIsShielded;
+    }
+
+    public void setShielded(boolean isShielded) {
+        mIsShielded = isShielded;
+    }
+
+    public void shield() {
+        setShielded(!isShielded());
+    }
+
     public Player(String playerId, String playerName) {
         mPlayerId = playerId;
         mPlayerName = playerName;

@@ -8,9 +8,9 @@ import com.game.wargame.R;
 public class PlayerDeadAnimation extends Animation{
     public PlayerDeadAnimation(boolean isRemote) {
         if (isRemote)
-            mDrawablesId.add(R.mipmap.player);
+            mDrawablesId.add(R.mipmap.profile_c);
         else
-            mDrawablesId.add(R.mipmap.player_current);
+            mDrawablesId.add(R.mipmap.profile_s);
         mDrawablesId.add(R.mipmap.void_image);
 
         mFrameRateMillis = 300;

@@ -84,6 +84,16 @@ public class LocalPlayerSocket extends PlayerSocket {
         }
     }
 
+    public void shield(double time, boolean isShielded) {
+        try {
+            JSONObject data = buildClientJson();
+            data.put("shielded", isShielded);
+            data.put("time", time);
+            mSocket.emit("shield", data);
+        } catch (JSONException e) {
+        }
+    }
+
     public void gameStart(double time) {
         try {
             JSONObject data = buildClientJson();

@@ -35,12 +35,14 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private RelativeLayout mMapLayout;
     private AbstractWeaponControllerView mWeaponControllerInterface;
     private Button mFireButton;
+    private Button mShieldButton;
     private ImageButton mGpsButton;
     private TextView mTimeText;
     private TextView[] mNotificationsBuffer;
     private TextView[] mScoreBoard;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
+    private OnShieldListener mOnShieldListener;
 
     public GameView(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorFactory bitmapDescriptorFactory) {
         init(activity, view, googleMapView, bitmapDescriptorFactory);
@@ -53,6 +55,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         final GameView that = this;
 
         mFireButton = (Button) view.findViewById(R.id.fire_button);
+        mShieldButton = (Button) view.findViewById(R.id.shield_button);
         mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
         mTimeText = (TextView) view.findViewById(R.id.time_text);
 
@@ -73,11 +76,19 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
             }
         });
 
+        mShieldButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnShieldListener.onShield();
+            }
+        });
+
         mMapLayout = (RelativeLayout) view.findViewById(R.id.map_layout);
     }
 
-    public void initialize(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener) {
+    public void initialize(OnWeaponTargetDefinedListener onWeaponTargetDefinedListener, OnShieldListener onShieldListener) {
         mOnWeaponTargetDefined = onWeaponTargetDefinedListener;
+        mOnShieldListener = onShieldListener;
     }
 
     public void start(MapView.OnMapReadyListener onMapReadyListener) {
@@ -204,5 +215,9 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public interface OnWeaponTargetDefinedListener {
         public void onWeaponTargetDefined(float x, float y);
+    }
+
+    public interface OnShieldListener {
+        public void onShield();
     }
 }

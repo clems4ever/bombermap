@@ -1,5 +1,7 @@
 package com.game.wargame.Controller.Communication.Game;
 
+import com.game.wargame.Views.GameView;
+
 /**
  * Created by clement on 26/02/16.
  */
@@ -11,6 +13,7 @@ public class RemotePlayerSocket extends PlayerSocket {
     private OnFireEventListener mOnFireEventListener;
     private OnDieEventListener mOnDieEventListener;
     private OnRespawnEventListener mOnRespawnEventListener;
+    private OnShieldEventListener mOnShieldEventListener;
 
     /**
      * @param playerId
@@ -37,6 +40,10 @@ public class RemotePlayerSocket extends PlayerSocket {
         mOnRespawnEventListener = onRespawnEventListener;
     }
 
+    public void setOnShieldEventListener(OnShieldEventListener onShieldEventListener) {
+        mOnShieldEventListener = onShieldEventListener;
+    }
+
    public void onMove(double latitude, double longitude) {
         if(mOnMoveEventListener != null) {
             mOnMoveEventListener.onMoveEvent(latitude, longitude);
@@ -60,6 +67,11 @@ public class RemotePlayerSocket extends PlayerSocket {
             mOnRespawnEventListener.onRespawnEvent(this.getPlayerId(), time);
     }
 
+    public void onShield(String playerId, boolean isShielded, double time) {
+        if (mOnShieldEventListener != null)
+            mOnShieldEventListener.onShieldEvent(playerId, isShielded, time);
+    }
+
     public interface OnMoveEventListener {
         public void onMoveEvent(double latitude, double longitude);
     }
@@ -74,5 +86,9 @@ public class RemotePlayerSocket extends PlayerSocket {
 
     public interface OnRespawnEventListener {
         public void onRespawnEvent(String playerId, double time);
+    }
+
+    public interface OnShieldEventListener {
+        public void onShieldEvent(String playerId, boolean isShielded, double time);
     }
 }

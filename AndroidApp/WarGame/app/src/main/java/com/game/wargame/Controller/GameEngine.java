@@ -21,6 +21,7 @@ import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
+import com.game.wargame.Model.Entities.Players.OnPlayerShielded;
 import com.game.wargame.Model.Entities.Players.OnPlayerWeaponTriggeredListener;
 import com.game.wargame.Model.Entities.Players.OnRemotePlayerPositionUpdated;
 import com.game.wargame.Model.Entities.Players.Player;
@@ -56,7 +57,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         OnExplosionListener,
         OnPlayerRespawnListener,
         OnRemotePlayerPositionUpdated,
-        OnLocationRetrievedListener {
+        OnLocationRetrievedListener, OnPlayerShielded {
 
     private static final int WEAPON_RANGE = 1000;
 
@@ -198,6 +199,12 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                     mGameView.onActionFinished();
                 }
             }
+        }, new GameView.OnShieldListener() {
+
+            @Override
+            public void onShield() {
+                mCurrentPlayer.shield(mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME);
+            }
         });
 
         mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
@@ -244,6 +251,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     private void addPlayer(PlayerModel player) {
         player.setOnPlayerWeaponTriggeredListener(this);
         player.setOnPlayerDiedListener(this);
+        player.setOnPlayerShieldListener(this);
         mGameContext.addPlayer(player.getPlayerId());
         mPlayersById.put(player.getPlayerId(), player);
     }
@@ -349,5 +357,12 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
     public void setCallback(GameMainFragment.Callback callback) {
         this.mGameCallback = callback;
+    }
+
+    @Override
+    public void onShield(String playerId, double time) {
+        Player player = mPlayersById.get(playerId);
+        if (player != null)
+            player.shield();
     }
 }

@@ -85,6 +85,20 @@ public class RemotePlayersSocket {
                     Log.w("respawn", "remote player " + playerId + " is null");
             }
         });
+
+        mSocket.on("shield", new ISocket.OnRemoteEventReceivedListener() {
+            @Override
+            public void onRemoteEventReceived(JSONObject message) throws JSONException {
+                String playerId = message.getString("player_id");
+                double time = message.getDouble("time");
+                boolean isShielded = message.getBoolean("shielded");
+                RemotePlayerSocket player = mPlayerByPlayerId.get(playerId);
+                if (player != null)
+                    player.onShield(playerId, isShielded, time);
+                else
+                    Log.w("respawn", "remote player " + playerId + " is null");
+            }
+        });
     }
 
     public void addPlayer(RemotePlayerSocket socket) {

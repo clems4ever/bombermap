@@ -37,8 +37,8 @@ import java.util.Iterator;
 
 public class MapView implements GoogleMapView.OnMapReadyCallback, EntityDisplayer {
 
-    public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.player_current;
-    public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.player;
+    public static final int LOCAL_PLAYER_MARKER_RES_ID = R.mipmap.profile_s;
+    public static final int REMOTE_PLAYER_MARKER_RES_ID = R.mipmap.profile_c;
 
     private FragmentActivity mActivity;
     private GoogleMap mGoogleMap;

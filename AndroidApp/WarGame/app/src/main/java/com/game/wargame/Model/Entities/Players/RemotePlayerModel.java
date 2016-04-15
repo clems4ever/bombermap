@@ -9,7 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by clement on 19/02/16.
  */
 public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket.OnMoveEventListener, RemotePlayerSocket.OnFireEventListener,
-                                                              RemotePlayerSocket.OnDieEventListener, RemotePlayerSocket.OnRespawnEventListener {
+                                                              RemotePlayerSocket.OnDieEventListener, RemotePlayerSocket.OnRespawnEventListener,
+                                                              RemotePlayerSocket.OnShieldEventListener {
 
     protected RemotePlayerSocket mPlayerSocket;
 
@@ -24,6 +25,7 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
         mPlayerSocket.setOnMoveEventListener(this);
         mPlayerSocket.setOnDieEventListener(this);
         mPlayerSocket.setOnRespawnEventListener(this);
+        mPlayerSocket.setOnShieldEventListener(this);
     }
 
     public void setOnRemotePlayerPositionUpdated(OnRemotePlayerPositionUpdated onRemotePlayerPositionUpdated) {
@@ -61,5 +63,14 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
         mAnimation = AnimationFactory.buildPlayerAliveAnimation(true);
         if (mOnPlayerRespawnListener != null)
             mOnPlayerRespawnListener.onRespawn(playerId, time);
+    }
+
+    @Override
+    public void onShieldEvent(String playerId, boolean isShielded, double time) {
+        super.shield();
+        if (isShielded())
+            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(true);
+        else
+            mAnimation = AnimationFactory.buildPlayerAliveAnimation(true);
     }
 }

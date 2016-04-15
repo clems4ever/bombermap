@@ -11,6 +11,7 @@ public abstract class PlayerModel extends Player {
     protected OnPlayerWeaponTriggeredListener mOnPlayerWeaponTriggeredListener;
     protected OnPlayerDiedListener mOnPlayerDiedListener;
     protected OnPlayerRespawnListener mOnPlayerRespawnListener;
+    protected OnPlayerShielded mOnPlayerShieldListener;
 
     public PlayerModel(String playerId, String playerName) {
         super(playerId, playerName);
@@ -27,5 +28,9 @@ public abstract class PlayerModel extends Player {
 
     public void setOnPlayerRespawnListener(OnPlayerRespawnListener onPlayerRespawnListener) {
         mOnPlayerRespawnListener = onPlayerRespawnListener;
+    }
+
+    public void setOnPlayerShieldListener(OnPlayerShielded onPlayerShielded) {
+        mOnPlayerShieldListener = onPlayerShielded;
     }
 }

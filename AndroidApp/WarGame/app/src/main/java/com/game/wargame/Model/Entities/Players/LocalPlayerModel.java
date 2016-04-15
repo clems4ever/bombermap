@@ -46,7 +46,7 @@ public class LocalPlayerModel extends PlayerModel {
     }
 
     public void die(String killerId, double time) {
-        if (mRespawnCounter == 0) {
+        if (mRespawnCounter == 0 && !isShielded()) {
             mPlayerSocket.die(this.getPlayerId(), killerId, time);
 
             mRespawnCounter = TIME_TO_RESPAWN;
@@ -66,6 +66,15 @@ public class LocalPlayerModel extends PlayerModel {
     public void respawn(double time) {
         mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
         mPlayerSocket.respawn(time);
+    }
+
+    public void shield(double time) {
+        super.shield();
+        if (isShielded())
+            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(false);
+        else
+            mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
+        mPlayerSocket.shield(time, !isShielded());
     }
 
     public void leave() {
