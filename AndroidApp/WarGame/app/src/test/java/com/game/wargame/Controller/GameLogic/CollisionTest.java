@@ -46,7 +46,7 @@ public class CollisionTest {
         mPlayerModel = new LocalPlayerModel("player_id", mLocalPlayerSocket);
 
         mEntitiesContainer = new EntitiesContainer();
-        mEntitiesContainer.addProjectile(new Projectile("other", new LatLng(50, 50), new LatLng(100, 100), 0));
+        mEntitiesContainer.addExplosion(new Explosion("other", 0, new LatLng(50, 50), 0));
 
         mEntitiesContainer.addExplosion(new Explosion("other", 100, new LatLng(50, 50), 0));
 
@@ -63,7 +63,7 @@ public class CollisionTest {
 
     @Test
     public void testThatCollisionKillsPlayer() {
-        mPlayerModel.setPosition(new LatLng(51, 51));
+        mPlayerModel.setPosition(new LatLng(55, 55));
 
         mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesContainer.getExplosions(), 100);
         assertEquals(0, mPlayerModel.getHealth());

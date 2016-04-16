@@ -18,12 +18,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class GameContextTest {
 
-    @Mock
-    FragManager mFragManager;
-    @Mock
-    DisplayTransaction mMockDisplayTransaction;
-    @Mock
-    EntitiesContainerUpdater mMockEntitiesContainerUpdater;
+    @Mock FragManager mFragManager;
+    @Mock DisplayTransaction mMockDisplayTransaction;
+    @Mock EntitiesContainerUpdater mMockEntitiesContainerUpdater;
 
     GameContext mGameContext;
 

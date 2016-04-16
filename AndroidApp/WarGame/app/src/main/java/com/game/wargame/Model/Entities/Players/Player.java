@@ -17,10 +17,6 @@ public class Player extends Entity {
     protected int mHealth = 100;
     protected boolean mIsVisible = true;
     protected int mRespawnCounter = 0;
-    protected Animation mAnimation;
-
-    protected LatLng mPosition;
-    protected float mRotation;
 
     protected boolean mIsShielded;
 
@@ -41,7 +37,6 @@ public class Player extends Entity {
         mPlayerName = playerName;
 
         mPosition = new LatLng(AppConstant.INITIAL_LATITUDE, AppConstant.INITIAL_LONGITUDE);
-        mRotation = 0;
     }
 
     @Override
@@ -75,22 +70,6 @@ public class Player extends Entity {
 
     public int getHealth() {
         return mHealth;
-    }
-
-    public void setPosition(LatLng position) {
-        mPosition = position;
-    }
-
-    public LatLng getPosition() {
-        return mPosition;
-    }
-
-    public void setRotation(float rotation) {
-        mRotation = rotation % 360;
-    }
-
-    public float getRotation() {
-        return mRotation;
     }
 
     @Override
