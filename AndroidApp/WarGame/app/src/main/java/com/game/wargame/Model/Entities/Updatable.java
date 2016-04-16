@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface Updatable {
 
-    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction);
+    public void update(long ticks, int increment, EntitiesContainerUpdater entitiesContainerUpdater, DisplayTransaction displayTransaction);
 
 }

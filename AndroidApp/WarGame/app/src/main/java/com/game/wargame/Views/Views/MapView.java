@@ -230,35 +230,6 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
-    public void updateVirtualMapOverlay(RealMap virtualMap) {
-        Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
-
-        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
-
-        for (int i = 0; i < virtualMap.width(); ++i) {
-            for (int j = 0; j < virtualMap.height(); ++j) {
-
-                RealCell realCell = virtualMap.getRealCell(i, j);
-
-                if (realCell.cell().type() == CellTypeEnum.BLOCK) {
-
-                    mGoogleMap.addBlock(new GroundOverlayOptions()
-                            .position(realCell.position(), 50, 50)
-                            .anchor(0.5f, 0.5f)
-                            .zIndex(-100)
-                            .bearing(virtualMap.getRealRotation())
-                            .image(scaledBlockDescriptor));
-
-                    Iterator<LatLng> it = realCell.vertices().iterator();
-                    while(it.hasNext()) {
-                        LatLng p = it.next();
-                        mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
-                    }
-                }
-            }
-        }
-    }
-
     public void setOnMapClickListener(com.google.android.gms.maps.GoogleMap.OnMapClickListener onMapClickListener) {
         mGoogleMap.setOnMapClickListener(onMapClickListener);
     }

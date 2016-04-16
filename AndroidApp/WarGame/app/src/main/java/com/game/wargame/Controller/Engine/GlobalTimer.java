@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.game.wargame.Controller.Engine.DisplayCommands.AddBlockDisplayCommand;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
@@ -37,6 +38,8 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     private CollisionManager mCollisionManager;
 
     private EntitiesContainer mEntities;
+    private EntitiesContainerUpdater mEntitiesContainerUpdater;
+
     private LocalPlayerModel mCurrentPlayer;
     private ArrayList<RemotePlayerModel> mRemotePlayerModels;
     private GameContext mGameContext;
@@ -52,6 +55,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
     public GlobalTimer(Activity activity) {
         mActivity = activity;
         mRemotePlayerModels = new ArrayList<>();
+        mEntitiesContainerUpdater = new EntitiesContainerUpdater();
     }
 
     private void startTimer() {
@@ -71,17 +75,19 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                     double time = mTicks * UPDATE_SAMPLE_TIME;
 
                     for(Entity e : mEntities.getEntities()) {
-                        e.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
+                        e.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     }
-                    mGameContext.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
-                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
+                    mGameContext.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
+                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     for (RemotePlayerModel remotePlayerModel : mRemotePlayerModels) {
-                        remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
+                        remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     }
 
                     List<Projectile> projectileList = mEntities.getProjectiles();
                     mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, projectileList, time);
                     mCollisionManager.treatBlockCollisions(mEntities, time, mDisplayTransaction);
+
+                    mEntitiesContainerUpdater.update(mEntities);
 
                     mActivity.runOnUiThread(new Runnable() {
                         @Override

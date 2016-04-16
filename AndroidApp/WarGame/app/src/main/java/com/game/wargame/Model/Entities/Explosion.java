@@ -28,13 +28,13 @@ public class Explosion extends Entity {
     }
 
     @Override
-    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
-        super.update(ticks, increment, entitiesContainer, displayTransaction);
+    public void update(long ticks, int increment, EntitiesContainerUpdater entitiesContainerUpdater, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainerUpdater, displayTransaction);
         long time = ticks*increment;
         if (time >= mTimeEnd)
         {
             displayTransaction.add(new RemoveExplosionDisplayCommand(this));
-            entitiesContainer.removeExplosion(this);
+            entitiesContainerUpdater.removeExplosion(this);
         }
         else {
             displayTransaction.add(new UpdateExplosionDisplayCommand(this));

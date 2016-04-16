@@ -121,10 +121,6 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.moveCameraTo(position, zoom);
     }
 
-    public void updateVirtualMapOverlay(RealMap virtualMap) {
-        mMapView.updateVirtualMapOverlay(virtualMap);
-    }
-
     public void setWeaponController(AbstractWeaponControllerView weaponController) {
 
         if(mWeaponControllerInterface == null) {

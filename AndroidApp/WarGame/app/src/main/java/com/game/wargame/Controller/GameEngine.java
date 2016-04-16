@@ -12,7 +12,6 @@ import com.game.wargame.Controller.Engine.DisplayCallback;
 import com.game.wargame.Controller.Engine.DisplayCommands.AddProjectileDisplayCommand;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
-import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.OnLocationRetrievedListener;
 import com.game.wargame.Controller.Settings.Settings;
@@ -116,7 +115,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
         addLocalPlayer(mCurrentPlayer);
         mGameView.addLocalPlayer(mCurrentPlayer);
-        mGameView.updateVirtualMapOverlay(mVirtualMap);
+
+        addBlocksAsEntities(mVirtualMap);
 
         startLocationRetriever();
         initializeView();

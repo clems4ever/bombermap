@@ -43,7 +43,7 @@ public abstract class Entity implements Updatable {
     }
 
     @Override
-    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
+    public void update(long ticks, int increment, EntitiesContainerUpdater entitiesContainerUpdater, DisplayTransaction displayTransaction) {
         if (mAnimation != null) {
             mAnimation.addTime(increment);
         }

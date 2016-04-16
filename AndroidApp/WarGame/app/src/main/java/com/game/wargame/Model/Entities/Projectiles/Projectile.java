@@ -6,7 +6,7 @@ import com.game.wargame.Controller.Engine.DisplayCommands.AddExplosionDisplayCom
 import com.game.wargame.Controller.Engine.DisplayCommands.RemoveProjectileDisplayCommand;
 import com.game.wargame.Controller.Engine.DisplayCommands.UpdateProjectileDisplayCommand;
 import com.game.wargame.Controller.Engine.DisplayTransaction;
-import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Views.Animations.AnimationFactory;
@@ -64,8 +64,8 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
-        super.update(ticks, increment, entitiesContainer, displayTransaction);
+    public void update(long ticks, int increment, EntitiesContainerUpdater entitiesContainerUpdater, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainerUpdater, displayTransaction);
         double time = ticks * increment;
         Double newTimestamp = mTrajectory.ceilingKey(time);
 
@@ -76,8 +76,8 @@ public class Projectile extends Entity {
             displayTransaction.add(new UpdateProjectileDisplayCommand(this));
         } else {
             Explosion explosion = new Explosion(this.getOwner(), time, this.getPosition(), this.getDirection());
-            entitiesContainer.addExplosion(explosion);
-            entitiesContainer.removeProjectile(this);
+            entitiesContainerUpdater.addExplosion(explosion);
+            entitiesContainerUpdater.removeProjectile(this);
 
             displayTransaction.add(new RemoveProjectileDisplayCommand(this));
             displayTransaction.add(new AddExplosionDisplayCommand(explosion));

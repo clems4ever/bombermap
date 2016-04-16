@@ -2,7 +2,7 @@ package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Engine.DisplayTransaction;
-import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Updatable;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -81,8 +81,8 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
     }
 
     @Override
-    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
-        super.update(ticks, increment, entitiesContainer, displayTransaction);
+    public void update(long ticks, int increment, EntitiesContainerUpdater entitiesContainerUpdater, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainerUpdater, displayTransaction);
         if (mRespawnCounter > increment)
             mRespawnCounter -= increment;
         else if (mRespawnCounter > 0) {
