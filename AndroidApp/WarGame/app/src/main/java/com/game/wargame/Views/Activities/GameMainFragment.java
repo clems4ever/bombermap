@@ -25,10 +25,10 @@ import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.game.wargame.Views.BundleExtractor;
-import com.game.wargame.Views.GameView;
-import com.game.wargame.Views.GoogleMapViewFactory;
-import com.game.wargame.Views.IGoogleMapView;
-import com.game.wargame.Views.MapView;
+import com.game.wargame.Views.Views.GameView;
+import com.game.wargame.Views.GoogleMap.GoogleMapViewFactory;
+import com.game.wargame.Views.GoogleMap.IGoogleMapView;
+import com.game.wargame.Views.Views.MapView;
 
 public class GameMainFragment extends Fragment {
 

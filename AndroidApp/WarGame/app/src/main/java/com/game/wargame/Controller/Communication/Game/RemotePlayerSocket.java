@@ -1,13 +1,9 @@
 package com.game.wargame.Controller.Communication.Game;
 
-import com.game.wargame.Views.GameView;
-
 /**
  * Created by clement on 26/02/16.
  */
 public class RemotePlayerSocket extends PlayerSocket {
-
-    private RemotePlayersSocket mRemotePlayersSocket;
 
     private OnMoveEventListener mOnMoveEventListener;
     private OnFireEventListener mOnFireEventListener;
@@ -20,7 +16,6 @@ public class RemotePlayerSocket extends PlayerSocket {
      */
     public RemotePlayerSocket(String playerId, RemotePlayersSocket remotePlayersSocket) {
         super(playerId);
-        mRemotePlayersSocket = remotePlayersSocket;
         remotePlayersSocket.addPlayer(this);
     }
 

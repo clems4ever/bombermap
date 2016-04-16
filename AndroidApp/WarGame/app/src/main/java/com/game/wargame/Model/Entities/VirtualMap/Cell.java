@@ -1,6 +1,8 @@
 package com.game.wargame.Model.Entities.VirtualMap;
 
 import com.game.wargame.Controller.Utils.Location;
+import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.Entity;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;

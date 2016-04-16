@@ -1,6 +1,7 @@
 package com.game.wargame.Model.Entities.VirtualMap;
 
 import com.game.wargame.Controller.Utils.Location;
+import com.game.wargame.Model.Entities.Entity;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -8,14 +9,14 @@ import java.util.ArrayList;
 /**
  * Created by clement on 13/04/16.
  */
-public class RealCell extends Cell {
+public class RealCell extends Entity {
 
+    private Cell mCell;
     private LatLng mPosition;
     private ArrayList<LatLng> mVertices;
 
     public RealCell(CellTypeEnum type, LatLng position, float width, float height) {
-        super(type);
-
+        mCell = new Cell(type);
         mPosition = position;
 
         LatLng p1 = Location.getDestinationPoint(position, 0, width / 2);
@@ -38,5 +39,9 @@ public class RealCell extends Cell {
 
     public LatLng position() {
         return mPosition;
+    }
+
+    public Cell cell() {
+        return mCell;
     }
 }

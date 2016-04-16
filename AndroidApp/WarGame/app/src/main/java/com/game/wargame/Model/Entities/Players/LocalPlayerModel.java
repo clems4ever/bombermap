@@ -1,17 +1,16 @@
 package com.game.wargame.Model.Entities.Players;
 
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
-import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Controller.Engine.DisplayTransaction;
+import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.Updatable;
 import com.game.wargame.Views.Animations.AnimationFactory;
-import com.game.wargame.Views.Animations.IAnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.json.JSONObject;
 
 /**
  * This local player can be locked
  */
-public class LocalPlayerModel extends PlayerModel {
+public class LocalPlayerModel extends PlayerModel implements Updatable {
 
     private LocalPlayerSocket mPlayerSocket;
 
@@ -81,8 +80,9 @@ public class LocalPlayerModel extends PlayerModel {
         mPlayerSocket.leave();
     }
 
-    public void update(long ticks, int increment) {
-        super.update(ticks, increment);
+    @Override
+    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainer, displayTransaction);
         if (mRespawnCounter > increment)
             mRespawnCounter -= increment;
         else if (mRespawnCounter > 0) {

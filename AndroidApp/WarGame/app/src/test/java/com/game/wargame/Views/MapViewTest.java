@@ -3,6 +3,9 @@ package com.game.wargame.Views;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Views.GoogleMap.GoogleMap;
+import com.game.wargame.Views.GoogleMap.GoogleMapView;
+import com.game.wargame.Views.Views.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.junit.Test;

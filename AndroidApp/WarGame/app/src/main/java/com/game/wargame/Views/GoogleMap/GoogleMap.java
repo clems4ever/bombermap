@@ -1,5 +1,6 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.GoogleMap;
 
+import com.game.wargame.Views.PlayerMarker;
 import com.game.wargame.Views.VirtualMap.Block;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.Projection;

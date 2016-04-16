@@ -1,8 +1,8 @@
 package com.game.wargame.Model.Entities;
 
-import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Players.PlayerException;
-import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.UpdateExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -27,28 +27,17 @@ public class Explosion extends Entity {
         mAnimation = AnimationFactory.buildExplosionAnimation();
     }
 
-    public void update(long ticks, int increment) {
-        super.update(ticks, increment);
+    @Override
+    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainer, displayTransaction);
         long time = ticks*increment;
         if (time >= mTimeEnd)
         {
-            setToRemove(true);
+            displayTransaction.add(new RemoveExplosionDisplayCommand(this));
+            entitiesContainer.removeExplosion(this);
         }
-    }
-
-    @Override
-    public void onCollision(LocalPlayerModel player, double time) {
-        try {
-            //a collision with an explosion kills the player
-            if (getOwner() != player.getPlayerId()) {
-                player.setHealth(0);
-                player.die(this.getOwner(), time);
-            }
+        else {
+            displayTransaction.add(new UpdateExplosionDisplayCommand(this));
         }
-        catch (PlayerException e)
-        {
-            e.printStackTrace();
-        }
-
     }
 }

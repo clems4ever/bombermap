@@ -1,4 +1,4 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.Views;
 
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
@@ -11,15 +11,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
-import com.game.wargame.Model.Entities.VirtualMap.RealMap;
-import com.game.wargame.Model.GameContext.GameContext;
-import com.game.wargame.Model.Entities.EntitiesModel;
-import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.VirtualMap.RealCell;
+import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
+import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.GoogleMap.IGoogleMapView;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
@@ -28,7 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener, EntityDisplayer {
+public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
 
     private FragmentActivity mActivity;
     private MapView mMapView;
@@ -169,10 +170,6 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
     }
 
-    public void display(EntitiesModel entities) {
-        mMapView.display(entities);
-    }
-
     public void display(GameContext gameContext) {
         String time = DateUtils.formatElapsedTime(gameContext.getRemainingTime());
         mTimeText.setText(time);
@@ -202,6 +199,26 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     public void display(Player player) {
         mMapView.display(player);
+    }
+
+    public void addBlock(RealCell block) {
+        mMapView.addBlock(block, 0);
+    }
+
+    public void removeBlock(RealCell block) {
+        mMapView.removeBlock(block);
+    }
+
+    public void addEntity(Entity e) {
+        mMapView.addEntity(e);
+    }
+
+    public void updateEntity(Entity e) {
+        mMapView.updateEntity(e);
+    }
+
+    public void removeEntity(Entity e) {
+        mMapView.removeEntity(e);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {

@@ -1,13 +1,24 @@
 package com.game.wargame.Controller.GameLogic;
 
+import com.game.wargame.Controller.Engine.DisplayCommands.AddExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveBlockDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveProjectileDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
-import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
+import com.game.wargame.Model.Entities.Players.PlayerException;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by sergei on 24/02/16.
@@ -20,18 +31,48 @@ public class CollisionManager {
         mDistanceCalculator = distanceCalculator;
     }
 
-    public void treatPlayerEntitiesCollisions(EntitiesModel entitiesModel, LocalPlayerModel player, double time)
-    {
-        ArrayList<Entity> entities = entitiesModel.getEntities();
-        for (Entity entity : entities) {
-            if (areColliding(player, entity))
+    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, List<Projectile> projectiles, double time) {
+        Iterator<Projectile> it = projectiles.iterator();
+        while(it.hasNext()) {
+            Projectile projectile = it.next();
+            if (areLocalPlayerAndEntityColliding(player, projectile))
             {
-                entity.onCollision(player, time);
+                try {
+                    //a collision with an explosion kills the player
+                    if (projectile.getOwner() != player.getPlayerId()) {
+                        player.setHealth(0);
+                        player.die(projectile.getOwner(), time);
+                    }
+                }
+                catch (PlayerException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    private boolean areColliding(PlayerModel p, Entity e)
+    public void treatBlockCollisions(EntitiesContainer entitiesContainer, double time, DisplayTransaction displayTransaction) {
+        ArrayList<RealCell> realCells = entitiesContainer.getRealCells();
+        ArrayList<Projectile> projectiles = entitiesContainer.getProjectiles();
+
+        for(Projectile projectile: projectiles) {
+            for (RealCell realCell : realCells) {
+                if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), false)) {
+                    Explosion explosion = new Explosion(projectile.getOwner(), time, projectile.getPosition(), projectile.getDirection());
+                    entitiesContainer.addExplosion(explosion);
+                    entitiesContainer.removeProjectile(projectile);
+                    entitiesContainer.removeBlock(realCell);
+
+                    displayTransaction.add(new AddExplosionDisplayCommand(explosion));
+                    displayTransaction.add(new RemoveProjectileDisplayCommand(projectile));
+                    displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
+                }
+            }
+        }
+    }
+
+    private boolean areLocalPlayerAndEntityColliding(PlayerModel p, Entity e)
     {
         float[] results = new float[1];
         LatLng entityPosition = e.getPosition();

@@ -1,5 +1,6 @@
 package com.game.wargame.Views;
 
+import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;

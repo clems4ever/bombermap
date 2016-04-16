@@ -1,4 +1,4 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.GoogleMap;
 
 import android.os.Bundle;
 
