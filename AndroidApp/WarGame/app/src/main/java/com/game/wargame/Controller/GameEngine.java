@@ -248,6 +248,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                     jsonArray.put(latLngJson);
                 }
                 Log.d("MapView touch debug", jsonArray.toString());
+                mPathEditor.clear();
             }
         });
     }
@@ -298,16 +299,41 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     @Override
     public void onLocationRetrieved(double latitude, double longitude) {
 
+        boolean lockedLastState = mCurrentPlayerLocked;
+        mCurrentPlayer.moveShadow(latitude, longitude);
+
         // If the new position is on the map, then lock the user and move its shadow only
         if(isPositionOnVirtualMap(latitude, longitude)) {
-            mCurrentPlayer.moveShadow(latitude, longitude);
-            //mCurrentPlayerLocked = true;
+            mCurrentPlayerLocked = true;
             Log.d("Collision", "Collision has been detected.");
         }
+        else {
+            float[] results = new float[1];
+            Location.distanceBetween(latitude, longitude, mCurrentPlayer.getPosition().latitude, mCurrentPlayer.getPosition().longitude, results);
 
+            float distanceInMeters = results[0];
+            if(distanceInMeters <= 10) {
+                mCurrentPlayerLocked = false;
+            }
+        }
+
+        // If lock state has changed
+        if(lockedLastState != mCurrentPlayerLocked) {
+            if(mCurrentPlayerLocked) {
+                mGameView.getMapView().addPlayerShadow(mCurrentPlayer.getShadowPosition());
+            }
+            else {
+                mGameView.getMapView().removePlayerShadow();
+            }
+        }
+
+        // Refresh view
         if(!mCurrentPlayerLocked) {
             mCurrentPlayer.move(latitude, longitude);
             mGameView.movePlayer(mCurrentPlayer);
+        }
+        else {
+            mGameView.getMapView().movePlayerShadow(mCurrentPlayer.getShadowPosition());
         }
     }
 

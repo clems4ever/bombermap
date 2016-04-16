@@ -8,7 +8,6 @@ import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
-import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class MapView implements GoogleMapView.OnMapReadyCallback {
 
@@ -42,6 +40,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     private GoogleMap mGoogleMap;
     private IGoogleMapView mGoogleMapView;
 
+    private PlayerMarker mPlayerShadowMarker;
     private HashMap<String, PlayerMarker> mPlayerLocations;
     private HashMap<String, Marker> mEntityMarkers;
     private HashMap<String, Block> mBlockMarkers;
@@ -54,7 +53,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
         init(fragmentActivity, googleMapView, bitmapDescriptorFactory, null);
-        mPlayerMarkerFactory = new PlayerMarkerFactory(mBitmapDescriptorFactory);
+        mPlayerMarkerFactory = new PlayerMarkerFactory(mBitmapDescriptorFactory, fragmentActivity.getResources());
     }
 
 
@@ -129,6 +128,35 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
                 if (marker != null) {
                     marker.move(position);
                 }
+            }
+        });
+    }
+
+    public void addPlayerShadow(final LatLng position) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerShadowMarker = mPlayerMarkerFactory.create(R.mipmap.player_current);
+                mPlayerShadowMarker.move(position);
+            }
+        });
+    }
+
+    public void movePlayerShadow(final LatLng position) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerShadowMarker.move(position);
+            }
+        });
+    }
+
+    public void removePlayerShadow() {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayerShadowMarker.remove();
+                mPlayerShadowMarker = null;
             }
         });
     }

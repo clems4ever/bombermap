@@ -95,7 +95,7 @@ public class GameMainFragment extends Fragment {
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
         if(mSettings.mode == Settings.GameEngineMode.SCENARIO_REPLAYER) {
-            mLocationRetriever = new PathPlayer(AppConstant.PLAYER_SCENARIO, false, true);
+            mLocationRetriever = new PathPlayer(mSettings.playerScenario, false, true);
         }
         else {
             mLocationRetriever = new LocationRetriever(getActivity());

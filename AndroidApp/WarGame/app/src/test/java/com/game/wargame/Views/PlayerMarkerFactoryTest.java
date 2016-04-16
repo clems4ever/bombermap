@@ -2,6 +2,7 @@ package com.game.wargame.Views;
 
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,13 +26,13 @@ public class PlayerMarkerFactoryTest {
     @Test
     public void create_a_player_marker_on_map() {
 
-        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockBitmapDescriptorFactory);
+        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockBitmapDescriptorFactory, null);
         factory.setGoogleMap(mMockGoogleMap);
 
         PlayerMarker playerMarker = factory.create(4);
 
         verify(mMockBitmapDescriptorFactory).load(4);
-        verify(mMockGoogleMap).addPlayerMarker(Matchers.<GroundOverlayOptions>any());
+        verify(mMockGoogleMap).addPlayerMarker(Matchers.<MarkerOptions>any());
     }
 
 }

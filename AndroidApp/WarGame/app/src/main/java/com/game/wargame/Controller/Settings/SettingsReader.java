@@ -1,5 +1,6 @@
 package com.game.wargame.Controller.Settings;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,9 +23,11 @@ public class SettingsReader {
 
         FileInputStream fin = new FileInputStream(filename);
 
-        byte[] buffer = new byte[512];
-        fin.read(buffer);
-        String fileContent = new String(buffer);
+        String fileContent = new String();
+        byte[] buffer = new byte[1024];
+        while(fin.read(buffer) != -1) {
+            fileContent += new String(buffer);
+        }
         JSONObject document = new JSONObject(fileContent);
 
         if(document.has("game_duration")) {
@@ -41,6 +44,18 @@ public class SettingsReader {
 
         if(document.has("mode")) {
             settings.mode = convertStringIntoGameEngineMode(document.getString("mode"));
+        }
+
+        if(document.has("player_scenarii")) {
+            JSONArray scenarii = document.getJSONArray("player_scenarii");
+
+            if(document.has("selected_player_scenario")) {
+                int index = document.getInt("selected_player_scenario");
+
+                if(index < scenarii.length()) {
+                    settings.playerScenario = scenarii.getJSONArray(index);
+                }
+            }
         }
 
         return settings;

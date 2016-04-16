@@ -3,16 +3,17 @@ package com.game.wargame.Views;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 /**
  * Created by clement on 03/04/16.
  */
 public class PlayerMarker {
 
-    private GroundOverlay mMarker;
+    private Marker mMarker;
 
-    public PlayerMarker(GroundOverlay groundOverlay) {
-        mMarker = groundOverlay;
+    public PlayerMarker(Marker marker) {
+        mMarker = marker;
     }
 
     public void move(LatLng to) {
@@ -22,7 +23,7 @@ public class PlayerMarker {
 
     public void setIcon(BitmapDescriptor bitmap) {
         if (mMarker != null)
-            mMarker.setImage(bitmap);
+            mMarker.setIcon(bitmap);
     }
 
     public void remove() {

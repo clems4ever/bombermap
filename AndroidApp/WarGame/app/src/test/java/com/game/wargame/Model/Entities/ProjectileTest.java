@@ -30,7 +30,7 @@ public class ProjectileTest {
     @Mock private OnExplosionListener mExplosionListener;
     @Mock private DisplayTransaction mMockDisplayTransaction;
     @Mock private Projectile mMockProjectile;
-    @Mock private EntitiesContainer mMockEntitiesContainer;
+    @Mock private EntitiesContainerUpdater mMockEntitiesContainerUpdater;
 
     private Projectile initProjectile() {
         Projectile projectile = new Projectile("player_id", new LatLng(0,0), new LatLng(0,0), 0);
@@ -50,7 +50,7 @@ public class ProjectileTest {
         projectile.setTrajectory(trajectory);
 
         assertEquals(projectile.getPosition(), start);
-        projectile.update(1, 100, mMockEntitiesContainer, mMockDisplayTransaction);
+        projectile.update(1, 100, mMockEntitiesContainerUpdater, mMockDisplayTransaction);
         assertEquals(projectile.getPosition(), target);
     }
 
@@ -65,7 +65,7 @@ public class ProjectileTest {
         trajectory.put(1., start);
         projectile.setTrajectory(trajectory);
 
-        projectile.update(1, 100, mMockEntitiesContainer, mMockDisplayTransaction);
+        projectile.update(1, 100, mMockEntitiesContainerUpdater, mMockDisplayTransaction);
 
         verify(mMockDisplayTransaction, times(1)).add(isA(RemoveProjectileDisplayCommand.class));
         verify(mMockDisplayTransaction, times(1)).add(isA(AddExplosionDisplayCommand.class));

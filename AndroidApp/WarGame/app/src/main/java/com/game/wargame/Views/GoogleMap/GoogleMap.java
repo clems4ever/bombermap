@@ -20,10 +20,6 @@ public class GoogleMap {
         mGoogleMap = googleMap;
     }
 
-    public void setGoogleMap(com.google.android.gms.maps.GoogleMap googleMap) {
-        mGoogleMap = googleMap;
-    }
-
     public void setZoomControlEnabled(boolean enabled) {
         mGoogleMap.getUiSettings().setZoomControlsEnabled(enabled);
     }
@@ -36,8 +32,8 @@ public class GoogleMap {
         return mGoogleMap.addMarker(options);
     }
 
-    public PlayerMarker addPlayerMarker(GroundOverlayOptions options) {
-        return new PlayerMarker(mGoogleMap.addGroundOverlay(options));
+    public PlayerMarker addPlayerMarker(MarkerOptions options) {
+        return new PlayerMarker(mGoogleMap.addMarker(options));
     }
 
     public Block addBlock(GroundOverlayOptions options) {

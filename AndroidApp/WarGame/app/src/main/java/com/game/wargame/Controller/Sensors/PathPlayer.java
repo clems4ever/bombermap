@@ -23,7 +23,7 @@ public class PathPlayer extends AbstractLocationRetriever {
 
     boolean mInfiniteLoop;
 
-    public PathPlayer(String path, boolean reverse, boolean infiniteLoop) {
+    public PathPlayer(JSONArray path, boolean reverse, boolean infiniteLoop) {
 
         mPath = new LinkedBlockingQueue<>();
         mTimer = new Timer();
@@ -33,10 +33,8 @@ public class PathPlayer extends AbstractLocationRetriever {
         buildPathQueue(path, reverse);
     }
 
-    private void buildPathQueue(String path, boolean reverse) {
+    private void buildPathQueue(JSONArray pathArray, boolean reverse) {
         try {
-            JSONArray pathArray = new JSONArray(path);
-
             int positionCount = pathArray.length();
 
             for (int i = 0; i < positionCount; ++i) {
