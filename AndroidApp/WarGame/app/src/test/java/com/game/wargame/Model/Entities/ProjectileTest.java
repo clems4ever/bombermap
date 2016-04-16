@@ -30,7 +30,7 @@ public class ProjectileTest {
     @Mock private OnExplosionListener mExplosionListener;
     @Mock private DisplayTransaction mMockDisplayTransaction;
     @Mock private Projectile mMockProjectile;
-    @Mock private EntitiesContainer mMockEntitiesContainer;
+    @Mock private EntitiesContainerUpdater mMockEntitiesContainer;
 
     private Projectile initProjectile() {
         Projectile projectile = new Projectile("player_id", new LatLng(0,0), new LatLng(0,0), 0);

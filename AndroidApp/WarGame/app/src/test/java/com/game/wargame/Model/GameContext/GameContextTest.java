@@ -2,6 +2,7 @@ package com.game.wargame.Model.GameContext;
 
 import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Players.Player;
 
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class GameContextTest {
     @Mock
     DisplayTransaction mMockDisplayTransaction;
     @Mock
-    EntitiesContainer mMockEntitiesContainer;
+    EntitiesContainerUpdater mMockEntitiesContainer;
 
     GameContext mGameContext;
 

@@ -3,6 +3,7 @@ package com.game.wargame.Controller.GameLogic;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
 import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,7 +46,7 @@ public class CollisionTest {
         mPlayerModel = new LocalPlayerModel("player_id", mLocalPlayerSocket);
 
         mEntitiesContainer = new EntitiesContainer();
-        mEntitiesContainer.addProjectile(new Projectile("other", new LatLng(50, 50), new LatLng(100, 100), 0));
+        mEntitiesContainer.addExplosion(new Explosion("other", 0, new LatLng(50, 50), 0));
 
         mCollisionManager = new CollisionManager(new DummyLocation());
     }
@@ -54,15 +55,15 @@ public class CollisionTest {
     public void testThatTooFarFromExplosionToDie() {
         mPlayerModel.setPosition(new LatLng(60, 60));
 
-        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesContainer.getProjectiles(), 100);
+        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesContainer.getExplosions(), 100);
         assertEquals(100, mPlayerModel.getHealth());
     }
 
     @Test
     public void testThatCollisionKillsPlayer() {
-        mPlayerModel.setPosition(new LatLng(51, 51));
+        mPlayerModel.setPosition(new LatLng(55, 55));
 
-        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesContainer.getProjectiles(), 100);
+        mCollisionManager.treatLocalPlayerAndExplosionCollision(mPlayerModel, mEntitiesContainer.getExplosions(), 100);
         assertEquals(0, mPlayerModel.getHealth());
     }
 
