@@ -102,7 +102,7 @@
                         android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/time_text"
-                        android:background="@mipmap/time_container"
+                        android:background="@android:drawable/dialog_holo_light_frame"
                         android:layout_centerInParent="true"
                         android:textAlignment="center"
                         android:gravity="center"

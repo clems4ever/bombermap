@@ -1,6 +1,7 @@
 package com.game.wargame.Views;
 
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,7 +174,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     }
 
     public void display(GameContext gameContext) {
-        mTimeText.setText(""+gameContext.getRemainingTime());
+        String time = DateUtils.formatElapsedTime(gameContext.getRemainingTime());
+        mTimeText.setText(time);
 
         ArrayList<GameNotification> gameNotifications = gameContext.getNotificationsToDisplay();
 
@@ -189,6 +191,7 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         for (String playerId : playersId)
         {
             GameScore gameScore = scores.get(playerId);
+            
             if (i<3)
                mScoreBoard[i].setText(gameScore.toString());
             i++;
