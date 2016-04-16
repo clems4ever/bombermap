@@ -3,6 +3,7 @@ package com.game.wargame.Controller.GameLogic;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
 import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.google.android.gms.maps.model.LatLng;
@@ -46,6 +47,8 @@ public class CollisionTest {
 
         mEntitiesContainer = new EntitiesContainer();
         mEntitiesContainer.addProjectile(new Projectile("other", new LatLng(50, 50), new LatLng(100, 100), 0));
+
+        mEntitiesContainer.addExplosion(new Explosion("other", 100, new LatLng(50, 50), 0));
 
         mCollisionManager = new CollisionManager(new DummyLocation());
     }
