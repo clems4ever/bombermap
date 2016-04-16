@@ -22,6 +22,8 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.regex.Matcher;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +62,7 @@ public class GameEngineViewUpdaterTest {
     @Test
     public void testThatViewIsInitializedWhenGameEngineStarts() {
 
-        verify(mMockGameView).initialize(Matchers.<GameView.OnWeaponTargetDefinedListener>any());
+        verify(mMockGameView).initialize(Matchers.<GameView.OnWeaponTargetDefinedListener>any(), Matchers.<GameView.OnShieldListener>any());
 
     }
 
