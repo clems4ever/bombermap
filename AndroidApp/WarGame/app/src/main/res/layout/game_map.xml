@@ -94,7 +94,7 @@
                         android:layout_alignParentEnd="true"
                         android:src="@mipmap/gps_white"
                         android:scaleType="fitXY"
-                        android:background="#ff666699"
+                        android:background="#00ffffff"
                         android:padding="5dp" />
 
                     <TextView
@@ -107,7 +107,6 @@
                         android:textAlignment="center"
                         android:gravity="center"
                         android:textSize="30dp"
-                        android:text="60"
                         android:textColor="#000000" />
 
                 </RelativeLayout>

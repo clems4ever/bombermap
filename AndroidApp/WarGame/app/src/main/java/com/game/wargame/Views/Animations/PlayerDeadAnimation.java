@@ -13,6 +13,6 @@ public class PlayerDeadAnimation extends Animation{
             mDrawablesId.add(R.mipmap.profile_s);
         mDrawablesId.add(R.mipmap.void_image);
 
-        mFrameRateMillis = 300;
+        mFrameRateMillis = 600;
     }
 }
