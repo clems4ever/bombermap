@@ -20,7 +20,7 @@ import java.util.TreeMap;
  */
 public class Projectile extends Entity {
 
-    protected static final int DEFAULT_SPEED = 200;
+    protected static final int DEFAULT_SPEED = 100;
     protected static final float DEFAULT_DELTA_T = 200;
     private static final double PROJECTILE_RADIUS = 100;
 

@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
-import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.GameContext.GameContext;
@@ -14,7 +13,6 @@ import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.game.wargame.Views.Animations.BitmapCache;
-import com.game.wargame.Views.Animations.GoogleMapAnimation;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.game.wargame.Views.GoogleMap.GoogleMapView;
@@ -153,6 +151,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(e.getPosition())
                 .rotation((float) e.getDirection())
+                .anchor(0.5f, 0.5f)
                 .icon(mBitmapCache.getBitmap(animation.current())));
         mEntityMarkers.put(e.getUUID(), marker);
     }
@@ -205,10 +204,6 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
             b.remove();
             mBlockMarkers.remove(realCell.getUUID());
         }
-    }
-
-    public void displayAnimation(GoogleMapAnimation animation) {
-        animation.start(mGoogleMap);
     }
 
     public void removePlayer(final String playerId) {

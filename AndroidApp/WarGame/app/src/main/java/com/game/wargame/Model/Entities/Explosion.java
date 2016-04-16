@@ -1,6 +1,7 @@
 package com.game.wargame.Model.Entities;
 
 import com.game.wargame.Controller.Engine.DisplayCommands.RemoveExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.UpdateExplosionDisplayCommand;
 import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -34,6 +35,9 @@ public class Explosion extends Entity {
         {
             displayTransaction.add(new RemoveExplosionDisplayCommand(this));
             entitiesContainer.removeExplosion(this);
+        }
+        else {
+            displayTransaction.add(new UpdateExplosionDisplayCommand(this));
         }
     }
 }
