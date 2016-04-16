@@ -7,6 +7,7 @@ import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Entity;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
@@ -83,8 +84,8 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                         remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     }
 
-                    List<Projectile> projectileList = mEntities.getProjectiles();
-                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, projectileList, time);
+                    List<Explosion> explosions = mEntities.getExplosions();
+                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, explosions, time);
                     mCollisionManager.treatBlockCollisions(mEntities, time, mDisplayTransaction);
 
                     mEntitiesContainerUpdater.update(mEntities);

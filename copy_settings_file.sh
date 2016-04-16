@@ -1,4 +1,4 @@
 #!/bin/bash
 
-adb push default.conf /mnt/sdcard/default.conf
+adb -s "emulator-$1" push default.conf /mnt/sdcard/default.conf
 

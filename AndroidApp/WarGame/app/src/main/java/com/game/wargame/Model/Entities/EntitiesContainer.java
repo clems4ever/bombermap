@@ -59,6 +59,16 @@ public class EntitiesContainer {
         return entities;
     }
 
+    public ArrayList<Explosion> getExplosions() {
+        ArrayList<Explosion> entities = new ArrayList<>();
+
+        mLock.lock();
+        entities.addAll(mExplosions);
+        mLock.unlock();
+
+        return entities;
+    }
+
     public void addProjectile(Projectile projectile) {
         mLock.lock();
         mProjectiles.add(projectile);

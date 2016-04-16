@@ -31,17 +31,17 @@ public class CollisionManager {
         mDistanceCalculator = distanceCalculator;
     }
 
-    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, List<Projectile> projectiles, double time) {
-        Iterator<Projectile> it = projectiles.iterator();
+    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, List<Explosion> explosions, double time) {
+        Iterator<Explosion> it = explosions.iterator();
         while(it.hasNext()) {
-            Projectile projectile = it.next();
-            if (areLocalPlayerAndEntityColliding(player, projectile))
+            Explosion explosion = it.next();
+            if (areLocalPlayerAndEntityColliding(player, explosion))
             {
                 try {
                     //a collision with an explosion kills the player
-                    if (projectile.getOwner() != player.getPlayerId()) {
+                    if (explosion.getOwner() != player.getPlayerId()) {
                         player.setHealth(0);
-                        player.die(projectile.getOwner(), time);
+                        player.die(explosion.getOwner(), time);
                     }
                 }
                 catch (PlayerException e)
