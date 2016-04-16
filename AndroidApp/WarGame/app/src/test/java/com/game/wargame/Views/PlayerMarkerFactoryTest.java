@@ -1,5 +1,6 @@
 package com.game.wargame.Views;
 
+import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 
 import org.junit.Test;
@@ -17,7 +18,8 @@ import static org.mockito.Mockito.verify;
 public class PlayerMarkerFactoryTest {
 
     @Mock PlayerMarker mMockPlayerMarker;
-    @Mock GoogleMap mMockGoogleMap;
+    @Mock
+    GoogleMap mMockGoogleMap;
     @Mock BitmapDescriptorFactory mMockBitmapDescriptorFactory;
 
     @Test

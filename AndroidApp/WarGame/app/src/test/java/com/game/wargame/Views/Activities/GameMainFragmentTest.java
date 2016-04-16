@@ -9,10 +9,8 @@ import android.widget.Button;
 import com.game.wargame.R;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.game.wargame.Views.BundleExtractor;
-import com.game.wargame.Views.GoogleMapView;
-import com.game.wargame.Views.GoogleMapViewFactory;
-import com.game.wargame.Views.IGoogleMapView;
-import com.google.android.gms.maps.MapView;
+import com.game.wargame.Views.GoogleMap.GoogleMapViewFactory;
+import com.game.wargame.Views.GoogleMap.IGoogleMapView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

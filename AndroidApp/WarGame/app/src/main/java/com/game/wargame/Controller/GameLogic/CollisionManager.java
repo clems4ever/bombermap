@@ -1,7 +1,11 @@
 package com.game.wargame.Controller.GameLogic;
 
+import com.game.wargame.Controller.Engine.DisplayCommands.AddExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveBlockDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveProjectileDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
-import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
@@ -12,8 +16,9 @@ import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by sergei on 24/02/16.
@@ -26,16 +31,17 @@ public class CollisionManager {
         mDistanceCalculator = distanceCalculator;
     }
 
-    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, EntitiesModel entitiesModel, double time) {
-        ArrayList<Explosion> explosions = entitiesModel.getExplosions();
-        for (Explosion explosion : explosions) {
-            if (areColliding(player, explosion))
+    public void treatLocalPlayerAndExplosionCollision(LocalPlayerModel player, List<Projectile> projectiles, double time) {
+        Iterator<Projectile> it = projectiles.iterator();
+        while(it.hasNext()) {
+            Projectile projectile = it.next();
+            if (areLocalPlayerAndEntityColliding(player, projectile))
             {
                 try {
                     //a collision with an explosion kills the player
-                    if (explosion.getOwner() != player.getPlayerId()) {
+                    if (projectile.getOwner() != player.getPlayerId()) {
                         player.setHealth(0);
-                        player.die(explosion.getOwner(), time);
+                        player.die(projectile.getOwner(), time);
                     }
                 }
                 catch (PlayerException e)
@@ -46,21 +52,27 @@ public class CollisionManager {
         }
     }
 
-    public void treatBlockCollisions(EntitiesModel entitiesModel) {
-        ArrayList<RealCell> realCells = entitiesModel.getRealCells();
-        ArrayList<Projectile> projectiles = entitiesModel.getProjectiles();
-        boolean collision = false;
+    public void treatBlockCollisions(EntitiesContainer entitiesContainer, double time, DisplayTransaction displayTransaction) {
+        ArrayList<RealCell> realCells = entitiesContainer.getRealCells();
+        ArrayList<Projectile> projectiles = entitiesContainer.getProjectiles();
 
-        for (RealCell realCell : realCells) {
-            for(Projectile projectile: projectiles) {
+        for(Projectile projectile: projectiles) {
+            for (RealCell realCell : realCells) {
                 if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), false)) {
-                    realCell.setToRemove(true);
+                    Explosion explosion = new Explosion(projectile.getOwner(), time, projectile.getPosition(), projectile.getDirection());
+                    entitiesContainer.addExplosion(explosion);
+                    entitiesContainer.removeProjectile(projectile);
+                    entitiesContainer.removeRealCell(realCell);
+
+                    displayTransaction.add(new AddExplosionDisplayCommand(explosion));
+                    displayTransaction.add(new RemoveProjectileDisplayCommand(projectile));
+                    displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
                 }
             }
         }
     }
 
-    private boolean areColliding(PlayerModel p, Entity e)
+    private boolean areLocalPlayerAndEntityColliding(PlayerModel p, Entity e)
     {
         float[] results = new float[1];
         LatLng entityPosition = e.getPosition();

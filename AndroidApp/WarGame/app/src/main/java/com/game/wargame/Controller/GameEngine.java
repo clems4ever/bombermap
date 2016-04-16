@@ -9,15 +9,14 @@ import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Engine.DisplayCallback;
+import com.game.wargame.Controller.Engine.DisplayCommands.AddProjectileDisplayCommand;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Controller.GameLogic.OnExplosionListener;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
 import com.game.wargame.Controller.Sensors.OnLocationRetrievedListener;
 import com.game.wargame.Controller.Settings.Settings;
-import com.game.wargame.Model.Entities.EntitiesModel;
-import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.Explosion;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.OnPlayerDiedListener;
 import com.game.wargame.Model.Entities.Players.OnPlayerRespawnListener;
@@ -27,7 +26,6 @@ import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
-import com.game.wargame.Model.Entities.VirtualMap.Cell;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
@@ -35,7 +33,7 @@ import com.game.wargame.Model.GameContext.FragManager;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotificationManager;
 import com.game.wargame.Views.Activities.GameMainFragment;
-import com.game.wargame.Views.GameView;
+import com.game.wargame.Views.Views.GameView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
@@ -72,7 +70,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     private GlobalTimer mGlobalTimer;
     private GameSocket mGameSocket;
 
-    private EntitiesModel mEntitiesModel;
+    private EntitiesContainer mEntitiesContainer;
     private DisplayCallback mDisplayCallback;
     private GameContext mGameContext;
 
@@ -101,7 +99,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                         GlobalTimer globalTimer,
                         Settings settings) {
 
-        mEntitiesModel = new EntitiesModel();
+        mEntitiesContainer = new EntitiesContainer();
         mGameView = gameView;
         mGameSocket = gameSocket;
         mGlobalTimer = globalTimer;
@@ -130,7 +128,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         for(int i=0; i < map.width(); ++i) {
             for(int j=0; j < map.height(); ++j) {
                 if(map.getRealCell(i, j).cell().type() == CellTypeEnum.BLOCK) {
-                    mEntitiesModel.addRealCell(map.getRealCell(i, j));
+                    mEntitiesContainer.addRealCell(map.getRealCell(i, j));
                 }
             }
         }
@@ -163,14 +161,15 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     }
 
     private void startGlobalUpdateTimer() {
-        mGlobalTimer.setEntitiesModel(mEntitiesModel);
+        mGlobalTimer.setEntitiesModel(mEntitiesContainer);
         mGlobalTimer.setCurrentPlayerModel(mCurrentPlayer);
         mGlobalTimer.setCollisionManager(new CollisionManager(new com.game.wargame.Controller.Utils.Location()));
-        DisplayCallback displayCallback = new DisplayCallback(mGameView, mGameContext, mCurrentPlayer, mEntitiesModel);
+        DisplayCallback displayCallback = new DisplayCallback(mGameView, mGameContext, mCurrentPlayer, mEntitiesContainer);
         mDisplayCallback = displayCallback;
         mGlobalTimer.setDisplayCallback(mDisplayCallback);
         mGlobalTimer.setGameContext(mGameContext);
         mGlobalTimer.setGameCallback(mGameCallback);
+        mGlobalTimer.setView(mGameView);
         mGlobalTimer.start();
     }
 
@@ -312,8 +311,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         LatLng destination = new LatLng(latitude, longitude);
 
         Projectile projectile = new Projectile(player.getPlayerId(), source, destination, timestamp);
-        projectile.setOnExplosionListener(this);
-        mEntitiesModel.addProjectile(projectile);
+        mEntitiesContainer.addProjectile(projectile);
+        mGlobalTimer.scheduleDisplayCommand(new AddProjectileDisplayCommand(projectile));
     }
 
     public int getPlayersCount() {
@@ -340,9 +339,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     }
 
     @Override
-    public void onExplosion(Entity entity, long time) {
-        entity.setToRemove(true);
-        mEntitiesModel.addExplosion(new Explosion(entity.getOwner(), (double) time, entity.getPosition(), entity.getDirection()));
+    public void onExplosion(Projectile projectile, long time) {
+
     }
 
     @Override

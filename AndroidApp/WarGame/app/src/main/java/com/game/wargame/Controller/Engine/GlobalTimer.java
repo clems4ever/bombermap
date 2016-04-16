@@ -2,15 +2,21 @@ package com.game.wargame.Controller.Engine;
 
 import android.app.Activity;
 
+import com.game.wargame.Controller.Engine.DisplayCommands.AddBlockDisplayCommand;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
-import com.game.wargame.Model.Entities.EntitiesModel;
+import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
+import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Views.Activities.GameMainFragment;
-import com.game.wargame.Views.GameView;
+import com.game.wargame.Views.Views.GameView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
@@ -30,19 +36,33 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
     private CollisionManager mCollisionManager;
 
-    private EntitiesModel mEntities;
+    private EntitiesContainer mEntities;
     private LocalPlayerModel mCurrentPlayer;
     private ArrayList<RemotePlayerModel> mRemotePlayerModels;
     private GameContext mGameContext;
     private IDisplayCallback mDisplayCallback;
+    private DisplayTransaction mDisplayTransaction = new DisplayTransaction();
+    private GameView mGameView;
 
     private GameMainFragment.Callback mGameCallback;
 
     public final int UPDATE_SAMPLE_TIME = 50;
     public final int SERVER_SAMPLE_TIME = 1000;
 
+    public GlobalTimer(Activity activity) {
+        mActivity = activity;
+        mRemotePlayerModels = new ArrayList<>();
+    }
+
     private void startTimer() {
         mTimer = new Timer(false);
+
+        Iterator<RealCell> entityIterator = mEntities.getRealCells().iterator();
+        while(entityIterator.hasNext()) {
+            RealCell r = entityIterator.next();
+            mDisplayTransaction.add(new AddBlockDisplayCommand(r));
+        }
+
         mTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -50,21 +70,23 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                     mTicks++;
                     double time = mTicks * UPDATE_SAMPLE_TIME;
 
-                    mEntities.update(mTicks, UPDATE_SAMPLE_TIME);
-                    mGameContext.update(mTicks, UPDATE_SAMPLE_TIME);
-                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME);
+                    for(Entity e : mEntities.getEntities()) {
+                        e.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
+                    }
+                    mGameContext.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
+                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
                     for (RemotePlayerModel remotePlayerModel : mRemotePlayerModels) {
-                        remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME);
+                        remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME, mEntities, mDisplayTransaction);
                     }
 
-                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer,
-                            mEntities,
-                            time);
-                    mCollisionManager.treatBlockCollisions(mEntities);
+                    List<Projectile> projectileList = mEntities.getProjectiles();
+                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, projectileList, time);
+                    mCollisionManager.treatBlockCollisions(mEntities, time, mDisplayTransaction);
 
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mDisplayTransaction.commit(mGameView);
                             mDisplayCallback.display();
                         }
                     });
@@ -85,17 +107,20 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mTimer.scheduleAtFixedRate(mTimerTask, 0, UPDATE_SAMPLE_TIME);
     }
 
-    public GlobalTimer(Activity activity) {
-        mActivity = activity;
-        mRemotePlayerModels = new ArrayList<>();
-    }
-
     public void start() {
         startTimer();
     }
 
     public void stop() {
         stopTimer();
+    }
+
+    public void setView(GameView gameView) {
+        mGameView = gameView;
+    }
+
+    public void scheduleDisplayCommand(DisplayCommand displayCommand) {
+        mDisplayTransaction.add(displayCommand);
     }
 
     public long getTicks()
@@ -139,7 +164,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mLock.unlock();
     }
 
-    public void setEntitiesModel(EntitiesModel entities)
+    public void setEntitiesModel(EntitiesContainer entities)
     {
         mEntities = entities;
     }

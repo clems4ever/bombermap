@@ -1,5 +1,7 @@
 package com.game.wargame.Model.GameContext;
 
+import com.game.wargame.Controller.Engine.DisplayTransaction;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Players.Player;
 
 import org.junit.Before;
@@ -17,6 +19,10 @@ public class GameContextTest {
 
     @Mock
     FragManager mFragManager;
+    @Mock
+    DisplayTransaction mMockDisplayTransaction;
+    @Mock
+    EntitiesContainer mMockEntitiesContainer;
 
     GameContext mGameContext;
 
@@ -53,7 +59,7 @@ public class GameContextTest {
     public void testThatNotificationsArePurged() {
         mGameContext.handleFrag(mKiller, mKillee, 0);
         mGameContext.handleFrag(mKiller, mKillee, 1);
-        mGameContext.update(1, gn.TIME_TO_DISPLAY);
+        mGameContext.update(1, gn.TIME_TO_DISPLAY, mMockEntitiesContainer, mMockDisplayTransaction);
         assertEquals(1, mGameContext.getNotificationsToDisplay().size());
     }
 

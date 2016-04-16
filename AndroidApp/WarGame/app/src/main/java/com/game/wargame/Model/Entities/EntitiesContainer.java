@@ -14,15 +14,16 @@ import java.util.concurrent.locks.ReentrantLock;
  * Created by sergei on 01/03/16.
  */
 
-public class EntitiesModel implements Updatable {
+public class EntitiesContainer {
 
     protected Lock mLock = new ReentrantLock();
 
     protected ArrayList<Projectile> mProjectiles = new ArrayList<>();
-    protected ArrayList<RealCell> mRealCells = new ArrayList<>();
     protected ArrayList<Explosion> mExplosions = new ArrayList<>();
 
-    public EntitiesModel() {
+    protected ArrayList<RealCell> mRealCells = new ArrayList<>();
+
+    public EntitiesContainer() {
     }
 
     public ArrayList<Entity> getEntities() {
@@ -52,16 +53,6 @@ public class EntitiesModel implements Updatable {
 
         mLock.lock();
         entities.addAll(mProjectiles);
-        mLock.unlock();
-
-        return entities;
-    }
-
-    public ArrayList<Explosion> getExplosions() {
-        ArrayList<Explosion> entities = new ArrayList<>();
-
-        mLock.lock();
-        entities.addAll(mExplosions);
         mLock.unlock();
 
         return entities;
@@ -100,42 +91,6 @@ public class EntitiesModel implements Updatable {
     public void removeRealCell(RealCell realCell) {
         mLock.lock();
         mRealCells.remove(realCell);
-        mLock.unlock();
-    }
-
-
-    public void update(long ticks, int increment) {
-        ArrayList<RealCell> realCells = new ArrayList<>();
-        ArrayList<Projectile> projectiles = new ArrayList<>();
-        ArrayList<Explosion> explosions = new ArrayList<>();
-        mLock.lock();
-        projectiles.addAll(mProjectiles);
-        realCells.addAll(mRealCells);
-
-        for (RealCell realCell : realCells) {
-            realCell.update(ticks, increment);
-            if (realCell.isToRemove() && !realCell.isDisplayed())
-                mRealCells.remove(realCell);
-        }
-
-        for (Projectile projectile : projectiles) {
-            projectile.update(ticks, increment);
-            if (projectile.isToRemove() && !projectile.isDisplayed())
-                mProjectiles.remove(projectile);
-        }
-
-        for (Explosion explosion : explosions) {
-            explosion.update(ticks, increment);
-            if (explosion.isToRemove() && !explosion.isDisplayed())
-                mProjectiles.remove(explosion);
-        }
-
-        mLock.unlock();
-    }
-
-    public void setDisplayed(Entity entity, boolean isDisplayed) {
-        mLock.lock();
-        entity.setDisplayed(isDisplayed);
         mLock.unlock();
     }
 }

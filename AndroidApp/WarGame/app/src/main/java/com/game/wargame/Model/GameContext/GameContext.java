@@ -1,6 +1,8 @@
 package com.game.wargame.Model.GameContext;
 
+import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Controller.GameLogic.GameScore;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Updatable;
 
@@ -39,7 +41,7 @@ public class GameContext implements Updatable {
         return (mCurrentTime - mTimeStart) > mGameDurationMilliseconds;
     }
 
-    public void update(long ticks, int increment) {
+    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
         if (isStarted() && !toEnd()) {
             mCurrentTime = ticks * increment;
             purgeNotifications(mCurrentTime);

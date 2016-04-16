@@ -1,29 +1,27 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.Views;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.support.v4.app.FragmentActivity;
-import android.view.View;
 
-import com.game.wargame.Controller.Utils.Location;
-import com.game.wargame.Model.Entities.EntitiesModel;
 import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.Explosion;
-import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
-import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
-import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.game.wargame.Views.Animations.BitmapCache;
+import com.game.wargame.Views.Animations.GoogleMapAnimation;
+import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.GoogleMap.GoogleMap;
+import com.game.wargame.Views.GoogleMap.GoogleMapView;
+import com.game.wargame.Views.GoogleMap.IGoogleMapView;
+import com.game.wargame.Views.PlayerMarker;
+import com.game.wargame.Views.PlayerMarkerFactory;
+import com.game.wargame.Views.VirtualMap.Block;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.Projection;
@@ -33,9 +31,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class MapView implements GoogleMapView.OnMapReadyCallback {
 
@@ -48,6 +44,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     private HashMap<String, PlayerMarker> mPlayerLocations;
     private HashMap<String, Marker> mEntityMarkers;
+    private HashMap<String, Block> mBlockMarkers;
     private BitmapCache mBitmapCache;
 
     private PlayerMarkerFactory mPlayerMarkerFactory;
@@ -70,6 +67,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mActivity = activity;
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
+        mBlockMarkers = new HashMap<>();
 
         mPlayerMarkerFactory = playerMarkerFactory;
         mEntityMarkers = new HashMap<>();
@@ -135,15 +133,6 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         });
     }
 
-    public void addEntityMarker(Entity entity) {
-        Animation animation = entity.getAnimation();
-        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                .position(entity.getPosition())
-                .rotation((float) entity.getDirection())
-                .icon(mBitmapCache.getBitmap(animation.current())));
-        mEntityMarkers.put(entity.getUUID(), marker);
-    }
-
     public void display(final Player player) {
         final String playerId = player.getPlayerId();
         final Animation playerAnimation = player.getAnimation();
@@ -159,78 +148,67 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         });
     }
 
-    public void display(final Entity entity) {
-        Animation animation = entity.getAnimation();
-        Marker marker = mEntityMarkers.get(entity.getUUID());
-        if (marker == null && !entity.isToRemove()) {
-            addEntityMarker(entity);
-        } else if (marker != null) {
-            if (entity.isToRemove()) {
-                marker.remove();
-                mEntityMarkers.remove(entity.getUUID());
-            } else if (animation.isDirty()) {
-                marker.setPosition(entity.getPosition());
-                marker.setIcon(mBitmapCache.getBitmap(animation.current()));
-                animation.clean();
-            }
-        }
+    public void addEntity(Entity e) {
+        Animation animation = e.getAnimation();
+        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                .position(e.getPosition())
+                .rotation((float) e.getDirection())
+                .icon(mBitmapCache.getBitmap(animation.current())));
+        mEntityMarkers.put(e.getUUID(), marker);
     }
 
-    public void displayProjectiles(final ArrayList<Projectile> projectiles) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run(){
-                for(Projectile projectile : projectiles) {
-                    display(projectile);
-                    if(projectile.isToRemove() && mEntityMarkers.get(projectile.getUUID()) == null){
-                        projectile.setDisplayed(false);
-                    }
-                }
-            }
-        });
+    public void updateEntity(Entity e) {
+        Marker marker = mEntityMarkers.get(e.getUUID());
+        marker.setPosition(e.getPosition());
+        Animation animation = e.getAnimation();
+        marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+        animation.clean();
     }
 
-    public void displayExplosions(final ArrayList<Explosion> explosions) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run(){
-                for(Explosion explosion : explosions) {
-                    display(explosion);
-                    if(explosion.isToRemove() && mEntityMarkers.get(explosion.getUUID()) == null){
-                        explosion.setDisplayed(false);
-                    }
-                }
-            }
-        });
+    public void removeEntity(Entity e) {
+        Marker marker = mEntityMarkers.get(e.getUUID());
+        marker.remove();
+        mEntityMarkers.remove(e.getUUID());
     }
 
     public void display(GameContext gameContext) {
 
     }
 
-    public void display(ArrayList<RealCell> realCells, float rotation) {
+    public void addBlock(RealCell realCell, float rotation) {
+
         Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
         BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
 
-        Iterator<RealCell> it = realCells.iterator();
-        while(it.hasNext()) {
-            RealCell realCell = it.next();
-            if (realCell.cell().type() == CellTypeEnum.BLOCK) {
+        if (realCell.cell().type() == CellTypeEnum.BLOCK) {
 
-                mGoogleMap.addBlock(new GroundOverlayOptions()
-                        .position(realCell.position(), 50, 50)
-                        .anchor(0.5f, 0.5f)
-                        .zIndex(-100)
-                        .bearing(rotation)
-                        .image(scaledBlockDescriptor));
+            Block b = mGoogleMap.addBlock(new GroundOverlayOptions()
+                    .position(realCell.position(), 50, 50)
+                    .anchor(0.5f, 0.5f)
+                    .zIndex(-100)
+                    .bearing(rotation)
+                    .image(scaledBlockDescriptor));
 
-                Iterator<LatLng> vIt = realCell.vertices().iterator();
-                while(vIt.hasNext()) {
-                    LatLng p = vIt.next();
-                    mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
-                }
-            }
+            mBlockMarkers.put(realCell.getUUID(), b);
+
+            /*Iterator<LatLng> vIt = realCell.vertices().iterator();
+            while(vIt.hasNext()) {
+                LatLng p = vIt.next();
+                mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
+            }*/
         }
+    }
+
+    public void removeBlock(RealCell realCell) {
+        Block b = mBlockMarkers.get(realCell.getUUID());
+        if(b != null) {
+            b.remove();
+            mBlockMarkers.remove(realCell.getUUID());
+        }
+    }
+
+    public void displayAnimation(GoogleMapAnimation animation) {
+        animation.start(mGoogleMap);
     }
 
     public void removePlayer(final String playerId) {

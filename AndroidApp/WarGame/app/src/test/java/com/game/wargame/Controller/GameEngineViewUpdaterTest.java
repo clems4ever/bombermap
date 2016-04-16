@@ -10,10 +10,9 @@ import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.Sensors.LocationRetriever;
 import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
-import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
-import com.game.wargame.Views.GameView;
-import com.game.wargame.Views.MapView;
+import com.game.wargame.Views.Views.GameView;
+import com.game.wargame.Views.Views.MapView;
 
 import org.junit.Before;
 import org.junit.Test;

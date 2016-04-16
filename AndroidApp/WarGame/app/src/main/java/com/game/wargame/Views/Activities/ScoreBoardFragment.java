@@ -3,7 +3,6 @@ package com.game.wargame.Views.Activities;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.widget.TextView;
 import com.game.wargame.Controller.GameLogic.GameScore;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
-import com.game.wargame.Views.GameView;
-
-import org.w3c.dom.Text;
 
 import java.util.Map;
 import java.util.Set;

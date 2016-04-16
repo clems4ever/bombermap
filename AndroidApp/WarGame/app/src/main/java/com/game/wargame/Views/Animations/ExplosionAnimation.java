@@ -2,11 +2,13 @@ package com.game.wargame.Views.Animations;
 
 import com.game.wargame.R;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by sergei on 14/03/16.
  */
 public class ExplosionAnimation extends Animation {
+
     public ExplosionAnimation() {
         mDrawablesId.add(R.mipmap.explosion);
         mDrawablesId.add(R.mipmap.explosion1);

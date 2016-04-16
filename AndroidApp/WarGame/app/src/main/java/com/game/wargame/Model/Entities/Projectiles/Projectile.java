@@ -2,18 +2,18 @@ package com.game.wargame.Model.Entities.Projectiles;
 
 import android.location.Location;
 
-import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
-import com.game.wargame.Controller.GameLogic.OnCollisionListener;
-import com.game.wargame.Controller.GameLogic.OnExplosionListener;
+import com.game.wargame.Controller.Engine.DisplayCommands.AddExplosionDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.RemoveProjectileDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayCommands.UpdateProjectileDisplayCommand;
+import com.game.wargame.Controller.Engine.DisplayTransaction;
+import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Entity;
-import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
-import com.game.wargame.Model.Entities.Players.PlayerModel;
+import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Views.Animations.AnimationFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.TreeMap;
-import java.util.UUID;
 
 /**
  * Created by sergei on 01/03/16.
@@ -23,9 +23,6 @@ public class Projectile extends Entity {
     protected static final int DEFAULT_SPEED = 200;
     protected static final float DEFAULT_DELTA_T = 200;
     private static final double PROJECTILE_RADIUS = 100;
-
-    private OnExplosionListener mOnExplosion;
-    private OnCollisionListener mOnCollision;
 
     private void initTrajectory() {
         double deltaLatitude = mTarget.latitude - mPosition.latitude;
@@ -62,51 +59,27 @@ public class Projectile extends Entity {
         mAnimation = AnimationFactory.buildProjectileAnimation();
     }
 
-    public void setOnExplosionListener(OnExplosionListener onExplosionListener) {
-        mOnExplosion = onExplosionListener;
-    }
-
-
-    public boolean equals(Projectile other) {
-        return this.getUUID().equals(other.getUUID());
-    }
-
-    public LatLng getTarget() {
-        return mTarget;
-    }
-
-    public void setTarget(LatLng target) {
-        mTarget = target;
-    }
-
-    public TreeMap<Double, LatLng> getTrajectory() {
-        return mTrajectory;
-    }
-
     public void setTrajectory(TreeMap<Double, LatLng> trajectory) {
         mTrajectory = trajectory;
     }
 
-    public double setTimestart() {
-        return mTimeStart;
-    }
-
-    public void setTimestart(double timestamp) {
-        mTimeStart = timestamp;
-    }
-
     @Override
-    public void update(long ticks, int increment) {
-        super.update(ticks, increment);
+    public void update(long ticks, int increment, EntitiesContainer entitiesContainer, DisplayTransaction displayTransaction) {
+        super.update(ticks, increment, entitiesContainer, displayTransaction);
         double time = ticks * increment;
         Double newTimestamp = mTrajectory.ceilingKey(time);
 
         if (newTimestamp != null) {
             LatLng newPosition = mTrajectory.get(newTimestamp);
             super.setPosition(newPosition);
-            //TODO: evaluateContacts
+            displayTransaction.add(new UpdateProjectileDisplayCommand(this));
         } else {
-            mOnExplosion.onExplosion(this, (long) time);
+            Explosion explosion = new Explosion(this.getOwner(), time, this.getPosition(), this.getDirection());
+            entitiesContainer.addExplosion(explosion);
+            entitiesContainer.removeProjectile(this);
+
+            displayTransaction.add(new RemoveProjectileDisplayCommand(this));
+            displayTransaction.add(new AddExplosionDisplayCommand(explosion));
         }
     }
 

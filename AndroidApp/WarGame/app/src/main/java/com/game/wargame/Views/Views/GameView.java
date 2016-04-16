@@ -1,4 +1,4 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.Views;
 
 import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.wargame.Controller.GameLogic.GameScore;
-import com.game.wargame.Model.Entities.Explosion;
+import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
@@ -18,6 +18,9 @@ import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
+import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.GoogleMap.IGoogleMapView;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
@@ -181,16 +184,24 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.display(player);
     }
 
-    public void displayCells(ArrayList<RealCell> realCells) {
-        mMapView.display(realCells, 0);
+    public void addBlock(RealCell block) {
+        mMapView.addBlock(block, 0);
     }
 
-    public void displayExplosions(ArrayList<Explosion> explosions) {
-        mMapView.displayExplosions(explosions);
+    public void removeBlock(RealCell block) {
+        mMapView.removeBlock(block);
     }
 
-    public void displayProjectiles(ArrayList<Projectile> projectiles) {
-        mMapView.displayProjectiles(projectiles);
+    public void addEntity(Entity e) {
+        mMapView.addEntity(e);
+    }
+
+    public void updateEntity(Entity e) {
+        mMapView.updateEntity(e);
+    }
+
+    public void removeEntity(Entity e) {
+        mMapView.removeEntity(e);
     }
 
     public void setOnGpsButtonClickedListener(View.OnClickListener onGpsButtonClickedListener) {
