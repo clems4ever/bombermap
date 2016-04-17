@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg2996"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   inkscape:export-filename="/home/sergei/Wargame/BazookaIcon.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
+   sodipodi:docname="Nouveau document 3">
+  <defs
+     id="defs2998" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.5"
+     inkscape:cx="32"
+     inkscape:cy="32"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3001">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="fill:#000000;fill-opacity:1"
+       id="rect3019"
+       width="64.181816"
+       height="63.81818"
+       x="0.18181819"
+       y="0.18181819"
+       ry="11.090909" />
+    <rect
+       style="fill:#808000;fill-opacity:1"
+       id="rect3017"
+       width="64"
+       height="62.181816"
+       x="0.18181811"
+       y="-0.18181826"
+       ry="9.1636353" />
+    <image
+       y="-38.278698"
+       x="13.480899"
+       id="image3012"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAWdJREFU
+eJztm90NwjAQg6+IZxboGizQyVmANboAC4QHQIqKBP2J7YP6kyr1IVVct0kvrhJhjDE7piP3V2a0
+oWpidVYiIvrz6WvD8Xp7nVK0MTopc258ytMIuD6KAa+ThW9ABH+IQij9cCrxMGLWUbWHc2R0EhHR
+D8uHAYODWoAaG6AWoMYGqAWosQFqAWpsgFqAmuwGwMthpAGb6/ln+UxZEyAo/XnZIujDAQO+GFqT
+BdRMlsfNyT4HwLEBagFqoAagx28LqJlgI5pqpkRia+Kw8XJ7u268tH+jaJngGuobRmWK2SfBLsDD
+NLsBcGyAWoAaG6AWoMYGqAWoSV0IBSENSm0A448y2oBNTxBR+09Bh6KbqOK0LghlcWs2h6LV9TDS
+h6Jodv8ZtAFqAWrgoWj2YPQXQlGoxtShaBAekOcAtQA1NkAtQI0NUAtQYwPUAtTs3gDurrEZFWEV
+g/3NrrGadPsGzd65A6JubaO3ttt0AAAAAElFTkSuQmCC
+"
+       height="64"
+       width="64"
+       transform="matrix(0.62366206,0.78169408,-0.78169408,0.62366206,0,0)" />
+  </g>
+</svg>
