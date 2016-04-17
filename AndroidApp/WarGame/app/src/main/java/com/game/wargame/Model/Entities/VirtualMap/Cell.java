@@ -22,6 +22,4 @@ public class Cell {
         return m_type;
     }
 
-
-
 }

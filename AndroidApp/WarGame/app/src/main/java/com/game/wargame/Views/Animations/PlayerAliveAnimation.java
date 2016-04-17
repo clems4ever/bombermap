@@ -7,6 +7,8 @@ import com.game.wargame.R;
  */
 public class PlayerAliveAnimation extends Animation {
 
+    public static final Size SIZE = new Size(64, 64);
+
     public PlayerAliveAnimation(boolean isRemote) {
         if (isRemote)
             mDrawablesId.add(R.mipmap.profile_c);

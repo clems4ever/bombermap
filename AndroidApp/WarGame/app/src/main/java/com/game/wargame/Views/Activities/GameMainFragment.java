@@ -1,6 +1,7 @@
 package com.game.wargame.Views.Activities;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -50,7 +51,6 @@ public class GameMainFragment extends Fragment {
 
     public GameMainFragment() {
         mGoogleMapViewFactory = new GoogleMapViewFactory();
-        mBitmapDescriptorFactory = new BitmapDescriptorFactory();
         mBundleExtractor = new BundleExtractor(this);
     }
 
@@ -87,6 +87,7 @@ public class GameMainFragment extends Fragment {
         super.onStart();
 
         View fragment = getView();
+        mBitmapDescriptorFactory = new BitmapDescriptorFactory(getActivity());
         IGoogleMapView googleMapView = mGoogleMapViewFactory.create(fragment);
         mGameView = new GameView((FragmentActivity) getActivity(), fragment, googleMapView, mBitmapDescriptorFactory);
 

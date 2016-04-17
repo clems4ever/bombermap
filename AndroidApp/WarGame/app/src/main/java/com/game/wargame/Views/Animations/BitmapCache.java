@@ -1,6 +1,5 @@
 package com.game.wargame.Views.Animations;
 
-import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
 import java.util.ArrayList;
@@ -30,11 +29,11 @@ public class BitmapCache {
         ArrayList<Animation> animations = mAnimationFactory.buildAllAnimations();
         for (Animation animation : animations)
         {
-            mBitmaps.put(animation.current(), mBitmapFactory.load(animation.current()));
+            mBitmaps.put(animation.current(), mBitmapFactory.load(animation.current(), animation.SIZE));
             while (animation.hasNext()) {
                 animation.next();
                 int resourceKey = animation.current();
-                mBitmaps.put(resourceKey, mBitmapFactory.load(resourceKey));
+                mBitmaps.put(resourceKey, mBitmapFactory.load(resourceKey, animation.SIZE));
             }
         }
     }

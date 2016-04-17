@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.game.wargame.Views.Animations.PlayerAliveAnimation;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
@@ -29,9 +30,7 @@ public class PlayerMarkerFactory {
     }
 
     public PlayerMarker create(int bitmapResId) {
-        Bitmap bmp = BitmapFactory.decodeResource(mResources, bitmapResId);
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmp, 64, 64, false);
-        BitmapDescriptor bitmapDescriptor = mBitmapDescriptorFactory.fromBitmap(scaledBitmap);
+        BitmapDescriptor bitmapDescriptor = mBitmapDescriptorFactory.load(bitmapResId, PlayerAliveAnimation.SIZE);
         return mGoogleMap.addPlayerMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .anchor(0.5f, 0.5f)

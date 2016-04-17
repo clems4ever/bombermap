@@ -36,7 +36,7 @@ public class BitmapCacheTest {
     public class DummyBitmapFactory implements IBitmapFactory {
 
         @Override
-        public BitmapDescriptor load(int id) {
+        public BitmapDescriptor load(int id, Size mSize) {
             switch (id) {
                 case 1:
                     return mBitmapDescriptor1;

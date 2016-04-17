@@ -34,7 +34,7 @@ public class PlayerMarkerFactoryTest {
 
         PlayerMarker playerMarker = factory.create(4);
 
-        verify(mMockBitmapDescriptorFactory).fromBitmap(Matchers.<Bitmap>any());
+        verify(mMockBitmapDescriptorFactory).load(Matchers.<Integer>any());
         verify(mMockGoogleMap).addPlayerMarker(Matchers.<MarkerOptions>any());
     }
 

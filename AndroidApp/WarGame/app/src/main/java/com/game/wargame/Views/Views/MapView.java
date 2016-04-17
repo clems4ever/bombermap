@@ -190,7 +190,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         Marker marker = mEntityMarkers.get(e.getUUID());
         marker.setPosition(e.getPosition());
         Animation animation = e.getAnimation();
-        marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+        if (animation.isDirty())
+            marker.setIcon(mBitmapCache.getBitmap(animation.current()));
         animation.clean();
     }
 
@@ -206,9 +207,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     public void addBlock(RealCell realCell, float rotation) {
 
-        Bitmap block = BitmapFactory.decodeResource(mActivity.getResources(), R.mipmap.wall);
-        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.fromBitmap(block);
-
+        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.load(R.mipmap.wall);
         if (realCell.cell().type() == CellTypeEnum.BLOCK) {
 
             Block b = mGoogleMap.addBlock(new GroundOverlayOptions()

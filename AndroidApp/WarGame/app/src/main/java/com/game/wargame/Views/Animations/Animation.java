@@ -22,6 +22,7 @@ public abstract class Animation {
     protected int mCounterMillis;
     protected int mCurrentFrame;
     protected boolean mIsDirty = true;
+    public static final Size SIZE = new Size(128, 128);
 
     protected Animation() {
         mDrawablesId = new LinkedList<>();
