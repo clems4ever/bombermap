@@ -6,6 +6,9 @@ import com.game.wargame.R;
  * Created by sergei on 05/04/16.
  */
 public class PlayerDeadAnimation extends Animation{
+
+    public static final Size SIZE = new Size(64, 64);
+
     public PlayerDeadAnimation(boolean isRemote) {
         if (isRemote)
             mDrawablesId.add(R.mipmap.profile_c);
