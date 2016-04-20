@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class RealCell extends Entity {
 
     private Cell mCell;
-    private LatLng mPosition;
     private ArrayList<LatLng> mVertices;
 
     public RealCell(CellTypeEnum type, LatLng position, float width, float height) {

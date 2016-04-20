@@ -18,6 +18,7 @@ import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -55,21 +56,44 @@ public class CollisionManager {
     public void treatBlockCollisions(EntitiesContainer entitiesContainer, double time, DisplayTransaction displayTransaction) {
         ArrayList<RealCell> realCells = entitiesContainer.getRealCells();
         ArrayList<Projectile> projectiles = entitiesContainer.getProjectiles();
+        ArrayList<Explosion> explosions = entitiesContainer.getExplosions();
+        LinkedList<RealCell> blocksToRemove = new LinkedList<>();
 
         for(Projectile projectile: projectiles) {
             for (RealCell realCell : realCells) {
-                if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), false)) {
+                if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), true)) {
                     Explosion explosion = new Explosion(projectile.getOwner(), time, projectile.getPosition(), projectile.getDirection());
                     entitiesContainer.addExplosion(explosion);
                     entitiesContainer.removeProjectile(projectile);
-                    entitiesContainer.removeBlock(realCell);
 
                     displayTransaction.add(new AddExplosionDisplayCommand(explosion));
                     displayTransaction.add(new RemoveProjectileDisplayCommand(projectile));
-                    displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
                 }
             }
         }
+
+        for(Explosion explosion: explosions) {
+            for (RealCell realCell : realCells) {
+                if(isExplosionCollidingBlock(explosion, realCell)) {
+                    blocksToRemove.push(realCell);
+                }
+            }
+        }
+
+        for(RealCell realCell: blocksToRemove) {
+            entitiesContainer.removeBlock(realCell);
+            displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
+        }
+    }
+
+    private boolean isExplosionCollidingBlock(Explosion e, RealCell r)
+    {
+        float[] results = new float[1];
+        LatLng explosionPösition = e.getPosition();
+        LatLng blockPosition = r.getPosition();
+        mDistanceCalculator.distanceBetween(explosionPösition.latitude, explosionPösition.longitude, blockPosition.latitude, blockPosition.longitude, results);
+
+        return results[0] < e.getRadius();
     }
 
     private boolean areLocalPlayerAndEntityColliding(PlayerModel p, Entity e)
