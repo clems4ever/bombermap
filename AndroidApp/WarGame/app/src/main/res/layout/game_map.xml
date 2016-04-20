@@ -17,7 +17,9 @@
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:layout_above="@+id/Footer"
+                android:layout_marginBottom="-15dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -131,33 +133,33 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/linearLayout"
+                android:id="@+id/game_pad"
                 android:translationZ="100dp">
 
-                <Button
+                <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20px"
-                android:text="FIRE"
                 android:id="@+id/fire_button"
                 android:background="@drawable/shapes"
-                android:padding="40dp"
+                android:padding="30dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                    android:src="@mipmap/missile1" />
 
-                <Button
+                <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SHIE"
                     android:id="@+id/shield_button"
                     android:background="@drawable/shapes"
-                    android:padding="40dp"
+                    android:padding="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="20dp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:src="@mipmap/shield" />
             </LinearLayout>
 
             <RelativeLayout android:layout_width="wrap_content"

@@ -36,8 +36,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
 
     private RelativeLayout mMapLayout;
     private AbstractWeaponControllerView mWeaponControllerInterface;
-    private Button mFireButton;
-    private Button mShieldButton;
+    private ImageButton mFireButton;
+    private ImageButton mShieldButton;
     private ImageButton mGpsButton;
     private TextView mTimeText;
     private TextView[] mNotificationsBuffer;
@@ -56,8 +56,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView = new MapView(mActivity, googleMapView, bitmapDescriptorFactory);
         final GameView that = this;
 
-        mFireButton = (Button) view.findViewById(R.id.fire_button);
-        mShieldButton = (Button) view.findViewById(R.id.shield_button);
+        mFireButton = (ImageButton) view.findViewById(R.id.fire_button);
+        mShieldButton = (ImageButton) view.findViewById(R.id.shield_button);
         mGpsButton = (ImageButton) view.findViewById(R.id.gps_button);
         mTimeText = (TextView) view.findViewById(R.id.time_text);
 
