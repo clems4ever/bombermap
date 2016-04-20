@@ -1,9 +1,16 @@
 package com.game.wargame.Views;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.IAnimationFactory;
 import com.game.wargame.Views.Animations.IBitmapFactory;
+import com.game.wargame.Views.Animations.PlayerAliveAnimation;
 import com.game.wargame.Views.Animations.Size;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -18,15 +25,17 @@ public class BitmapCache {
     private HashMap<Integer, BitmapDescriptor> mBitmaps;
     private IAnimationFactory mAnimationFactory;
     private IBitmapFactory mBitmapFactory;
+    private Resources mResources;
 
     public BitmapDescriptor getBitmap(int resourceID)
     {
         return mBitmaps.get(resourceID);
     }
 
-    public BitmapCache(IAnimationFactory animationFactory, IBitmapFactory bitmapFactory) {
+    public BitmapCache(Resources resources, IAnimationFactory animationFactory, IBitmapFactory bitmapFactory) {
         mAnimationFactory = animationFactory;
         mBitmapFactory = bitmapFactory;
+        mResources = resources;
     }
 
     public void loadBitmaps() {
@@ -44,6 +53,15 @@ public class BitmapCache {
         }
 
         mBitmaps.put(R.mipmap.wall, mBitmapFactory.load(R.mipmap.wall));
+
+        Bitmap playerShadow = BitmapFactory.decodeResource(mResources, R.mipmap.profile_s);
+        Bitmap transBitmap = Bitmap.createBitmap(playerShadow.getWidth(), playerShadow.getHeight(), Bitmap.Config.ARGB_8888);
+        Paint paint = new Paint();
+        paint.setAlpha(70);
+        Canvas canvas = new Canvas(transBitmap);
+        canvas.drawBitmap(playerShadow, 0, 0, paint);
+
+        mBitmaps.put(1000, mBitmapFactory.load(transBitmap, PlayerAliveAnimation.SIZE));
     }
 
 }

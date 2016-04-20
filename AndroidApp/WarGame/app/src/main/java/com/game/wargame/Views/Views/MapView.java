@@ -45,6 +45,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     private HashMap<String, Marker> mEntityMarkers;
     private HashMap<String, Block> mBlockMarkers;
     private BitmapCache mBitmapCache;
+    private Bitmap mShadowBitmap;
 
     private PlayerMarkerFactory mPlayerMarkerFactory;
     private BitmapDescriptorFactory mBitmapDescriptorFactory;
@@ -73,7 +74,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
         mGoogleMapView = googleMapView;
         mGoogleMapView.onCreate(null);
-        mBitmapCache = new BitmapCache(new AnimationFactory(), bitmapDescriptorFactory);
+        mBitmapCache = new BitmapCache(mActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory);
         mBitmapCache.loadBitmaps();
     }
 
@@ -136,7 +137,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mPlayerShadowMarker = mPlayerMarkerFactory.create(R.mipmap.player_current);
+                mPlayerShadowMarker = mPlayerMarkerFactory.create(mBitmapCache.getBitmap(1000));
                 mPlayerShadowMarker.move(position);
             }
         });

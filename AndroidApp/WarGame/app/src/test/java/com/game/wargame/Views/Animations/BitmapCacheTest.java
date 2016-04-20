@@ -1,5 +1,8 @@
 package com.game.wargame.Views.Animations;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+
 import com.game.wargame.Views.BitmapCache;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
@@ -24,6 +27,9 @@ public class BitmapCacheTest {
 
     @Mock
     BitmapDescriptor mBitmapDescriptor3;
+
+    @Mock
+    Resources mMockResources;
 
     public class DummyAnimation extends Animation {
         public DummyAnimation() {
@@ -53,6 +59,16 @@ public class BitmapCacheTest {
         public BitmapDescriptor load(int id) {
             return null;
         }
+
+        @Override
+        public BitmapDescriptor load(Bitmap bitmap) {
+            return null;
+        }
+
+        @Override
+        public BitmapDescriptor load(Bitmap bitmap, Size size) {
+            return null;
+        }
     }
 
     public class DummyAnimationFactory implements IAnimationFactory {
@@ -68,7 +84,7 @@ public class BitmapCacheTest {
 
     @Test
     public void testThatBitmapHolderContainsAllBitmapsDescriptors() {
-        BitmapCache bitmapCache = new BitmapCache(new DummyAnimationFactory(), new DummyBitmapFactory());
+        BitmapCache bitmapCache = new BitmapCache(mMockResources, new DummyAnimationFactory(), new DummyBitmapFactory());
         bitmapCache.loadBitmaps();
 
         BitmapDescriptor bitmapDescriptor = bitmapCache.getBitmap(1);

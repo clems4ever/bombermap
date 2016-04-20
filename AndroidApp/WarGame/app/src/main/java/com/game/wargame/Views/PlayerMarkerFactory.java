@@ -29,12 +29,20 @@ public class PlayerMarkerFactory {
         mGoogleMap = googleMap;
     }
 
-    public PlayerMarker create(int bitmapResId) {
-        BitmapDescriptor bitmapDescriptor = mBitmapDescriptorFactory.load(bitmapResId, PlayerAliveAnimation.SIZE);
+    public PlayerMarker create(BitmapDescriptor descriptor) {
         return mGoogleMap.addPlayerMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .anchor(0.5f, 0.5f)
-                .icon(bitmapDescriptor));
+                .icon(descriptor));
     }
 
+    public PlayerMarker create(int bitmapResId) {
+        BitmapDescriptor bitmapDescriptor = mBitmapDescriptorFactory.load(bitmapResId, PlayerAliveAnimation.SIZE);
+        return create(bitmapDescriptor);
+    }
+
+    public PlayerMarker create(Bitmap bitmap) {
+        BitmapDescriptor bitmapDescriptor = mBitmapDescriptorFactory.load(bitmap);
+        return create(bitmapDescriptor);
+    }
 }

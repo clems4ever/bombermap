@@ -21,6 +21,16 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@mipmap/footer"
+                android:id="@+id/Footer"
+                android:translationZ="10dp"></FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_height="50dp"
                 android:background="@mipmap/banner"
@@ -39,7 +49,7 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
                         android:orientation="horizontal"
-                        >
+                        android:layout_marginLeft="30dp">
                         <TextView
                             android:layout_width="20px"
                             android:layout_height="40px"
@@ -86,8 +96,8 @@
                     </LinearLayout>
 
                     <ImageButton
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:id="@+id/gps_button"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
@@ -95,19 +105,22 @@
                         android:src="@mipmap/gps_white"
                         android:scaleType="fitXY"
                         android:background="#00ffffff"
-                        android:padding="5dp" />
+                        android:padding="5dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="3dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:id="@+id/time_text"
-                        android:background="@android:drawable/dialog_holo_light_frame"
+                        android:background="#78ffffff"
                         android:layout_centerInParent="true"
                         android:textAlignment="center"
-                        android:gravity="center"
-                        android:textSize="30dp"
-                        android:textColor="#000000" />
+                        android:gravity="center|center_vertical|center_horizontal"
+                        android:textSize="20dp"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
             </FrameLayout>
@@ -117,7 +130,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linearLayout"
+                android:translationZ="100dp">
 
                 <Button
                 android:layout_width="wrap_content"
