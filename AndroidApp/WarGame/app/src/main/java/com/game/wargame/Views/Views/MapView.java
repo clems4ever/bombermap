@@ -12,7 +12,7 @@ import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
-import com.game.wargame.Views.Animations.BitmapCache;
+import com.game.wargame.Views.BitmapCache;
 import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.game.wargame.Views.GoogleMap.GoogleMapView;
@@ -206,8 +206,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     }
 
     public void addBlock(RealCell realCell, float rotation) {
+        BitmapDescriptor scaledBlockDescriptor = mBitmapCache.getBitmap(R.mipmap.wall);
 
-        BitmapDescriptor scaledBlockDescriptor = mBitmapDescriptorFactory.load(R.mipmap.wall);
         if (realCell.cell().type() == CellTypeEnum.BLOCK) {
 
             Block b = mGoogleMap.addBlock(new GroundOverlayOptions()

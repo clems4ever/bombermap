@@ -1,5 +1,9 @@
 package com.game.wargame.Model.Entities.VirtualMap;
 
+import android.content.res.Resources;
+
+import com.game.wargame.R;
+
 import java.util.HashMap;
 
 /**
@@ -8,9 +12,11 @@ import java.util.HashMap;
 public class Repository {
 
     private java.util.Map<Integer, Map> mVirtualMapByMapId;
+    private MapBuilder mMapBuilder;
 
-    public Repository() {
+    public Repository(Resources res) {
         mVirtualMapByMapId = new HashMap<>();
+        mMapBuilder = new MapBuilder(res);
 
         createMaps();
     }
@@ -24,6 +30,14 @@ public class Repository {
     }
 
     private void createMaps() {
+        Map<Cell> mapExample0 = buildMapExample0();
+        Map<Cell> mushroomMap = mMapBuilder.build(R.mipmap.mushroom);
+
+        mVirtualMapByMapId.put(0, mapExample0);
+        mVirtualMapByMapId.put(1, mushroomMap);
+    }
+
+    private Map<Cell> buildMapExample0() {
         Map<Cell> map0 = new Map(16, 16, new Cell(CellTypeEnum.EMPTY));
 
         for(int i=0; i<map0.width(); ++i) {
@@ -39,7 +53,7 @@ public class Repository {
         }
         map0.set(10, 4, new Cell(CellTypeEnum.BLOCK));
 
-        mVirtualMapByMapId.put(0, map0);
+        return map0;
     }
 
 }

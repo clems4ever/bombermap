@@ -7,4 +7,5 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
  */
 public interface IBitmapFactory {
     public BitmapDescriptor load(int id, Size size);
+    public BitmapDescriptor load(int id);
 }

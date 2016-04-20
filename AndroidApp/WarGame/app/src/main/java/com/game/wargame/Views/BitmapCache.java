@@ -1,5 +1,11 @@
-package com.game.wargame.Views.Animations;
+package com.game.wargame.Views;
 
+import com.game.wargame.R;
+import com.game.wargame.Views.Animations.Animation;
+import com.game.wargame.Views.Animations.IAnimationFactory;
+import com.game.wargame.Views.Animations.IBitmapFactory;
+import com.game.wargame.Views.Animations.Size;
+import com.game.wargame.Views.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
 import java.util.ArrayList;
@@ -36,6 +42,8 @@ public class BitmapCache {
                 mBitmaps.put(resourceKey, mBitmapFactory.load(resourceKey, animation.SIZE));
             }
         }
+
+        mBitmaps.put(R.mipmap.wall, mBitmapFactory.load(R.mipmap.wall));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.game.wargame.Views.Animations;
 
+import com.game.wargame.Views.BitmapCache;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
 import org.junit.Test;
@@ -46,6 +47,11 @@ public class BitmapCacheTest {
                     return mBitmapDescriptor3;
             }
             return mBitmapDescriptor1;
+        }
+
+        @Override
+        public BitmapDescriptor load(int id) {
+            return null;
         }
     }
 

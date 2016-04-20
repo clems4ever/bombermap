@@ -21,12 +21,14 @@ public class BitmapDescriptorFactory implements IBitmapFactory {
         mContext = context;
     }
 
+    @Override
     public BitmapDescriptor load(int resId, Size size) {
         Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), resId);
         bmp = Bitmap.createScaledBitmap(bmp, size.x, size.y, false);
         return com.google.android.gms.maps.model.BitmapDescriptorFactory.fromBitmap(bmp);
     }
 
+    @Override
     public BitmapDescriptor load(int resId) {
         return com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(resId);
     }

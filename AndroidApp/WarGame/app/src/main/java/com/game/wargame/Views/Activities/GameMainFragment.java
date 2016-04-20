@@ -74,7 +74,7 @@ public class GameMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.game_map, container, false);
-        mVirtualMapRepository = new Repository();
+        mVirtualMapRepository = new Repository(getResources());
 
         Bundle args = mBundleExtractor.getBundle();
         mGameId = args.getString("game_id");
@@ -102,8 +102,7 @@ public class GameMainFragment extends Fragment {
             mLocationRetriever = new LocationRetriever(getActivity());
         }
 
-        // Get map 0
-        Map virtualMap = mVirtualMapRepository.get(0);
+        Map virtualMap = mVirtualMapRepository.get(1);
 
         final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 50, 50, 0);
         mGameEngine = new GameEngine();
