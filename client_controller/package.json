@@ -1,0 +1,11 @@
+{
+  "name": "BomberMap",
+  "version": "1.0.0",
+  "description": "The game controller for BomberMap",
+  "main": "app.js",
+  "author": "SK & CM",
+  "dependencies": {
+    "amqplib": "^0.4.1",
+    "node-uuid": "^1.4.7"
+  }
+}
