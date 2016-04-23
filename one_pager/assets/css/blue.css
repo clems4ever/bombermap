@@ -6149,6 +6149,30 @@
   color: #1080f2 !important;
 }
 
+.block-secondary {
+  background-color: #1080f2;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.block-secondary h1,
+.block-secondary h2,
+.block-secondary h3,
+.block-secondary h4,
+.block-secondary h5,
+.block-secondary h6 {
+  color: #fff;
+}
+
+.block-secondary a:not(.btn) {
+  color: #fff;
+}
+
+.block-secondary a:not(.btn):focus,
+.block-secondary a:not(.btn):hover {
+  color: #e5e5e5;
+  text-decoration: none;
+}
+
 .block-accent {
   background-color: #786de4;
   color: rgba(255, 255, 255, 0.9);
