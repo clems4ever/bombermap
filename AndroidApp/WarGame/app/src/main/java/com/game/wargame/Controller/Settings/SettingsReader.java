@@ -71,6 +71,9 @@ public class SettingsReader {
         else if(str.equals("DEBUG")) {
             mode = Settings.GameEngineMode.DEBUG;
         }
+        else if(str.equals("MANUAL")) {
+            mode = Settings.GameEngineMode.MANUAL;
+        }
 
         return mode;
     }

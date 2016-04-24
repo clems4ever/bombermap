@@ -229,7 +229,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
             }
         });
 
-        mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        /*mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng _) {
                 Iterator<LatLng> it = mPathEditor.iterator();
@@ -250,7 +250,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                 Log.d("MapView touch debug", jsonArray.toString());
                 mPathEditor.clear();
             }
-        });
+        });*/
     }
 
     /**

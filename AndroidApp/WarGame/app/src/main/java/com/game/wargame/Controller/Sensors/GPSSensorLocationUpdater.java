@@ -12,7 +12,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-public class LocationRetriever extends AbstractLocationRetriever implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GPSSensorLocationUpdater extends AbstractLocationRetriever implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     protected GoogleApiClient mGoogleApiClient;
     protected LocationRequest mLocationRequest;
@@ -22,7 +22,7 @@ public class LocationRetriever extends AbstractLocationRetriever implements Goog
     public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 2000;
     public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    public LocationRetriever(Context context) {
+    public GPSSensorLocationUpdater(Context context) {
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -33,7 +33,7 @@ public class LocationRetriever extends AbstractLocationRetriever implements Goog
     }
 
     // For test
-    public LocationRetriever(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
+    public GPSSensorLocationUpdater(Context context, GoogleApiClient googleApiClient, FusedLocationProviderApi fusedLocationProviderApi) {
         init(googleApiClient, fusedLocationProviderApi);
     }
 

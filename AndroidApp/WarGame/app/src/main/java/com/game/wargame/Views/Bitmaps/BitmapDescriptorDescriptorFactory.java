@@ -1,23 +1,20 @@
-package com.game.wargame.Views;
+package com.game.wargame.Views.Bitmaps;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.game.wargame.Views.Activities.GameMainFragment;
-import com.game.wargame.Views.Animations.Animation;
-import com.game.wargame.Views.Animations.IBitmapFactory;
 import com.game.wargame.Views.Animations.Size;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
 /**
  * Created by developer on 3/13/16.
  */
-public class BitmapDescriptorFactory implements IBitmapFactory {
+public class BitmapDescriptorDescriptorFactory implements IBitmapDescriptorFactory {
 
     private Context mContext;
 
-    public BitmapDescriptorFactory(Context context) {
+    public BitmapDescriptorDescriptorFactory(Context context) {
         mContext = context;
     }
 

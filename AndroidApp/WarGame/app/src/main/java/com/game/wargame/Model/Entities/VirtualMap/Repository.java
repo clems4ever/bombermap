@@ -15,9 +15,17 @@ public class Repository {
     private MapBuilder mMapBuilder;
 
     public Repository(Resources res) {
-        mVirtualMapByMapId = new HashMap<>();
-        mMapBuilder = new MapBuilder(res);
+        init(new MapBuilder(res));
+    }
 
+    // TEST
+    public Repository(MapBuilder mapBuilder) {
+        init(mapBuilder);
+    }
+
+    private void init(MapBuilder mapBuilder) {
+        mVirtualMapByMapId = new HashMap<>();
+        mMapBuilder = mapBuilder;
         createMaps();
     }
 

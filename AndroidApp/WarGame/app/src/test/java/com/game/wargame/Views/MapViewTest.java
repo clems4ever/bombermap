@@ -3,6 +3,8 @@ package com.game.wargame.Views;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.BitmapFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.game.wargame.Views.GoogleMap.GoogleMapView;
 import com.game.wargame.Views.Views.MapView;
@@ -31,13 +33,14 @@ public class MapViewTest {
     @Mock private MapView.OnMapReadyListener mMockOnMapReadyListener;
     @Mock private Bundle mMockBundle;
     @Mock private GoogleMap mMockGoogleMap;
-    @Mock private BitmapDescriptorFactory mMockBitmapDescriptorFactory;
+    @Mock private BitmapDescriptorDescriptorFactory mMockBitmapDescriptorFactory;
     @Mock private PlayerMarkerFactory mMockPlayerMarkerFactory;
     @Mock private PlayerMarker mMockPlayerMarker;
+    @Mock private BitmapFactory mMockBitmapFactory;
 
     @Test
     public void testThatStartAsyncLoadsTheMap() {
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         mapView.startAsync(mMockOnMapReadyListener);
 
@@ -47,7 +50,7 @@ public class MapViewTest {
     @Test
     public void mapReady_callback_is_called_when_map_is_loaded() {
         ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         // We request the service to load the map
         mapView.startAsync(mMockOnMapReadyListener);
@@ -65,7 +68,7 @@ public class MapViewTest {
     public void adding_local_user_add_marker_on_googleMap() {
         ArgumentCaptor<Runnable> UiThreadRunnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
         mapView.startAsync(mMockOnMapReadyListener);
@@ -87,7 +90,7 @@ public class MapViewTest {
     public void adding_remote_user_add_marker_on_googleMap() {
         ArgumentCaptor<Runnable> UiThreadRunnableArgumentCaptor = ArgumentCaptor.forClass(Runnable.class);
 
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         ArgumentCaptor<GoogleMapView.OnMapReadyCallback> onMapReadyCallbackArgumentCaptor = ArgumentCaptor.forClass(GoogleMapView.OnMapReadyCallback.class);
         mapView.startAsync(mMockOnMapReadyListener);
@@ -110,7 +113,7 @@ public class MapViewTest {
     {
         when(mMockPlayerMarkerFactory.create(anyInt())).thenReturn(mMockPlayerMarker);
 
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         mapView.startAsync(mMockOnMapReadyListener);
         mapView.onMapReady(mMockGoogleMap);
@@ -142,7 +145,7 @@ public class MapViewTest {
     public void remove_a_player_that_has_been_previously_added() {
         when(mMockPlayerMarkerFactory.create(anyInt())).thenReturn(mMockPlayerMarker);
 
-        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockPlayerMarkerFactory);
+        MapView mapView = new MapView(mMockFragmentActivity, mMockGoogleMapView, mMockBitmapDescriptorFactory, mMockBitmapFactory, mMockPlayerMarkerFactory);
 
         mapView.startAsync(mMockOnMapReadyListener);
         mapView.onMapReady(mMockGoogleMap);

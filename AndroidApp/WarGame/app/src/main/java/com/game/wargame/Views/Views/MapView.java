@@ -1,7 +1,6 @@
 package com.game.wargame.Views.Views;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.Model.Entities.Entity;
@@ -12,8 +11,9 @@ import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
-import com.game.wargame.Views.BitmapCache;
-import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.BitmapCache;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.IBitmapFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.game.wargame.Views.GoogleMap.GoogleMapView;
 import com.game.wargame.Views.GoogleMap.IGoogleMapView;
@@ -48,22 +48,26 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     private Bitmap mShadowBitmap;
 
     private PlayerMarkerFactory mPlayerMarkerFactory;
-    private BitmapDescriptorFactory mBitmapDescriptorFactory;
+    private BitmapDescriptorDescriptorFactory mBitmapDescriptorFactory;
     private OnMapReadyListener mOnMapReadyListener;
 
 
-    public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory) {
+    public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory) {
+        mPlayerMarkerFactory = new PlayerMarkerFactory(bitmapDescriptorFactory);
+        mBitmapCache = new BitmapCache(fragmentActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory);
+
         init(fragmentActivity, googleMapView, bitmapDescriptorFactory, null);
-        mPlayerMarkerFactory = new PlayerMarkerFactory(mBitmapDescriptorFactory, fragmentActivity.getResources());
     }
 
 
     // For test
-    public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
+    public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory, IBitmapFactory bitmapFactory, PlayerMarkerFactory playerMarkerFactory) {
+        mBitmapCache = new BitmapCache(fragmentActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory, bitmapFactory);
+
         init(fragmentActivity, googleMapView, bitmapDescriptorFactory, playerMarkerFactory);
     }
 
-    private void init(FragmentActivity activity, IGoogleMapView googleMapView, com.game.wargame.Views.BitmapDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
+    private void init(FragmentActivity activity, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
         mActivity = activity;
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
@@ -74,7 +78,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
         mGoogleMapView = googleMapView;
         mGoogleMapView.onCreate(null);
-        mBitmapCache = new BitmapCache(mActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory);
+
         mBitmapCache.loadBitmaps();
     }
 

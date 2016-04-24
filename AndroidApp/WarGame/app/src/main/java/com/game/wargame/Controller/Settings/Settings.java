@@ -7,7 +7,7 @@ import org.json.JSONArray;
  */
 public class Settings {
 
-    public enum GameEngineMode { PRODUCTION, DEBUG, SCENARIO_REPLAYER }
+    public enum GameEngineMode { PRODUCTION, DEBUG, SCENARIO_REPLAYER, MANUAL }
 
     public GameEngineMode mode;
     public String virtualHost;
