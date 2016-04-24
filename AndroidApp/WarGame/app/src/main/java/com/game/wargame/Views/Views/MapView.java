@@ -45,10 +45,8 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     private HashMap<String, Marker> mEntityMarkers;
     private HashMap<String, Block> mBlockMarkers;
     private BitmapCache mBitmapCache;
-    private Bitmap mShadowBitmap;
 
     private PlayerMarkerFactory mPlayerMarkerFactory;
-    private BitmapDescriptorDescriptorFactory mBitmapDescriptorFactory;
     private OnMapReadyListener mOnMapReadyListener;
 
 
@@ -56,7 +54,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mPlayerMarkerFactory = new PlayerMarkerFactory(bitmapDescriptorFactory);
         mBitmapCache = new BitmapCache(fragmentActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory);
 
-        init(fragmentActivity, googleMapView, bitmapDescriptorFactory, null);
+        init(fragmentActivity, googleMapView, new PlayerMarkerFactory(bitmapDescriptorFactory));
     }
 
 
@@ -64,12 +62,11 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
     public MapView(FragmentActivity fragmentActivity, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory, IBitmapFactory bitmapFactory, PlayerMarkerFactory playerMarkerFactory) {
         mBitmapCache = new BitmapCache(fragmentActivity.getResources(), new AnimationFactory(), bitmapDescriptorFactory, bitmapFactory);
 
-        init(fragmentActivity, googleMapView, bitmapDescriptorFactory, playerMarkerFactory);
+        init(fragmentActivity, googleMapView, playerMarkerFactory);
     }
 
-    private void init(FragmentActivity activity, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory, PlayerMarkerFactory playerMarkerFactory) {
+    private void init(FragmentActivity activity, IGoogleMapView googleMapView, PlayerMarkerFactory playerMarkerFactory) {
         mActivity = activity;
-        mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mPlayerLocations = new HashMap<>();
         mBlockMarkers = new HashMap<>();
 

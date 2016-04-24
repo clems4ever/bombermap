@@ -52,7 +52,6 @@ public class GameMainFragment extends Fragment implements MapView.OnMapReadyList
     public GameMainFragment() {
         mGoogleMapViewFactory = new GoogleMapViewFactory();
         mBundleExtractor = new BundleExtractor(this);
-        mVirtualMapRepository = new Repository(getResources());
     }
 
     // TEST
@@ -76,6 +75,10 @@ public class GameMainFragment extends Fragment implements MapView.OnMapReadyList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.game_map, container, false);
+
+        if(mVirtualMapRepository == null) {
+            mVirtualMapRepository = new Repository(getResources());
+        }
 
         Bundle args = mBundleExtractor.getBundle();
         mGameId = args.getString("game_id");
