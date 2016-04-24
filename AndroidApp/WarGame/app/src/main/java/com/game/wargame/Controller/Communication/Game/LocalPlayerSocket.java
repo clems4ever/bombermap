@@ -28,11 +28,12 @@ public class LocalPlayerSocket extends PlayerSocket {
         return jsonObject;
     }
 
-    public void move(double latitude, double longitude) {
+    public void move(double latitude, double longitude, double time) {
         try {
             JSONObject moveJsonObject = buildClientJson();
             moveJsonObject.put("lat", latitude);
             moveJsonObject.put("long", longitude);
+            moveJsonObject.put("time", time);
 
             mSocket.emit("move", moveJsonObject);
 

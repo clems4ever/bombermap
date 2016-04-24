@@ -329,7 +329,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
         // Refresh view
         if(!mCurrentPlayerLocked) {
-            mCurrentPlayer.move(latitude, longitude);
+            mCurrentPlayer.move(latitude, longitude, mGlobalTimer.getTime());
             mGameView.movePlayer(mCurrentPlayer);
         }
         else {

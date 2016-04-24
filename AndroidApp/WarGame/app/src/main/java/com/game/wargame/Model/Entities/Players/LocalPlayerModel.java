@@ -35,9 +35,9 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
         }
     }
 
-    public void move(double latitude, double longitude) {
+    public void move(double latitude, double longitude, double time) {
         mPosition = new LatLng(latitude, longitude);
-        mPlayerSocket.move(mPosition.latitude, mPosition.longitude);
+        mPlayerSocket.move(mPosition.latitude, mPosition.longitude, time);
     }
 
     public void moveShadow(double latitude, double longitude) {

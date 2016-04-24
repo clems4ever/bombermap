@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class AppConstant {
 
+    public static boolean COMMUNICATION_DUMP_ENABLED = true;
+
     public static int GAME_DURATION = 60*5;
 
     public static String HOST = "broker.wargame.ingenious-cm.fr";

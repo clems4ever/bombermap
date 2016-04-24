@@ -1,7 +1,16 @@
 package com.game.wargame.Controller.Communication.RabbitMQ;
 
+import android.os.Environment;
+
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.ISocketFactory;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class RabbitMQConnectionManager implements IConnectionManager {
 
@@ -16,7 +25,7 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     @Override
     public void connect(String host) {
-        mConnectionThread = new RabbitMQConnectionThread(host, mVirtualHost);
+        mConnectionThread = new RabbitMQConnectionThread(host, mVirtualHost, AppConstant.COMMUNICATION_DUMP_ENABLED);
         mConnectionThread.start();
         mSocketFactory = new RabbitMQSocketFactory(mConnectionThread);
     }
@@ -28,6 +37,18 @@ public class RabbitMQConnectionManager implements IConnectionManager {
 
     @Override
     public void disconnect() {
+        RabbitMQMessageLogger logger = mConnectionThread.messageLogger();
+        if(logger != null) {
+            String s = mConnectionThread.messageLogger().dump();
+            String logFile = Environment.getExternalStorageDirectory().getPath() + "/comm.dump";
+            try {
+                PrintWriter fout = new PrintWriter(logFile);
+                fout.write(s);
+                fout.flush();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         mConnectionThread.interrupt();
         mSocketFactory = null;
         mConnectionThread = null;

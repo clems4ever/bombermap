@@ -141,6 +141,17 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         return ticks;
     }
 
+    public long getTime()
+    {
+        long time = 0;
+
+        mLock.lock();
+        time = mTicks * UPDATE_SAMPLE_TIME;
+        mLock.unlock();
+
+        return time;
+    }
+
     private void stopTimer() {
         if (mTimerTask != null) {
             mTimerTask.cancel();

@@ -45,12 +45,13 @@ public class LocalPlayerSocketTest {
 
         LocalPlayerSocket localPlayerSocket = new LocalPlayerSocket("player_id", mMockSocket);
 
-        localPlayerSocket.move(10.0d, 20.0d);
+        localPlayerSocket.move(10.0d, 20.0d, 0);
 
         JSONObject message = new JSONObject();
         message.put("player_id", "player_id");
         message.put("lat", 10.0d);
         message.put("long", 20.0d);
+        message.put("time", 0.0d);
 
         verify(mMockSocket).emit(Matchers.eq("move"), Matchers.refEq(message));
     }
