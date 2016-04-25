@@ -2,6 +2,7 @@ package com.game.wargame.Controller.Communication.RabbitMQ;
 
 import android.util.Log;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.ISocket;
 import com.rabbitmq.client.AMQP;
@@ -33,6 +34,8 @@ public class RabbitMQConnectionThread extends Thread {
 
     private BlockingQueue<RabbitMQMessage> mCommandQueue;
     private SocketBuffer mSocketBuffer;
+    private RabbitMQMessageLogger mMessageLogger;
+    private boolean mLoggerEnabled = false;
 
     private boolean mStopThreadFlag = false;
     private IConnectionManager.OnDisconnectedListener mOnDisconnectedListener;
@@ -40,7 +43,10 @@ public class RabbitMQConnectionThread extends Thread {
     private Map<String, ISocket.OnRemoteEventReceivedListener> mRpcRepliesCallback = new HashMap<>();
     private Map<String, ISocket.OnRemoteEventReceivedListener> mListenerByChannel= new HashMap<>();
 
-    public RabbitMQConnectionThread(String host, String virtualHost) {
+    public RabbitMQConnectionThread(String host, String virtualHost, boolean loggerEnabled) {
+        mLoggerEnabled = loggerEnabled;
+        mMessageLogger = new RabbitMQMessageLogger();
+
         mConnectionFactory = new ConnectionFactory();
         mConnectionFactory.setAutomaticRecoveryEnabled(false);
         mConnectionFactory.setHost(host);
@@ -48,7 +54,7 @@ public class RabbitMQConnectionThread extends Thread {
         mConnectionFactory.setUsername("player");
         mConnectionFactory.setPassword("player");
         mConnectionFactory.setHandshakeTimeout(600000);
-        mConnectionFactory.setRequestedHeartbeat(240);
+        mConnectionFactory.setRequestedHeartbeat(AppConstant.RABBITMQ_HEARTBEAT);
 
         mCommandQueue = new LinkedBlockingQueue<>();
         mSocketBuffer = new SocketBuffer(mCommandQueue);
@@ -92,6 +98,10 @@ public class RabbitMQConnectionThread extends Thread {
                         sendMessage(message);
                     } else if (message.mType == RabbitMQMessage.RECEIVE) {
                         receiveMessage(message);
+                    }
+
+                    if(mLoggerEnabled) {
+                        mMessageLogger.log(message.mContent);
                     }
                 }
             } catch (InterruptedException e) {
@@ -268,5 +278,9 @@ public class RabbitMQConnectionThread extends Thread {
 
     public void unfreeze() {
         mSocketBuffer.unfreeze();
+    }
+
+    public RabbitMQMessageLogger messageLogger() {
+        return mMessageLogger;
     }
 }

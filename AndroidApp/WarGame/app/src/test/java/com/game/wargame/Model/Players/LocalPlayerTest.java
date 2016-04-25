@@ -35,7 +35,7 @@ public class LocalPlayerTest {
 
         LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
-        localPlayerModel.move(30, 40);
+        localPlayerModel.move(30, 40, 0);
 
         LatLng newPosition = new LatLng(30, 40);
 
@@ -47,9 +47,9 @@ public class LocalPlayerTest {
 
         LocalPlayerModel localPlayerModel = new LocalPlayerModel("player_name", mMockLocalPlayerSocket);
 
-        localPlayerModel.move(30, 40);
+        localPlayerModel.move(30, 40, 0);
 
-        verify(mMockLocalPlayerSocket).move(30, 40);
+        verify(mMockLocalPlayerSocket).move(30, 40, 0);
     }
 
     @Test

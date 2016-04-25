@@ -5,7 +5,6 @@ import android.text.format.DateUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,11 +14,10 @@ import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
-import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
-import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.IGoogleMapView;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
@@ -46,11 +44,11 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
     private OnShieldListener mOnShieldListener;
 
-    public GameView(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorFactory bitmapDescriptorFactory) {
+    public GameView(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory) {
         init(activity, view, googleMapView, bitmapDescriptorFactory);
     }
 
-    private void init(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorFactory bitmapDescriptorFactory) {
+    private void init(final FragmentActivity activity, View view, IGoogleMapView googleMapView, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory) {
         mActivity = activity;
 
         mMapView = new MapView(mActivity, googleMapView, bitmapDescriptorFactory);

@@ -2,16 +2,22 @@ package com.game.wargame.Views.Animations;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
-import com.game.wargame.Views.BitmapCache;
+import com.game.wargame.Views.Bitmaps.BitmapCache;
+import com.game.wargame.Views.Bitmaps.IBitmapDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.IBitmapFactory;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by sergei on 20/03/16.
@@ -19,17 +25,12 @@ import static org.junit.Assert.assertEquals;
 
 public class BitmapCacheTest {
 
-    @Mock
-    BitmapDescriptor mBitmapDescriptor1;
-
-    @Mock
-    BitmapDescriptor mBitmapDescriptor2;
-
-    @Mock
-    BitmapDescriptor mBitmapDescriptor3;
-
-    @Mock
-    Resources mMockResources;
+    @Mock private BitmapDescriptor mBitmapDescriptor1;
+    @Mock private BitmapDescriptor mBitmapDescriptor2;
+    @Mock private BitmapDescriptor mBitmapDescriptor3;
+    @Mock private Resources mMockResources;
+    @Mock private Bitmap mMockBitmap;
+    @Mock private IBitmapFactory mMockBitmapFactory;
 
     public class DummyAnimation extends Animation {
         public DummyAnimation() {
@@ -40,7 +41,7 @@ public class BitmapCacheTest {
         }
     }
 
-    public class DummyBitmapFactory implements IBitmapFactory {
+    public class DummyBitmapDescriptorFactory implements IBitmapDescriptorFactory {
 
         @Override
         public BitmapDescriptor load(int id, Size mSize) {
@@ -71,6 +72,19 @@ public class BitmapCacheTest {
         }
     }
 
+    public class MockBitmapFactory implements IBitmapFactory {
+
+        @Override
+        public Bitmap decodeResource(Resources resources, int resId) {
+            return null;
+        }
+
+        @Override
+        public Bitmap createBitmap(int width, int height, Bitmap.Config config) {
+            return null;
+        }
+    }
+
     public class DummyAnimationFactory implements IAnimationFactory {
         @Override
         public ArrayList<Animation> buildAllAnimations () {
@@ -84,7 +98,7 @@ public class BitmapCacheTest {
 
     @Test
     public void testThatBitmapHolderContainsAllBitmapsDescriptors() {
-        BitmapCache bitmapCache = new BitmapCache(mMockResources, new DummyAnimationFactory(), new DummyBitmapFactory());
+        BitmapCache bitmapCache = new BitmapCache(mMockResources, new DummyAnimationFactory(), new DummyBitmapDescriptorFactory(), new MockBitmapFactory());
         bitmapCache.loadBitmaps();
 
         BitmapDescriptor bitmapDescriptor = bitmapCache.getBitmap(1);
@@ -97,6 +111,8 @@ public class BitmapCacheTest {
         assertEquals(mBitmapDescriptor3, bitmapDescriptor);
 
     }
+
+
 
 
 }

@@ -43,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -229,7 +230,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
             }
         });
 
-        mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        /*mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng _) {
                 Iterator<LatLng> it = mPathEditor.iterator();
@@ -250,7 +251,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                 Log.d("MapView touch debug", jsonArray.toString());
                 mPathEditor.clear();
             }
-        });
+        });*/
     }
 
     /**
@@ -285,12 +286,13 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         LatLng position = new LatLng(latitude, longitude);
         boolean collision = false;
 
-        for(int x=0; x < mVirtualMap.width() && !collision; ++x) {
-            for(int y=0; y<mVirtualMap.height() && !collision; ++y) {
-                RealCell realCell = mVirtualMap.getRealCell(x, y);
-                if(realCell.cell().type() == CellTypeEnum.BLOCK) {
-                    collision |= PolyUtil.containsLocation(position, realCell.vertices(), false);
-                }
+        ArrayList<RealCell> blocks = mEntitiesContainer.getRealCells();
+        Iterator<RealCell> it = blocks.iterator();
+
+        while(it.hasNext()) {
+            RealCell realCell = it.next();
+            if(realCell.cell().type() == CellTypeEnum.BLOCK) {
+                collision |= PolyUtil.containsLocation(position, realCell.vertices(), false);
             }
         }
         return collision;
@@ -329,7 +331,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
         // Refresh view
         if(!mCurrentPlayerLocked) {
-            mCurrentPlayer.move(latitude, longitude);
+            mCurrentPlayer.move(latitude, longitude, mGlobalTimer.getTime());
             mGameView.movePlayer(mCurrentPlayer);
         }
         else {

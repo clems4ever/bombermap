@@ -6,6 +6,7 @@ import com.game.wargame.Controller.Engine.DisplayCommands.RemoveProjectileDispla
 import com.game.wargame.Controller.Engine.DisplayTransaction;
 import com.game.wargame.Controller.Utils.IDistanceCalculator;
 import com.game.wargame.Model.Entities.EntitiesContainer;
+import com.game.wargame.Model.Entities.EntitiesContainerUpdater;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Explosion;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
@@ -53,18 +54,17 @@ public class CollisionManager {
         }
     }
 
-    public void treatBlockCollisions(EntitiesContainer entitiesContainer, double time, DisplayTransaction displayTransaction) {
+    public void treatBlockCollisions(final EntitiesContainer entitiesContainer, EntitiesContainerUpdater entitiesContainerUpdater, double time, DisplayTransaction displayTransaction) {
         ArrayList<RealCell> realCells = entitiesContainer.getRealCells();
         ArrayList<Projectile> projectiles = entitiesContainer.getProjectiles();
         ArrayList<Explosion> explosions = entitiesContainer.getExplosions();
-        LinkedList<RealCell> blocksToRemove = new LinkedList<>();
 
         for(Projectile projectile: projectiles) {
             for (RealCell realCell : realCells) {
                 if(PolyUtil.containsLocation(projectile.getPosition(), realCell.vertices(), true)) {
                     Explosion explosion = new Explosion(projectile.getOwner(), time, projectile.getPosition(), projectile.getDirection());
-                    entitiesContainer.addExplosion(explosion);
-                    entitiesContainer.removeProjectile(projectile);
+                    entitiesContainerUpdater.addExplosion(explosion);
+                    entitiesContainerUpdater.removeProjectile(projectile);
 
                     displayTransaction.add(new AddExplosionDisplayCommand(explosion));
                     displayTransaction.add(new RemoveProjectileDisplayCommand(projectile));
@@ -75,14 +75,10 @@ public class CollisionManager {
         for(Explosion explosion: explosions) {
             for (RealCell realCell : realCells) {
                 if(isExplosionCollidingBlock(explosion, realCell)) {
-                    blocksToRemove.push(realCell);
+                    entitiesContainerUpdater.removeBlock(realCell);
+                    displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
                 }
             }
-        }
-
-        for(RealCell realCell: blocksToRemove) {
-            entitiesContainer.removeBlock(realCell);
-            displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
         }
     }
 

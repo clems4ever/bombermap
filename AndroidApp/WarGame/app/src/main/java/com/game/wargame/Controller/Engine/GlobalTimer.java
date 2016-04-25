@@ -72,7 +72,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
             @Override
             public void run() {
                 if (!mGameContext.toEnd()) {
-                    mTicks++;
+                    //mTicks++;
                     double time = mTicks * UPDATE_SAMPLE_TIME;
 
                     for(Entity e : mEntities.getEntities()) {
@@ -86,7 +86,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
                     List<Explosion> explosions = mEntities.getExplosions();
                     mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, explosions, time);
-                    mCollisionManager.treatBlockCollisions(mEntities, time, mDisplayTransaction);
+                    mCollisionManager.treatBlockCollisions(mEntities, mEntitiesContainerUpdater, time, mDisplayTransaction);
 
                     mEntitiesContainerUpdater.update(mEntities);
 
@@ -139,6 +139,17 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
         mLock.unlock();
 
         return ticks;
+    }
+
+    public long getTime()
+    {
+        long time = 0;
+
+        mLock.lock();
+        time = mTicks * UPDATE_SAMPLE_TIME;
+        mLock.unlock();
+
+        return time;
     }
 
     private void stopTimer() {

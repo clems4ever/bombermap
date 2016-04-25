@@ -7,7 +7,7 @@ import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
 import com.game.wargame.Controller.Communication.ISocketFactory;
 import com.game.wargame.Controller.Engine.GlobalTimer;
-import com.game.wargame.Controller.Sensors.LocationRetriever;
+import com.game.wargame.Controller.Sensors.GPSSensorLocationUpdater;
 import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
@@ -21,8 +21,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.regex.Matcher;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +31,7 @@ public class GameEngineViewUpdaterTest {
     @Mock private MapView mMockMapView;
     @Mock private Context mMockContext;
     @Mock private GameSocket mMockGameSocket;
-    @Mock private LocationRetriever mMockLocationRetriever;
+    @Mock private GPSSensorLocationUpdater mMockGPSSensorLocationUpdater;
     @Mock private LocalPlayerSocket mMockPlayerSocket;
     @Mock private RemotePlayerSocket mMockRemotePlayerSocket;
     @Mock private ISocketFactory mMockSocketFactory;
@@ -48,7 +46,7 @@ public class GameEngineViewUpdaterTest {
         when(mMockGameView.getMapView()).thenReturn(mMockMapView);
 
         mGameEngine = new GameEngine();
-        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockVirtualMap, mMockPlayerSocket, mMockLocationRetriever, mMockGlobalTimer, mMockSettings);
+        mGameEngine.onStart(mMockGameView, mMockGameSocket, mMockVirtualMap, mMockPlayerSocket, mMockGPSSensorLocationUpdater, mMockGlobalTimer, mMockSettings);
     }
 
     @Test

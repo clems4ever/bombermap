@@ -2,12 +2,12 @@ package com.game.wargame.Views;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.game.wargame.Views.Animations.PlayerAliveAnimation;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.IBitmapDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -17,12 +17,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class PlayerMarkerFactory {
 
     private GoogleMap mGoogleMap;
-    private BitmapDescriptorFactory mBitmapDescriptorFactory;
-    private Resources mResources;
+    private IBitmapDescriptorFactory mBitmapDescriptorFactory;
 
-    public PlayerMarkerFactory(BitmapDescriptorFactory bitmapDescriptorFactory, Resources res) {
+    public PlayerMarkerFactory(IBitmapDescriptorFactory bitmapDescriptorFactory) {
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
-        mResources = res;
     }
 
     public void setGoogleMap(GoogleMap googleMap) {

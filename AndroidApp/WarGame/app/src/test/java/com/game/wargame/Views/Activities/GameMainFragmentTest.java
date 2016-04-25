@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.game.wargame.Model.Entities.VirtualMap.Repository;
 import com.game.wargame.R;
-import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
 import com.game.wargame.Views.BundleExtractor;
 import com.game.wargame.Views.GoogleMap.GoogleMapViewFactory;
 import com.game.wargame.Views.GoogleMap.IGoogleMapView;
@@ -37,9 +38,10 @@ public class GameMainFragmentTest {
     @Mock private View mMockOtherViews;
     @Mock private GoogleMapViewFactory mMockGoogleMapViewFactory;
     @Mock private IGoogleMapView mMockGoogleMapView;
-    @Mock private BitmapDescriptorFactory mMockBitmapDescriptorFactory;
+    @Mock private BitmapDescriptorDescriptorFactory mMockBitmapDescriptorFactory;
     @Mock private Button mMockButton;
     @Mock private BundleExtractor mMockBundleExtractor;
+    @Mock private Repository mMockRepository;
 
     @Test
     public void get_player_id_and_game_id_from_bundle_args() {
@@ -50,7 +52,7 @@ public class GameMainFragmentTest {
         when(mMockBundle.getString(Matchers.eq("player_id"))).thenReturn("#playerid");
         when(mMockBundle.getString(Matchers.eq("game_id"))).thenReturn("#playerid");
 
-        GameMainFragment gameMainFragment = new GameMainFragment(mMockGoogleMapViewFactory, mMockBitmapDescriptorFactory, mMockBundleExtractor);
+        GameMainFragment gameMainFragment = new GameMainFragment(mMockGoogleMapViewFactory, mMockBitmapDescriptorFactory, mMockBundleExtractor, mMockRepository);
 
         gameMainFragment.onCreateView(mMockLayoutInflater, mMockViewGroup, mMockBundle);
 

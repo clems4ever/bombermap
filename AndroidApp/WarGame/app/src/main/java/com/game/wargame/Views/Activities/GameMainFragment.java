@@ -1,7 +1,6 @@
 package com.game.wargame.Views.Activities;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -16,22 +15,23 @@ import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Engine.GlobalTimer;
 import com.game.wargame.Controller.GameEngine;
 import com.game.wargame.Controller.Sensors.AbstractLocationRetriever;
-import com.game.wargame.Controller.Sensors.LocationRetriever;
-import com.game.wargame.Controller.Sensors.PathPlayer;
+import com.game.wargame.Controller.Sensors.GPSSensorLocationUpdater;
+import com.game.wargame.Controller.Sensors.ManualLocationUpdater;
+import com.game.wargame.Controller.Sensors.RecordedPathLocationUpdater;
 import com.game.wargame.Controller.Settings.Settings;
 import com.game.wargame.Model.Entities.VirtualMap.Map;
 import com.game.wargame.Model.Entities.VirtualMap.RealMap;
 import com.game.wargame.Model.Entities.VirtualMap.Repository;
 import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
-import com.game.wargame.Views.BitmapDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
 import com.game.wargame.Views.BundleExtractor;
 import com.game.wargame.Views.Views.GameView;
 import com.game.wargame.Views.GoogleMap.GoogleMapViewFactory;
 import com.game.wargame.Views.GoogleMap.IGoogleMapView;
 import com.game.wargame.Views.Views.MapView;
 
-public class GameMainFragment extends Fragment {
+public class GameMainFragment extends Fragment implements MapView.OnMapReadyListener {
 
     private IConnectionManager mConnectionManager;
     private GameEngine mGameEngine;
@@ -44,7 +44,7 @@ public class GameMainFragment extends Fragment {
     private Repository mVirtualMapRepository;
 
     private GoogleMapViewFactory mGoogleMapViewFactory;
-    private BitmapDescriptorFactory mBitmapDescriptorFactory;
+    private BitmapDescriptorDescriptorFactory mBitmapDescriptorFactory;
     private BundleExtractor mBundleExtractor;
 
     private Settings mSettings;
@@ -55,10 +55,11 @@ public class GameMainFragment extends Fragment {
     }
 
     // TEST
-    public GameMainFragment(GoogleMapViewFactory googleMapViewFactory, BitmapDescriptorFactory bitmapDescriptorFactory, BundleExtractor bundleExtractor) {
+    public GameMainFragment(GoogleMapViewFactory googleMapViewFactory, BitmapDescriptorDescriptorFactory bitmapDescriptorFactory, BundleExtractor bundleExtractor, Repository virtualMapRepository) {
         mGoogleMapViewFactory = googleMapViewFactory;
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mBundleExtractor = bundleExtractor;
+        mVirtualMapRepository = virtualMapRepository;
     }
 
     private Callback mGameCallback;
@@ -74,7 +75,10 @@ public class GameMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.game_map, container, false);
-        mVirtualMapRepository = new Repository(getResources());
+
+        if(mVirtualMapRepository == null) {
+            mVirtualMapRepository = new Repository(getResources());
+        }
 
         Bundle args = mBundleExtractor.getBundle();
         mGameId = args.getString("game_id");
@@ -87,43 +91,13 @@ public class GameMainFragment extends Fragment {
         super.onStart();
 
         View fragment = getView();
-        mBitmapDescriptorFactory = new BitmapDescriptorFactory(getActivity());
+        mBitmapDescriptorFactory = new BitmapDescriptorDescriptorFactory(getActivity());
         IGoogleMapView googleMapView = mGoogleMapViewFactory.create(fragment);
         mGameView = new GameView((FragmentActivity) getActivity(), fragment, googleMapView, mBitmapDescriptorFactory);
 
-
-        final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
-        final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
-
-        if(mSettings.mode == Settings.GameEngineMode.SCENARIO_REPLAYER) {
-            mLocationRetriever = new PathPlayer(mSettings.playerScenario, false, true);
-        }
-        else {
-            mLocationRetriever = new LocationRetriever(getActivity());
-        }
-
-        Map virtualMap = mVirtualMapRepository.get(1);
-
-        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 50, 50, 0);
         mGameEngine = new GameEngine();
         mGameEngine.setCallback(mGameCallback);
-
-        mGameView.start(new MapView.OnMapReadyListener() {
-            @Override
-            public void onMapReady() {
-                mGameEngine.onStart(mGameView,
-                        gameSocket,
-                        realMap,
-                        localPlayerSocket,
-                        mLocationRetriever,
-                        new GlobalTimer(getActivity()),
-                        mSettings
-                );
-
-                // Unfreeze messages when view is loaded
-                mConnectionManager.unfreeze();
-            }
-        });
+        mGameView.start(this);
     }
 
     @Override
@@ -138,6 +112,39 @@ public class GameMainFragment extends Fragment {
         mConnectionManager.clear();
 
         super.onStop();
+    }
+
+    public void onMapReady() {
+        final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
+        final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
+
+        Map virtualMap = mVirtualMapRepository.get(1);
+
+        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 50, 50, 0);
+
+        if(mSettings.mode == Settings.GameEngineMode.SCENARIO_REPLAYER) {
+            mLocationRetriever = new RecordedPathLocationUpdater(mSettings.playerScenario, false, true);
+        }
+        else if(mSettings.mode == Settings.GameEngineMode.MANUAL) {
+            ManualLocationUpdater manualLocationUpdater = new ManualLocationUpdater();
+            mGameView.getMapView().setOnMapLongClickListener(manualLocationUpdater);
+            mLocationRetriever = manualLocationUpdater;
+        }
+        else {
+            mLocationRetriever = new GPSSensorLocationUpdater(getActivity());
+        }
+
+        mGameEngine.onStart(mGameView,
+                gameSocket,
+                realMap,
+                localPlayerSocket,
+                mLocationRetriever,
+                new GlobalTimer(getActivity()),
+                mSettings
+        );
+
+        // Unfreeze messages when view is loaded
+        mConnectionManager.unfreeze();
     }
 
     public void setCallback(Callback callback) {

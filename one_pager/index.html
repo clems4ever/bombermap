@@ -20,21 +20,22 @@
   <!--[if lte IE 9]><!-->
   <script src='assets/js/vendor/html5shiv.min.js'></script>
 
-<!-- Piwik -->
-<script type="text/javascript">
-  var _paq = _paq || [];
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
-  (function() {
+  <!-- Piwik -->
+  <script type="text/javascript">
+    var _paq = _paq || [];
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
     var u="//analytics.bombermap.ingenious-cm.fr/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', 1]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-  })();
-</script>
-<noscript><p><img src="//analytics.bombermap.ingenious-cm.fr/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
-<!-- End Piwik Code -->
+    })();
+  </script>
+  <noscript><p><img src="//analytics.bombermap.ingenious-cm.fr/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+  <!-- End Piwik Code -->
+  
   <!--<![endif]-->
 </head>
 <body>
@@ -66,6 +67,7 @@
               <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="#home">Home</a></li>
                 <li><a href="#feature">Features</a></li>
+                <li><a href="#betaTest">Beta Test</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li class="audio-toggle"><a href="#"><i class="fa fa-volume-up"></i></a></li>
               </ul>
@@ -93,8 +95,7 @@
                     <p>The first location based shooter for mobile</p>
                   </div> <!-- .section-heading -->
                   <div class="section-content">
-                    <a class="btn btn-default btn-outline m-a-5" href="#brief_1"><i class="fa fa-search"></i>Learn More</a>
-                    <a class="btn btn-warning m-a-5" href="#download"><i class="fa fa-download"></i>Get The APP</a>
+                    <a class="btn btn-warning m-a-5" href="#subscribeBetaTestForm"><i class="fa fa-download"></i>Be a beta tester</a>
                   </div> <!-- .section-content -->
                 </div>
               </div>
@@ -122,6 +123,32 @@
                 </div>
               </div>
             </div>
+            <br/>
+            <br/>
+            <div>
+              <div class="col-xs-12 col-sm-6 col-md-6 icon-box _center">
+                <div class="icon-box-media">
+                  <img src="assets/img/gps.png" alt="" data-sr="bottom">
+                </div>
+                <div class="icon-box-heading">
+                  <h3>Geolocation</h3>
+                </div>
+                <div class="icon-box-content">
+                  <p>Play the game in your hometown.</p>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-6 icon-box _center">
+                <div class="icon-box-media">
+                  <img src="assets/img/people.png" alt="" data-sr="bottom">
+                </div>
+                <div class="icon-box-heading">
+                  <h3>Multiplayer</h3>
+                </div>
+                <div class="icon-box-content">
+                  <p>Share this new experience with your friends and have fun!</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div> <!-- #brief_1 -->
 
@@ -131,7 +158,7 @@
             <div class="section-heading align-c">
               <h2>Game Features</h2>
               <div class="divider"></div>
-              <p>A basic presentation of the gameplay</p>
+              <p>Go through the city winding around the streets and avoiding the rockets from your ennemies. If your agile enough you will send back what they deserve and win the game if your the best among your friends.</p>
             </div>
             <div class="row section-content m-t-70">
               <div class="col-xs-12 col-sm-6 col-md-3 icon-box _center">
@@ -147,7 +174,7 @@
               </div>
               <div class="col-xs-12 col-sm-6 col-md-3 icon-box _center">
                 <div class="icon-box-media">
-                  <img src="assets/img/Shield_well_B_strip2.png" alt="" data-sr="bottom">
+                  <img src="assets/img/shield.png" alt="" data-sr="bottom">
                 </div>
                 <div class="icon-box-heading">
                   <h3>Shield</h3>
@@ -181,8 +208,31 @@
             </div>
           </div>
         </div> <!-- #feature-->
+          
+        <div id="betaTest" class="section block-primary">
+          <div class="container">
+            <div class="col-sm-12 col-md-12">
+                <div class="section-heading align-c">
+                    <h2>Subscribe to be beta tester</h2>
+                    <div class="divider"></div>
+                    <p>Be the first to be an Android beta tester. Provide your email and will get back to you soon.</p>
+                    <br/>
+                    <img src="assets/img/android.png"/>
+                </div>
+                <form class="form-default" id="subscribeBetaTestForm" novalidate="novalidate" action="#" data-track-content>
+                  <div class="form-group required">
+                    <label class="form-label color-invert" for="subscribeEmail">Email address</label>
+                    <input class="form-control" id="subscribeEmail" type="text" name="email" data-content-name="email">
+                    <button type="submit" class="btn btn-primary btn-block" onclick="javascript:_paq.push(['trackEvent', 'BetaTest Subscription', 'subscribe', document.getElementById('subscribeEmail').value]);"><i class="fa fa-send"></i></button>
+                  </div>
+                  <div class="form-notify">With your email, we will send you the beta version of BomberMap. We'll neither share it, sell it nor spam you.</div>
+                </form> <!-- #subscribeForm -->
+              </div>
+          </div>
+        </div> <!-- #contact -->
 
-        <div id="contact" class="section block-primary">
+
+        <div id="contact" class="section block-secondary">
           <div class="container">
             <div class="section-heading align-c">
               <h2>Get in touch with us</h2>
@@ -195,9 +245,6 @@
                     <div class="icon-box-media">
                       <img src="assets/img/icon/mail.png" alt="" data-sr="bottom">
                     </div>
-                    <div class="icon-box-heading">
-                      <h4>Email Address</h4>
-                    </div>
                     <div class="icon-box-content m-t-0 font-sub font-italic">
                       <span>serge.kireev.fr@gmail.com</span>
                       <br>
@@ -208,27 +255,28 @@
             </div>
           </div>
         </div> <!-- #contact -->
-
+            
       </main> <!-- .site-main -->
 
       <footer id="siteFooter" class="site-footer block-invert">
         <div class="site-footer-top">
           <div class="container">
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-5">
                 <h3>OUR STORY</h3>
-                <p>We're two software engineers </p>
+                <p>We are two passionate software engineers willing to improve the world bringing new kind of products and experiences.</p>
+                <div>
+                    <div class="linkedin-profile">
+                        <img src="assets/img/linkedin.png"/>
+                        <a href="https://fr.linkedin.com/in/clément-michaud-20464344">Clément</a>
+                    </div>
+                    <div class="linkedin-profile">
+                        <img src="assets/img/linkedin.png"/>
+                        <a href="https://fr.linkedin.com/in/sergei-kireev-9748a37a/en">Sergeï</a></div>
+                </div>
               </div>
-              <div class="col-sm-5 col-md-4 col-sm-offset-1 col-md-offset-2 m-t-40-xs-max">
-                <h3>NEWSLETTER</h3>
-                <form class="form-default" id="subscribeForm" novalidate="novalidate">
-                  <div class="form-group required">
-                    <label class="form-label color-invert" for="subscribeEmail">Email address</label>
-                    <input class="form-control" id="subscribeEmail" type="text" name="email">
-                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i></button>
-                  </div>
-                  <div class="form-notify">We won't share your information. Won't spam.</div>
-                </form> <!-- #subscribeForm -->
+              <div class="col-sm-6 col-md-4 col-sm-offset-1 col-md-offset-2 m-t-40-xs-max">
+                <h3>FOLLOW US</h3>
               </div>
             </div>
           </div>
@@ -251,17 +299,6 @@
   <script src='assets/js/vendor/plugin.js'></script>
   <script src='assets/js/variable.js'></script>
   <script src='assets/js/main.js'></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-76777610-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 
 
 </body>

@@ -1,9 +1,9 @@
 package com.game.wargame.Views;
 
-import android.graphics.Bitmap;
-
+import com.game.wargame.Views.Animations.Size;
+import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
+import com.game.wargame.Views.Bitmaps.IBitmapDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.GoogleMap;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.junit.Test;
@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -21,20 +22,18 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class PlayerMarkerFactoryTest {
 
-    @Mock PlayerMarker mMockPlayerMarker;
-    @Mock
-    GoogleMap mMockGoogleMap;
-    @Mock BitmapDescriptorFactory mMockBitmapDescriptorFactory;
+    @Mock private PlayerMarker mMockPlayerMarker;
+    @Mock private GoogleMap mMockGoogleMap;
+    @Mock private IBitmapDescriptorFactory mMockBitmapDescriptorFactory;
 
     @Test
     public void create_a_player_marker_on_map() {
-
-        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockBitmapDescriptorFactory, null);
+        PlayerMarkerFactory factory = new PlayerMarkerFactory(mMockBitmapDescriptorFactory);
         factory.setGoogleMap(mMockGoogleMap);
 
-        PlayerMarker playerMarker = factory.create(4);
+        factory.create(4);
 
-        verify(mMockBitmapDescriptorFactory).load(Matchers.<Integer>any());
+        verify(mMockBitmapDescriptorFactory).load(anyInt(), Matchers.<Size>any());
         verify(mMockGoogleMap).addPlayerMarker(Matchers.<MarkerOptions>any());
     }
 

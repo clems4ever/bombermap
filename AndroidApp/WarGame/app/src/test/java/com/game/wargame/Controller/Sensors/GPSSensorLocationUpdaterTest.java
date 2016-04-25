@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LocationRetrieverTest {
+public class GPSSensorLocationUpdaterTest {
 
     @Mock
     private Context mMockContext;
@@ -44,12 +44,12 @@ public class LocationRetrieverTest {
 
     @Test
     public void testThatLocationRetrieverCallsTheGoogleApi() {
-        LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
+        GPSSensorLocationUpdater GPSSensorLocationUpdater = new GPSSensorLocationUpdater(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
-        locationRetriever.start();
+        GPSSensorLocationUpdater.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        GPSSensorLocationUpdater.start();
 
-        locationRetriever.stop();
+        GPSSensorLocationUpdater.stop();
 
         verify(mMockGoogleApiClient, times(1)).connect();
         verify(mMockGoogleApiClient, times(1)).disconnect();
@@ -57,12 +57,12 @@ public class LocationRetrieverTest {
 
     @Test
     public void testThatWhenConnectedListenerStartsListening() {
-        LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
+        GPSSensorLocationUpdater GPSSensorLocationUpdater = new GPSSensorLocationUpdater(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
-        locationRetriever.start();
+        GPSSensorLocationUpdater.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        GPSSensorLocationUpdater.start();
 
-        locationRetriever.onConnected(mMockBundle);
+        GPSSensorLocationUpdater.onConnected(mMockBundle);
 
         verify(mMockFusedLocationProviderApi).requestLocationUpdates(eq(mMockGoogleApiClient), Matchers.<LocationRequest>any(), Matchers.<LocationListener>any());
     }
@@ -70,12 +70,12 @@ public class LocationRetrieverTest {
     @Test
     public void testThatLocationUpdateListenerIsCalledWhenTheServiceNotifiesAnUpdate() {
         ArgumentCaptor<LocationListener> captor = ArgumentCaptor.forClass(LocationListener.class);
-        LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
+        GPSSensorLocationUpdater GPSSensorLocationUpdater = new GPSSensorLocationUpdater(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
-        locationRetriever.start();
+        GPSSensorLocationUpdater.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        GPSSensorLocationUpdater.start();
 
-        locationRetriever.onConnected(mMockBundle);
+        GPSSensorLocationUpdater.onConnected(mMockBundle);
 
         verify(mMockFusedLocationProviderApi).requestLocationUpdates(eq(mMockGoogleApiClient), Matchers.<LocationRequest>any(), captor.capture());
 
@@ -91,11 +91,11 @@ public class LocationRetrieverTest {
 
     @Test
     public void testReconnectionWhenServiceConnectionIsSuspended() {
-        LocationRetriever locationRetriever = new LocationRetriever(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
+        GPSSensorLocationUpdater GPSSensorLocationUpdater = new GPSSensorLocationUpdater(mMockContext, mMockGoogleApiClient, mMockFusedLocationProviderApi);
 
-        locationRetriever.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
-        locationRetriever.start();
-        locationRetriever.onConnectionSuspended(5);
+        GPSSensorLocationUpdater.setOnLocationRetrievedListener(mMockOnLocationRetrievedListener);
+        GPSSensorLocationUpdater.start();
+        GPSSensorLocationUpdater.onConnectionSuspended(5);
 
         verify(mMockGoogleApiClient, times(2)).connect();
     }

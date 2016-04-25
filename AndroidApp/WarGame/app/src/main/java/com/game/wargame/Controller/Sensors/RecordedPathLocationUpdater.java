@@ -14,7 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by clement on 09/04/16.
  */
-public class PathPlayer extends AbstractLocationRetriever {
+public class RecordedPathLocationUpdater extends AbstractLocationRetriever {
 
     private static int TIMER_TIME = 500;
 
@@ -23,7 +23,7 @@ public class PathPlayer extends AbstractLocationRetriever {
 
     boolean mInfiniteLoop;
 
-    public PathPlayer(JSONArray path, boolean reverse, boolean infiniteLoop) {
+    public RecordedPathLocationUpdater(JSONArray path, boolean reverse, boolean infiniteLoop) {
 
         mPath = new LinkedBlockingQueue<>();
         mTimer = new Timer();
