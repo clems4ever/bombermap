@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class AppConstant {
 
     public static boolean COMMUNICATION_DUMP_ENABLED = true;
+    public static int RABBITMQ_HEARTBEAT = 6000;
 
     public static int GAME_DURATION = 60*5;
 

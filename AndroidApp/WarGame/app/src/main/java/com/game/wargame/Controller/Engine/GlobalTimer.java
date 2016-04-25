@@ -86,7 +86,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
 
                     List<Explosion> explosions = mEntities.getExplosions();
                     mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, explosions, time);
-                    mCollisionManager.treatBlockCollisions(mEntities, time, mDisplayTransaction);
+                    mCollisionManager.treatBlockCollisions(mEntities, mEntitiesContainerUpdater, time, mDisplayTransaction);
 
                     mEntitiesContainerUpdater.update(mEntities);
 

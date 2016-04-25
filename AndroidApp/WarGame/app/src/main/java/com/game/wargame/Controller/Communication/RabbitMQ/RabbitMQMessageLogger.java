@@ -15,7 +15,7 @@ public class RabbitMQMessageLogger {
     }
 
     public void log(JSONObject message) {
-        mMessages.put(message.toString());
+        mMessages.put(message);
     }
 
     public String dump() {

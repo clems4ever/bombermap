@@ -2,6 +2,7 @@ package com.game.wargame.Controller.Communication.RabbitMQ;
 
 import android.util.Log;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.IConnectionManager;
 import com.game.wargame.Controller.Communication.ISocket;
 import com.rabbitmq.client.AMQP;
@@ -53,7 +54,7 @@ public class RabbitMQConnectionThread extends Thread {
         mConnectionFactory.setUsername("player");
         mConnectionFactory.setPassword("player");
         mConnectionFactory.setHandshakeTimeout(600000);
-        mConnectionFactory.setRequestedHeartbeat(240);
+        mConnectionFactory.setRequestedHeartbeat(AppConstant.RABBITMQ_HEARTBEAT);
 
         mCommandQueue = new LinkedBlockingQueue<>();
         mSocketBuffer = new SocketBuffer(mCommandQueue);
