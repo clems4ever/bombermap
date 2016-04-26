@@ -13,6 +13,7 @@ import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.PlayerException;
 import com.game.wargame.Model.Entities.Players.PlayerModel;
 import com.game.wargame.Model.Entities.Projectiles.Projectile;
+import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
 import com.game.wargame.Model.Entities.VirtualMap.RealCell;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -74,7 +75,7 @@ public class CollisionManager {
 
         for(Explosion explosion: explosions) {
             for (RealCell realCell : realCells) {
-                if(isExplosionCollidingBlock(explosion, realCell)) {
+                if(realCell.cell().type() == CellTypeEnum.BREAKABLE_BLOCK && isExplosionCollidingBlock(explosion, realCell)) {
                     entitiesContainerUpdater.removeBlock(realCell);
                     displayTransaction.add(new RemoveBlockDisplayCommand(realCell));
                 }

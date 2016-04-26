@@ -39,10 +39,6 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -127,7 +123,9 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     private void addBlocksAsEntities(RealMap map) {
         for(int i=0; i < map.width(); ++i) {
             for(int j=0; j < map.height(); ++j) {
-                if(map.getRealCell(i, j).cell().type() == CellTypeEnum.BLOCK) {
+                CellTypeEnum blockType = map.getRealCell(i, j).cell().type();
+
+                if(blockType == CellTypeEnum.BREAKABLE_BLOCK || blockType == CellTypeEnum.UNBREAKABLE_BLOCK ) {
                     mEntitiesContainer.addBlock(map.getRealCell(i, j));
                 }
             }
@@ -229,29 +227,6 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                 mPathEditor.push(position);
             }
         });
-
-        /*mGameView.getMapView().setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng _) {
-                Iterator<LatLng> it = mPathEditor.iterator();
-                JSONArray jsonArray = new JSONArray();
-
-                while (it.hasNext()) {
-                    LatLng position = it.next();
-
-                    JSONObject latLngJson = new JSONObject();
-                    try {
-                        latLngJson.put("lat", position.latitude);
-                        latLngJson.put("long", position.longitude);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    jsonArray.put(latLngJson);
-                }
-                Log.d("MapView touch debug", jsonArray.toString());
-                mPathEditor.clear();
-            }
-        });*/
     }
 
     /**
@@ -291,7 +266,7 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
 
         while(it.hasNext()) {
             RealCell realCell = it.next();
-            if(realCell.cell().type() == CellTypeEnum.BLOCK) {
+            if(realCell.cell().type() == CellTypeEnum.BREAKABLE_BLOCK || realCell.cell().type() == CellTypeEnum.UNBREAKABLE_BLOCK) {
                 collision |= PolyUtil.containsLocation(position, realCell.vertices(), false);
             }
         }

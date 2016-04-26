@@ -195,10 +195,6 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mMapView.display(player);
     }
 
-    public void addBlock(RealCell block) {
-        mMapView.addBlock(block, 0);
-    }
-
     public void removeBlock(RealCell block) {
         mMapView.removeBlock(block);
     }

@@ -118,9 +118,9 @@ public class GameMainFragment extends Fragment implements MapView.OnMapReadyList
         final GameSocket gameSocket = mConnectionManager.getSocketFactory().buildGameSocket(mGameId);
         final LocalPlayerSocket localPlayerSocket = mConnectionManager.getSocketFactory().buildLocalPlayerSocket(mGameId, mPlayerId);
 
-        Map virtualMap = mVirtualMapRepository.get(1);
+        Map virtualMap = mVirtualMapRepository.get(2);
 
-        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 50, 50, 0);
+        final RealMap realMap = new RealMap(virtualMap, AppConstant.LAFOURCHE_LATLNG, 20, 20, 0);
 
         if(mSettings.mode == Settings.GameEngineMode.SCENARIO_REPLAYER) {
             mLocationRetriever = new RecordedPathLocationUpdater(mSettings.playerScenario, false, true);

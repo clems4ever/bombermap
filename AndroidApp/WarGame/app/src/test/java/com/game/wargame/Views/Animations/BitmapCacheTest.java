@@ -58,7 +58,15 @@ public class BitmapCacheTest {
 
         @Override
         public BitmapDescriptor load(int id) {
-            return null;
+            switch (id) {
+                case 1:
+                    return mBitmapDescriptor1;
+                case 2:
+                    return mBitmapDescriptor2;
+                case 3:
+                    return mBitmapDescriptor3;
+            }
+            return mBitmapDescriptor1;
         }
 
         @Override
@@ -97,9 +105,12 @@ public class BitmapCacheTest {
     }
 
     @Test
-    public void testThatBitmapHolderContainsAllBitmapsDescriptors() {
+    public void testThatBitmapHolderContainsAllBitmapsDescriptors() throws Exception {
         BitmapCache bitmapCache = new BitmapCache(mMockResources, new DummyAnimationFactory(), new DummyBitmapDescriptorFactory(), new MockBitmapFactory());
-        bitmapCache.loadBitmaps();
+        bitmapCache.add(1, mBitmapDescriptor1);
+        bitmapCache.add(2, mBitmapDescriptor2);
+        bitmapCache.add(3, mBitmapDescriptor3);
+
 
         BitmapDescriptor bitmapDescriptor = bitmapCache.getBitmap(1);
         assertEquals(mBitmapDescriptor1, bitmapDescriptor);

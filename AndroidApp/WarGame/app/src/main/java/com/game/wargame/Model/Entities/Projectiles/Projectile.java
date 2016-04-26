@@ -20,9 +20,9 @@ import java.util.TreeMap;
  */
 public class Projectile extends Entity {
 
-    protected static final int DEFAULT_SPEED = 100;
+    protected static final int DEFAULT_SPEED = 20;
     protected static final float DEFAULT_DELTA_T = 200;
-    private static final double PROJECTILE_RADIUS = 100;
+    private static final double PROJECTILE_RADIUS = 10;
 
     private void initTrajectory() {
         double deltaLatitude = mTarget.latitude - mPosition.latitude;
@@ -79,6 +79,7 @@ public class Projectile extends Entity {
             entitiesContainerUpdater.addExplosion(explosion);
             entitiesContainerUpdater.removeProjectile(this);
 
+            displayTransaction.add(new UpdateProjectileDisplayCommand(this));
             displayTransaction.add(new RemoveProjectileDisplayCommand(this));
             displayTransaction.add(new AddExplosionDisplayCommand(explosion));
         }

@@ -27,7 +27,13 @@ public class MapBuilder {
                 int alpha = Color.alpha(c);
 
                 if(alpha > 128) {
-                    map.set(i, j, new Cell(CellTypeEnum.BLOCK));
+                    int blue = Color.blue(c);
+                    if(blue > 128) {
+                        map.set(i, j, new Cell(CellTypeEnum.UNBREAKABLE_BLOCK));
+                    }
+                    else {
+                        map.set(i, j, new Cell(CellTypeEnum.BREAKABLE_BLOCK));
+                    }
                 }
             }
         }

@@ -72,7 +72,7 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
             @Override
             public void run() {
                 if (!mGameContext.toEnd()) {
-                    //mTicks++;
+                    mTicks++;
                     double time = mTicks * UPDATE_SAMPLE_TIME;
 
                     for(Entity e : mEntities.getEntities()) {

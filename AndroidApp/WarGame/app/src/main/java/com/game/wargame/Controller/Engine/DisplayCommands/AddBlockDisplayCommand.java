@@ -17,6 +17,6 @@ public class AddBlockDisplayCommand extends DisplayCommand {
 
     @Override
     public void execute(GameView gameView) {
-        gameView.addBlock(mBlock);
+        gameView.getMapView().addBlock(mBlock, 0);
     }
 }

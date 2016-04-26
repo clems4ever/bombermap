@@ -31,7 +31,7 @@ public class GameMapTest {
     @Test
     public void testThatCellsAreCorrectlySet() {
         Map virtualMap = new Map(3, 3, null);
-        Cell mapCell = new Cell(CellTypeEnum.BLOCK);
+        Cell mapCell = new Cell(CellTypeEnum.BREAKABLE_BLOCK);
 
         virtualMap.set(0, 2, mapCell);
 
