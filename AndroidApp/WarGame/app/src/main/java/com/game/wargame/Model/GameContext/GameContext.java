@@ -59,7 +59,7 @@ public class GameContext implements Updatable {
     public void handleFrag(Player dead, Player killer, double time) {
         mFragManager.addFrag(killer.getPlayerId());
         mFragManager.addDeath(dead.getPlayerId());
-        GameNotification gameNotification = new GameNotification(killer.getPlayerName()+" killed "+dead.getPlayerName()+" savagely", time);
+        GameNotification gameNotification = new GameNotification(killer.getPlayerId()+" killed "+dead.getPlayerId()+" savagely", time);
         mGameNotificationManager.pushNotification(gameNotification);
     }
 

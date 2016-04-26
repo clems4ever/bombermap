@@ -2,6 +2,7 @@ package com.game.wargame.Controller.Engine;
 
 import android.app.Activity;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Engine.DisplayCommands.AddBlockDisplayCommand;
 import com.game.wargame.Controller.GameLogic.CollisionManager;
 import com.game.wargame.Model.Entities.EntitiesContainer;
@@ -79,13 +80,18 @@ public class GlobalTimer extends Timer implements OnClockEventListener {
                         e.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     }
                     mGameContext.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
-                    mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
+
+                    if (!AppConstant.DEMO)
+                        mCurrentPlayer.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
+
                     for (RemotePlayerModel remotePlayerModel : mRemotePlayerModels) {
                         remotePlayerModel.update(mTicks, UPDATE_SAMPLE_TIME, mEntitiesContainerUpdater, mDisplayTransaction);
                     }
 
                     List<Explosion> explosions = mEntities.getExplosions();
-                    mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, explosions, time);
+
+                    if (!AppConstant.DEMO)
+                        mCollisionManager.treatLocalPlayerAndExplosionCollision(mCurrentPlayer, explosions, time);
                     mCollisionManager.treatBlockCollisions(mEntities, mEntitiesContainerUpdater, time, mDisplayTransaction);
 
                     mEntitiesContainerUpdater.update(mEntities);

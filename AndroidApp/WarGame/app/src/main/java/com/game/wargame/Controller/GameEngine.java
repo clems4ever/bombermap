@@ -5,6 +5,7 @@ import android.location.Location;
 import android.util.Log;
 import android.view.View;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.Communication.Game.GameSocket;
 import com.game.wargame.Controller.Communication.Game.LocalPlayerSocket;
 import com.game.wargame.Controller.Communication.Game.RemotePlayerSocket;
@@ -47,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 
 public class GameEngine implements OnPlayerWeaponTriggeredListener,
@@ -113,10 +116,11 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         GameNotificationManager gameNotificationManager = new GameNotificationManager();
         mGameContext = new GameContext(fragManager, gameNotificationManager, settings.gameDuration);
 
-        mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
-        addLocalPlayer(mCurrentPlayer);
-        mGameView.addLocalPlayer(mCurrentPlayer);
-
+        if (!AppConstant.DEMO) {
+            mCurrentPlayer = new LocalPlayerModel("username", localPlayerSocket);
+            addLocalPlayer(mCurrentPlayer);
+            mGameView.addLocalPlayer(mCurrentPlayer);
+        }
         addBlocksAsEntities(mVirtualMap);
 
         startLocationRetriever();
@@ -138,9 +142,10 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
      * @brief Stops the game engine
      */
     public void onStop() {
-        mCurrentPlayer.leave();
-        mGameView.removePlayer(mCurrentPlayer);
-
+        if (!AppConstant.DEMO) {
+            mCurrentPlayer.leave();
+            mGameView.removePlayer(mCurrentPlayer);
+        }
         stopLocationRetriever();
         stopGameTimers();
     }
@@ -192,34 +197,44 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
                 targetPositionInScreenCoordinates.set((int) x, (int) y);
 
                 Projection projection = mGameView.getMapProjection();
-                LatLng currentPlayerPosition = mCurrentPlayer.getPosition();
-                LatLng targetPosition = projection.fromScreenLocation(targetPositionInScreenCoordinates);
+                if (!AppConstant.DEMO) {
+                    LatLng currentPlayerPosition = mCurrentPlayer.getPosition();
+                    LatLng targetPosition = projection.fromScreenLocation(targetPositionInScreenCoordinates);
 
-                float[] results = new float[1];
-                Location.distanceBetween(currentPlayerPosition.latitude, currentPlayerPosition.longitude, targetPosition.latitude, targetPosition.longitude, results);
+                    float[] results = new float[1];
+                    Location.distanceBetween(currentPlayerPosition.latitude, currentPlayerPosition.longitude, targetPosition.latitude, targetPosition.longitude, results);
 
-                float distanceInMeters = results[0];
-                Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
+                    float distanceInMeters = results[0];
+                    Log.d("Distance in meters", "D=" + String.valueOf(distanceInMeters));
 
-                if (distanceInMeters < WEAPON_RANGE) {
-                    mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, getTime());
-                } else {
-                    Log.d("GameEngine", "The target is out of range");
-                    mGameView.onActionFinished();
+                    if (distanceInMeters < WEAPON_RANGE) {
+                        mCurrentPlayer.fire(targetPosition.latitude, targetPosition.longitude, getTime());
+                    } else {
+                        Log.d("GameEngine", "The target is out of range");
+                        mGameView.onActionFinished();
+                    }
                 }
             }
         }, new GameView.OnShieldListener() {
 
             @Override
             public void onShield() {
-                mCurrentPlayer.shield(mGlobalTimer.getTicks()*mGlobalTimer.UPDATE_SAMPLE_TIME);
+                mCurrentPlayer.shield(mGlobalTimer.getTicks() * mGlobalTimer.UPDATE_SAMPLE_TIME);
             }
         });
 
         mGameView.setOnGpsButtonClickedListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 17);
+                if (!AppConstant.DEMO)
+                    mGameView.moveCameraTo(mCurrentPlayer.getPosition(), 14);
+                else {
+                    Iterator<String> playerSetIterator = mPlayersById.keySet().iterator();
+                    if (playerSetIterator.hasNext()) {
+                        Player player = (Player) mPlayersById.get(playerSetIterator.next());
+                        mGameView.moveCameraTo(player.getPosition(), 14);
+                    }
+                }
             }
         });
 
@@ -301,41 +316,43 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
     @Override
     public void onLocationRetrieved(double latitude, double longitude) {
 
-        boolean lockedLastState = mCurrentPlayerLocked;
-        mCurrentPlayer.moveShadow(latitude, longitude);
+        if (mCurrentPlayer != null) {
+            boolean lockedLastState = mCurrentPlayerLocked;
+            mCurrentPlayer.moveShadow(latitude, longitude);
 
-        // If the new position is on the map, then lock the user and move its shadow only
-        if(isPositionOnVirtualMap(latitude, longitude)) {
-            mCurrentPlayerLocked = true;
-            Log.d("Collision", "Collision has been detected.");
-        }
-        else {
-            float[] results = new float[1];
-            Location.distanceBetween(latitude, longitude, mCurrentPlayer.getPosition().latitude, mCurrentPlayer.getPosition().longitude, results);
-
-            float distanceInMeters = results[0];
-            if(distanceInMeters <= 10) {
-                mCurrentPlayerLocked = false;
-            }
-        }
-
-        // If lock state has changed
-        if(lockedLastState != mCurrentPlayerLocked) {
-            if(mCurrentPlayerLocked) {
-                mGameView.getMapView().addPlayerShadow(mCurrentPlayer.getShadowPosition());
+            // If the new position is on the map, then lock the user and move its shadow only
+            if(isPositionOnVirtualMap(latitude, longitude)) {
+                mCurrentPlayerLocked = true;
+                Log.d("Collision", "Collision has been detected.");
             }
             else {
-                mGameView.getMapView().removePlayerShadow();
-            }
-        }
+                float[] results = new float[1];
+                Location.distanceBetween(latitude, longitude, mCurrentPlayer.getPosition().latitude, mCurrentPlayer.getPosition().longitude, results);
 
-        // Refresh view
-        if(!mCurrentPlayerLocked) {
-            mCurrentPlayer.move(latitude, longitude, mGlobalTimer.getTime());
-            mGameView.movePlayer(mCurrentPlayer);
-        }
-        else {
-            mGameView.getMapView().movePlayerShadow(mCurrentPlayer.getShadowPosition());
+                float distanceInMeters = results[0];
+                if(distanceInMeters <= 10) {
+                    mCurrentPlayerLocked = false;
+                }
+            }
+
+            // If lock state has changed
+            if(lockedLastState != mCurrentPlayerLocked) {
+                if(mCurrentPlayerLocked) {
+                    mGameView.getMapView().addPlayerShadow(mCurrentPlayer.getShadowPosition());
+                }
+                else {
+                    mGameView.getMapView().removePlayerShadow();
+                }
+            }
+
+            // Refresh view
+            if(!mCurrentPlayerLocked) {
+                mCurrentPlayer.move(latitude, longitude, mGlobalTimer.getTime());
+                mGameView.movePlayer(mCurrentPlayer);
+            }
+            else {
+                mGameView.getMapView().movePlayerShadow(mCurrentPlayer.getShadowPosition());
+            }
         }
     }
 
@@ -359,7 +376,8 @@ public class GameEngine implements OnPlayerWeaponTriggeredListener,
         RemotePlayerModel player = new RemotePlayerModel("username", playerSocket);
         addRemotePlayer(player);
         mGameView.addRemotePlayer(player);
-        mCurrentPlayer.syncGameStart(mGameContext.getTimeStart());
+        if (mCurrentPlayer != null)
+            mCurrentPlayer.syncGameStart(mGameContext.getTimeStart());
     }
 
     // A remote player has left the game

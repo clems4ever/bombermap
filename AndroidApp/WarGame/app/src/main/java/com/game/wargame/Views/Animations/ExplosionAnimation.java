@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class ExplosionAnimation extends Animation {
 
-    public static final Size SIZE = new Size(128, 128);
+    protected static final Size SIZE = new Size(256, 256);
 
     public ExplosionAnimation() {
         mDrawablesId.add(R.mipmap.explosion);
@@ -20,5 +20,10 @@ public class ExplosionAnimation extends Animation {
         mDrawablesId.add(R.mipmap.explosion5);
         mDrawablesId.add(R.mipmap.explosion6);
         mDrawablesId.add(R.mipmap.explosion7);
+    }
+
+    @Override
+    public Size getSize() {
+        return SIZE;
     }
 }

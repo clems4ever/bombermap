@@ -17,6 +17,11 @@ public class AnimationTest {
             mDrawablesId.add(3);
             mFrameRateMillis = 50;
         }
+
+        @Override
+        public Size getSize() {
+            return new Size(60,60);
+        }
     }
 
     public Animation initDummyAnimation() {

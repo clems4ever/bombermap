@@ -39,6 +39,11 @@ public class BitmapCacheTest {
             mDrawablesId.add(3);
             mFrameRateMillis = 50;
         }
+
+        @Override
+        public Size getSize() {
+            return new Size(50, 50);
+        }
     }
 
     public class DummyBitmapDescriptorFactory implements IBitmapDescriptorFactory {

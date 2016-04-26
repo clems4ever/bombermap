@@ -47,7 +47,10 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
 
         GameEntryFragment gameEntryFragment = new GameEntryFragment();
         gameEntryFragment.setConnectionManager(mConnectionManager);
-        gameEntryFragment.setGameEntryCallbacks(this);
+
+        GameEntryFragment.Callback gameEntryCallback = this;
+        gameEntryFragment.setGameEntryCallbacks(gameEntryCallback);
+
         gameEntryFragment.setSettings(mSettings);
         addFragment(gameEntryFragment);
 
@@ -55,6 +58,14 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         RegisterFragment registerFragment = new RegisterFragment();
         registerFragment.setConnectionManager(mConnectionManager);
         addFragment(registerFragment);*/
+    }
+
+    public Settings getSettings() {
+        return mSettings;
+    }
+
+    public IConnectionManager getConnectionManager() {
+        return mConnectionManager;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class MainActivity extends FragmentActivity implements GameEntryFragment.
         fragmentTransaction.commit();
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(android.R.id.content, fragment);

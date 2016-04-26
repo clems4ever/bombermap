@@ -3,6 +3,7 @@ package com.game.wargame.Views.Views;
 import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
 import com.game.wargame.Model.Entities.VirtualMap.CellTypeEnum;
@@ -11,6 +12,7 @@ import com.game.wargame.Model.GameContext.GameContext;
 import com.game.wargame.R;
 import com.game.wargame.Views.Animations.Animation;
 import com.game.wargame.Views.Animations.AnimationFactory;
+import com.game.wargame.Views.Animations.PlayerAliveAnimation;
 import com.game.wargame.Views.Bitmaps.BitmapCache;
 import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
 import com.game.wargame.Views.Bitmaps.IBitmapFactory;
@@ -114,7 +116,7 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                PlayerMarker playerMarker = mPlayerMarkerFactory.create(REMOTE_PLAYER_MARKER_RES_ID);
+                PlayerMarker playerMarker = mPlayerMarkerFactory.create(PlayerAliveAnimation.getResourceIdForNumero(AppConstant.getNumeroFromName(playerId)));
                 mPlayerLocations.put(playerId, playerMarker);
             }
         });
@@ -190,16 +192,19 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     public void updateEntity(Entity e) {
         Marker marker = mEntityMarkers.get(e.getUUID());
-        marker.setPosition(e.getPosition());
-        Animation animation = e.getAnimation();
-        if (animation.isDirty())
-            marker.setIcon(mBitmapCache.getBitmap(animation.current()));
-        animation.clean();
+        if (marker != null) {
+            marker.setPosition(e.getPosition());
+            Animation animation = e.getAnimation();
+            if (animation.isDirty())
+                marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+            animation.clean();
+        }
     }
 
     public void removeEntity(Entity e) {
         Marker marker = mEntityMarkers.get(e.getUUID());
-        marker.remove();
+        if (marker != null)
+            marker.remove();
         mEntityMarkers.remove(e.getUUID());
     }
 

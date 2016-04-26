@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Controller.GameLogic.GameScore;
 import com.game.wargame.Model.Entities.Entity;
 import com.game.wargame.Model.Entities.Players.Player;
@@ -25,6 +26,8 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
@@ -40,6 +43,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private TextView mTimeText;
     private TextView[] mNotificationsBuffer;
     private TextView[] mScoreBoard;
+
+    private Map<String, Integer> mNamesToNum;
 
     private OnWeaponTargetDefinedListener mOnWeaponTargetDefined;
     private OnShieldListener mOnShieldListener;
@@ -64,10 +69,19 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mNotificationsBuffer[1] = (TextView) view.findViewById(R.id.game_notif_2);
         mNotificationsBuffer[2] = (TextView) view.findViewById(R.id.game_notif_3);
 
-        mScoreBoard = new TextView[3];
+        mScoreBoard = new TextView[4];
         mScoreBoard [0] = (TextView) view.findViewById(R.id.score1);
         mScoreBoard [1] = (TextView) view.findViewById(R.id.score2);
         mScoreBoard [2] = (TextView) view.findViewById(R.id.score3);
+        mScoreBoard [3] = (TextView) view.findViewById(R.id.score4);
+
+        if (AppConstant.DEMO) {
+            mNamesToNum = new HashMap<>();
+            mNamesToNum.put("Serg", 1);
+            mNamesToNum.put("Jose", 2);
+            mNamesToNum.put("Elvis", 3);
+            mNamesToNum.put("Clem", 4);
+        }
 
         mFireButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,8 +197,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         {
             GameScore gameScore = scores.get(playerId);
             
-            if (i<3)
-               mScoreBoard[i].setText(gameScore.toString());
+            if (i<4)
+               mScoreBoard[i].setText(playerId + " " + gameScore.toString());
             i++;
         }
 

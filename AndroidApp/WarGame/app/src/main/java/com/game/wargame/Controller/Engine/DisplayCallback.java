@@ -1,5 +1,6 @@
 package com.game.wargame.Controller.Engine;
 
+import com.game.wargame.AppConstant;
 import com.game.wargame.Model.Entities.EntitiesContainer;
 import com.game.wargame.Model.Entities.Players.LocalPlayerModel;
 import com.game.wargame.Model.Entities.Players.RemotePlayerModel;
@@ -33,7 +34,8 @@ public class DisplayCallback implements IDisplayCallback {
 
     @Override
     public void display() {
-        mGameView.display(mCurrentPlayer);
+        if (!AppConstant.DEMO)
+            mGameView.display(mCurrentPlayer);
         mGameView.display(mGameContext);
         for (RemotePlayerModel remotePlayerModel : mRemotePlayers) {
             mGameView.display(remotePlayerModel);

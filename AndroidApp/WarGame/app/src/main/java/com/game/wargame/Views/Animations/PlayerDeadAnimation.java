@@ -7,7 +7,7 @@ import com.game.wargame.R;
  */
 public class PlayerDeadAnimation extends Animation{
 
-    public static final Size SIZE = new Size(64, 64);
+    protected static final Size SIZE = new Size(64, 64);
 
     public PlayerDeadAnimation(boolean isRemote) {
         if (isRemote)
@@ -17,5 +17,17 @@ public class PlayerDeadAnimation extends Animation{
         mDrawablesId.add(R.mipmap.void_image);
 
         mFrameRateMillis = 600;
+    }
+
+    public PlayerDeadAnimation(int numero) {
+        mDrawablesId.add(PlayerAliveAnimation.getResourceIdForNumero(numero));
+        mDrawablesId.add(R.mipmap.void_image);
+
+        mFrameRateMillis = 600;
+    }
+
+    @Override
+    public Size getSize() {
+        return SIZE;
     }
 }

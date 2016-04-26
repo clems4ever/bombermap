@@ -22,14 +22,16 @@ public class AnimationFactory implements IAnimationFactory{
         ArrayList<Animation> animations = new ArrayList<>();
         animations.add(buildProjectileAnimation());
         animations.add(buildExplosionAnimation());
-        animations.add(buildPlayerDeadAnimation(true));
-        animations.add(buildPlayerDeadAnimation(false));
+        animations.add(buildPlayerDeadAnimation(1));
+        animations.add(buildPlayerDeadAnimation(2));
+        animations.add(buildPlayerDeadAnimation(3));
+        animations.add(buildPlayerDeadAnimation(4));
         animations.add(buildPlayerShieldedAnimation(true));
         animations.add(buildPlayerShieldedAnimation(false));
         return animations;
     }
 
-    public static Animation buildPlayerDeadAnimation(boolean isRemote) {
+    public static Animation buildPlayerDeadAnimation(int isRemote) {
         PlayerDeadAnimation playerDeadAnimation = new PlayerDeadAnimation(isRemote);
         playerDeadAnimation.first();
         return playerDeadAnimation;
@@ -41,7 +43,7 @@ public class AnimationFactory implements IAnimationFactory{
         return playerShieldedAnimation;
     }
 
-    public static Animation buildPlayerAliveAnimation(boolean isRemote) {
+    public static Animation buildPlayerAliveAnimation(int isRemote) {
         PlayerAliveAnimation playerAliveAnimation = new PlayerAliveAnimation(isRemote);
         playerAliveAnimation.first();
         return playerAliveAnimation;

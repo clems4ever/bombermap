@@ -51,11 +51,11 @@ public class BitmapCache {
         ArrayList<Animation> animations = mAnimationFactory.buildAllAnimations();
         for (Animation animation : animations)
         {
-            mBitmaps.put(animation.current(), mBitmapDescriptorFactory.load(animation.current(), animation.SIZE));
+            mBitmaps.put(animation.current(), mBitmapDescriptorFactory.load(animation.current(), animation.getSize()));
             while (animation.hasNext()) {
                 animation.next();
                 int resourceKey = animation.current();
-                mBitmaps.put(resourceKey, mBitmapDescriptorFactory.load(resourceKey, animation.SIZE));
+                mBitmaps.put(resourceKey, mBitmapDescriptorFactory.load(resourceKey, animation.getSize()));
             }
         }
 

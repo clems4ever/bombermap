@@ -17,6 +17,8 @@ public class AppConstant {
 
     public static LatLng LAFOURCHE_LATLNG = new LatLng(48.8870407, 2.3228797);
 
+    public static final boolean DEMO = true;
+
     public static String PLAYER_SCENARIO = "[" +
             "{\"lat\":48.886498921559465,\"long\":2.3225080221891403}," +
             "{\"lat\":48.8865743194227,\"long\":2.3226119577884674}," +
@@ -33,4 +35,18 @@ public class AppConstant {
             "{\"lat\":48.88745130727001,\"long\":2.3237596079707146}," +
             "{\"lat\":48.88751722403574,\"long\":2.3239171877503395}" +
             "]";
+
+    public static int getNumeroFromName(String name) {
+        switch(name) {
+            case "Serg":
+                return 1;
+            case "Clem":
+                return 2;
+            case "Elvis":
+                return 3;
+            case "Jose":
+                return 4;
+        }
+        return 0;
+    }
 }

@@ -7,13 +7,18 @@ import com.game.wargame.R;
  */
 public class PlayerShieldedAnimation extends Animation {
 
-    public static final Size SIZE = new Size(64, 64);
+    protected static final Size SIZE = new Size(64, 64);
 
     PlayerShieldedAnimation(boolean remote) {
         if (remote)
             mDrawablesId.add(R.mipmap.profile_c_shield);
         else
             mDrawablesId.add(R.mipmap.profile_s_shield);
+    }
+
+    @Override
+    public Size getSize() {
+        return SIZE;
     }
 
 }

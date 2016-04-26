@@ -50,7 +50,7 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
 
             mRespawnCounter = TIME_TO_RESPAWN;
 
-            mAnimation = AnimationFactory.buildPlayerDeadAnimation(false);
+            mAnimation = AnimationFactory.buildPlayerDeadAnimation(1);
 
             if (mOnPlayerDiedListener != null) {
                 mOnPlayerDiedListener.onDied(this.getPlayerId(), killerId, time);
@@ -63,7 +63,7 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
     }
 
     public void respawn(double time) {
-        mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
+        mAnimation = AnimationFactory.buildPlayerAliveAnimation(1);
         mPlayerSocket.respawn(time);
     }
 
@@ -72,7 +72,7 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
         if (isShielded())
             mAnimation = AnimationFactory.buildPlayerShieldedAnimation(false);
         else
-            mAnimation = AnimationFactory.buildPlayerAliveAnimation(false);
+            mAnimation = AnimationFactory.buildPlayerAliveAnimation(1);
         mPlayerSocket.shield(time, !isShielded());
     }
 
