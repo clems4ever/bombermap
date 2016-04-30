@@ -55,13 +55,14 @@ function setupRoutes() {
         console.log("Insert " + req_email + " email in the DB");
         betaTester = new BetaTester({ email: req_email, insertionTimestamp: new Date()});
         betaTester.save(function (err) {
-                  if (err) {
-                      console.log(err);
-                  } else {
-                      console.log('meow');
-                  }
+            if (err) {
+                console.log(err);
+                res.send('FAILURE');
+            } else {
+                console.log('Beta Tester registered successfully');
+                res.send('SUCCESS');
+            }
         });
-        res.redirect('/');
     });
 }
 
