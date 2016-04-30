@@ -6,3 +6,5 @@ geogen
 
 *~
 *.dump
+
+mongodb/
