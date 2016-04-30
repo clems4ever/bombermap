@@ -248,13 +248,21 @@
                     <br/>
                     <img src="assets/img/android.png"/>
                 </div>
-                <form class="form-default" id="subscribeBetaTestForm" novalidate="novalidate" method="post" action="/subscribe">
-                  <div class="form-group required">
-                    <label class="form-label color-invert" for="subscribeEmail">Email address</label>
-                    <input class="form-control" id="subscribeEmail" type="text" name="email">
-                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i></button>
-                  </div>
-                  <div class="form-notify">With your email, we will send you the beta version of BomberMap. We'll neither share it, sell it nor spam you.</div>
+                <form class="form-default" id="subscribeBetaTestForm" novalidate="novalidate" action="/subscribe" onsubmit="submitBetaTestForm(); return false;">
+                    <div class="form-group required">
+                        <label class="form-label color-invert" for="subscribeEmail">Email address</label>
+                        <input class="form-control" id="subscribeEmail" type="text" name="email">
+                        <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-send"></i></button>
+                    </div>
+                    <div class="form-notify">With your email, we will send you the beta version of BomberMap. We'll neither share it, sell it nor spam you.</div>
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Success!</strong> You have been registered as a beta tester.
+                    </div>
+                    <div class="alert alert-danger hidden">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Failure!</strong> You have not been registered as a beta tester, please contact our team.
+                    </div>
                 </form> <!-- #subscribeForm -->
               </div>
           </div>
@@ -324,6 +332,7 @@
   <script src='assets/js/vendor/plugin.js'></script>
   <script src='assets/js/variable.js'></script>
   <script src='assets/js/main.js'></script>
+  <script src='assets/js/custom.js'></script>
 
 
 </body>
