@@ -6020,7 +6020,7 @@
 }
 
 .block-invert a:not(.btn) {
-  color: #fff;
+  /*color: #fff;*/
 }
 
 .block-invert a:not(.btn):focus,
@@ -7415,7 +7415,7 @@ form .required:after {
 .form-default .form-label {
   opacity: 0.7;
   margin-bottom: 0;
-  font-size: 12px;
+  font-size: 1em;
   font-weight: 900;
   text-transform: capitalize;
 }
@@ -7438,7 +7438,6 @@ form .required:after {
 }
 
 .form-notify {
-  margin-top: 20px;
   font-size: 13px;
 }
 
@@ -7905,7 +7904,6 @@ form .required:after {
 }
 
 .icon-box-media img {
-  display: block;
   height: 60px;
   line-height: 60px;
 }
@@ -7946,6 +7944,7 @@ form .required:after {
 
 .icon-box._left .icon-box-content {
   margin-top: 15px;
+  font-size: 1.4em;
 }
 
 /**
@@ -8068,7 +8067,7 @@ form .required:after {
 
 @media (min-width: 768px) {
   .navbar-brand img {
-    max-height: 46px;
+      max-height: 80px;
   }
 }
 
@@ -8354,7 +8353,7 @@ form .required:after {
 }
 
 .section-heading {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .section-heading h1,

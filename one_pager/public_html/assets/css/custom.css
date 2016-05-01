@@ -1,0 +1,54 @@
+/**
+ * custom
+ * place custom style in this file
+ * add !important to the end if no effect
+ * e.g. color: #fff !important;
+ * --------------------------------------------------
+ *
+ */
+
+.linkedin-profile {
+    display:inline-block;
+    padding: 10px;
+}
+
+.linkedin-profile a {
+    color: #197fb8;
+}
+
+.icon-box-media img {
+    display: inline-block;
+}
+
+.are-you-ready {
+    font-weight: bold;
+}
+
+.alert {
+    margin-top: 30px;
+}
+
+#subscribeBetaTestForm .form-group {
+    margin-bottom: 0px;
+}
+
+.map {
+    color: deepskyblue;
+}
+
+p {
+    font-size: 1.5em;
+}
+
+#siteFooter p {
+    font-size: 1.2em;
+}
+
+h3 {
+    font-size: 2em;
+}
+
+.phone {
+    width: 300px;
+}
+
