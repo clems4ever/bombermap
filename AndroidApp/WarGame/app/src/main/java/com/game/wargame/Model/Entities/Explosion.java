@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class Explosion extends Entity {
 
     private static final int STANDARD_DURATION = 800;
-    private static final double EXPLOSION_RADIUS = 100;
+    private static final double EXPLOSION_RADIUS = 20;
 
     private double mTimeStart;
     private double mTimeEnd;

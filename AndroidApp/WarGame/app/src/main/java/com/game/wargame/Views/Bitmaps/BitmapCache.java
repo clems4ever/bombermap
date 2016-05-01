@@ -38,16 +38,23 @@ public class BitmapCache {
         mBitmapDescriptorFactory = bitmapDescriptorFactory;
         mBitmapFactory = bitmapFactory;
         mResources = resources;
+        mBitmaps = new HashMap<>();
     }
 
-    public BitmapDescriptor getBitmap(int resourceID)
-    {
-        return mBitmaps.get(resourceID);
+    public BitmapDescriptor getBitmap(int resourceID) throws Exception {
+        if(!mBitmaps.containsKey(resourceID)) {
+            throw new Exception("The bitmap " + resourceID + " does not exist in cache");
+        }
+        BitmapDescriptor descriptor = mBitmaps.get(resourceID);
+        return descriptor;
+    }
+
+    public void add(int id, BitmapDescriptor bitmapDescriptor) {
+        mBitmaps.put(id, bitmapDescriptor);
     }
 
     public void loadBitmaps() {
         //Load all the bitmaps necessary for all animations in memory before the game
-        mBitmaps = new HashMap<>();
         ArrayList<Animation> animations = mAnimationFactory.buildAllAnimations();
         for (Animation animation : animations)
         {
@@ -60,6 +67,7 @@ public class BitmapCache {
         }
 
         mBitmaps.put(R.mipmap.wall, mBitmapDescriptorFactory.load(R.mipmap.wall));
+        mBitmaps.put(R.mipmap.woodbox, mBitmapDescriptorFactory.load(R.mipmap.woodbox));
 
         Bitmap playerShadow = mBitmapFactory.decodeResource(mResources, R.mipmap.profile_s);
         if(playerShadow != null) {

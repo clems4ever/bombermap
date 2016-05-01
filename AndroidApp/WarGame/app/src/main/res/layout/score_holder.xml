@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp" android:layout_height="40dp"
+    android:background="@mipmap/notif_back"
+    android:padding="5dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/medal_holder">
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/medal2"
+            android:id="@+id/medal"
+            android:background="#00FFFFFF"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/score_text"
+            android:layout_alignLeft="@id/medal"
+            android:layout_alignTop="@id/medal"
+            android:layout_alignRight="@id/medal"
+            android:layout_alignBottom="@id/medal"
+            android:text="20"
+            android:textStyle="bold"
+            android:textColor="#FF000000"
+            android:gravity="center"
+            />
+    </RelativeLayout>>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/score_name"
+        android:layout_toRightOf="@+id/medal_holder"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:text="Cergy"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        />
+</RelativeLayout>

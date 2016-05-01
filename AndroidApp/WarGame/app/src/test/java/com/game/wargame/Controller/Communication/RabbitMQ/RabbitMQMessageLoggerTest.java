@@ -34,7 +34,7 @@ public class RabbitMQMessageLoggerTest {
 
         String s = logger.dump();
 
-        assertEquals(s, "[{\"ac1\":\"aaa\",\"a2\":\"bbb\"},{\"b1\":3,\"b2\":\"abc\"}]");
+        assertEquals(s, "[{\"a1\":\"aaa\",\"a2\":\"bbb\"},{\"b1\":3,\"b2\":\"abc\"}]");
     }
 
 }

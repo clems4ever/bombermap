@@ -15,6 +15,7 @@ import java.util.Map;
 public class GameContext implements Updatable {
 
     private boolean mStarted;
+    private boolean mScoresDirty = true;
     private double mTimeStart = -1;
     private double mCurrentTime;
     private int mGameDurationMilliseconds;
@@ -54,12 +55,14 @@ public class GameContext implements Updatable {
 
     public void addPlayer(String playerId) {
         mFragManager.addPlayer(playerId);
+        mScoresDirty = true;
     }
 
     public void handleFrag(Player dead, Player killer, double time) {
         mFragManager.addFrag(killer.getPlayerId());
         mFragManager.addDeath(dead.getPlayerId());
         GameNotification gameNotification = new GameNotification(killer.getPlayerId()+" killed "+dead.getPlayerId()+" savagely", time);
+        mScoresDirty = true;
         mGameNotificationManager.pushNotification(gameNotification);
     }
 
@@ -80,5 +83,13 @@ public class GameContext implements Updatable {
     public void start(double time) {
         mTimeStart = time;
         mStarted = true;
+    }
+
+    public void setScoresDirty(boolean dirty) {
+        mScoresDirty = dirty;
+    }
+
+    public boolean isScoresDirty() {
+        return mScoresDirty;
     }
 }

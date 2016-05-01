@@ -7,6 +7,15 @@ public class GameScore {
 
     private int mFrags;
     private int mDeaths;
+    private String mPlayerId;
+
+    public GameScore(String playerId) {
+        mPlayerId = playerId;
+    }
+
+    public String getPlayerId() {
+        return mPlayerId;
+    }
 
     public int getFrags() {
         return mFrags;

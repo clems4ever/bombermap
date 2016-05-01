@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class ExplosionAnimation extends Animation {
 
-    protected static final Size SIZE = new Size(256, 256);
+    protected static final Size SIZE = new Size(128, 128);
 
     public ExplosionAnimation() {
         mDrawablesId.add(R.mipmap.explosion);

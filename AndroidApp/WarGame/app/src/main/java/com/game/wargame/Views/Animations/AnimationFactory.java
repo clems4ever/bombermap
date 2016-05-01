@@ -26,8 +26,10 @@ public class AnimationFactory implements IAnimationFactory{
         animations.add(buildPlayerDeadAnimation(2));
         animations.add(buildPlayerDeadAnimation(3));
         animations.add(buildPlayerDeadAnimation(4));
-        animations.add(buildPlayerShieldedAnimation(true));
-        animations.add(buildPlayerShieldedAnimation(false));
+        animations.add(buildPlayerShieldedAnimation(1));
+        animations.add(buildPlayerShieldedAnimation(2));
+        animations.add(buildPlayerShieldedAnimation(3));
+        animations.add(buildPlayerShieldedAnimation(4));
         return animations;
     }
 
@@ -37,7 +39,7 @@ public class AnimationFactory implements IAnimationFactory{
         return playerDeadAnimation;
     }
 
-    public static Animation buildPlayerShieldedAnimation(boolean isRemote) {
+    public static Animation buildPlayerShieldedAnimation(int isRemote) {
         PlayerShieldedAnimation playerShieldedAnimation = new PlayerShieldedAnimation(isRemote);
         playerShieldedAnimation.first();
         return playerShieldedAnimation;

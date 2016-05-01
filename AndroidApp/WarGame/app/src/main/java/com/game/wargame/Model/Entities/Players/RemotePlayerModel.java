@@ -70,7 +70,7 @@ public class RemotePlayerModel extends PlayerModel implements RemotePlayerSocket
     public void onShieldEvent(String playerId, boolean isShielded, double time) {
         super.shield();
         if (isShielded())
-            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(true);
+            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(AppConstant.getNumeroFromName(playerId));
         else
             mAnimation = AnimationFactory.buildPlayerAliveAnimation(AppConstant.getNumeroFromName(playerId));
     }

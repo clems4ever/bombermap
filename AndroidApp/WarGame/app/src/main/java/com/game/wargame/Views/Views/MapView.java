@@ -1,6 +1,5 @@
 package com.game.wargame.Views.Views;
 
-import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 
 import com.game.wargame.AppConstant;
@@ -140,8 +139,12 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mPlayerShadowMarker = mPlayerMarkerFactory.create(mBitmapCache.getBitmap(1000));
-                mPlayerShadowMarker.move(position);
+                try {
+                    mPlayerShadowMarker = mPlayerMarkerFactory.create(mBitmapCache.getBitmap(1000));
+                    mPlayerShadowMarker.move(position);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -173,7 +176,11 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
             public void run() {
                 PlayerMarker marker = mPlayerLocations.get(playerId);
                 if (marker != null && playerAnimation != null && playerAnimation.isDirty()) {
-                    marker.setIcon(mBitmapCache.getBitmap(playerAnimation.current()));
+                    try {
+                        marker.setIcon(mBitmapCache.getBitmap(playerAnimation.current()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     playerAnimation.clean();
                 }
             }
@@ -182,12 +189,17 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     public void addEntity(Entity e) {
         Animation animation = e.getAnimation();
-        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                .position(e.getPosition())
-                .rotation((float) e.getDirection())
-                .anchor(0.5f, 0.5f)
-                .icon(mBitmapCache.getBitmap(animation.current())));
-        mEntityMarkers.put(e.getUUID(), marker);
+        Marker marker = null;
+        try {
+            marker = mGoogleMap.addMarker(new MarkerOptions()
+                    .position(e.getPosition())
+                    .rotation((float) e.getDirection())
+                    .anchor(0.5f, 0.5f)
+                    .icon(mBitmapCache.getBitmap(animation.current())));
+            mEntityMarkers.put(e.getUUID(), marker);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     public void updateEntity(Entity e) {
@@ -196,7 +208,11 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
             marker.setPosition(e.getPosition());
             Animation animation = e.getAnimation();
             if (animation.isDirty())
-                marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+                try {
+                    marker.setIcon(mBitmapCache.getBitmap(animation.current()));
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             animation.clean();
         }
     }
@@ -212,25 +228,31 @@ public class MapView implements GoogleMapView.OnMapReadyCallback {
 
     }
 
-    public void addBlock(RealCell realCell, float rotation) {
-        BitmapDescriptor scaledBlockDescriptor = mBitmapCache.getBitmap(R.mipmap.wall);
-
-        if (realCell.cell().type() == CellTypeEnum.BLOCK) {
-
+    private void addBlock(RealCell realCell, float rotation, int resId) {
+        BitmapDescriptor scaledBlockDescriptor = null;
+        try {
+            scaledBlockDescriptor = mBitmapCache.getBitmap(resId);
             Block b = mGoogleMap.addBlock(new GroundOverlayOptions()
-                    .position(realCell.position(), 50, 50)
+                    .position(realCell.position(), realCell.width(), realCell.height())
                     .anchor(0.5f, 0.5f)
                     .zIndex(-100)
                     .bearing(rotation)
                     .image(scaledBlockDescriptor));
 
             mBlockMarkers.put(realCell.getUUID(), b);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            /*Iterator<LatLng> vIt = realCell.vertices().iterator();
-            while(vIt.hasNext()) {
-                LatLng p = vIt.next();
-                mGoogleMap.addBlock(new GroundOverlayOptions().position(p, 10, 10).image(scaledBlockDescriptor));
-            }*/
+    public void addBlock(RealCell realCell, float rotation) {
+
+        CellTypeEnum cellType = realCell.cell().type();
+        if (cellType == CellTypeEnum.BREAKABLE_BLOCK) {
+            addBlock(realCell, rotation, R.mipmap.woodbox);
+        }
+        else if(cellType == CellTypeEnum.UNBREAKABLE_BLOCK) {
+            addBlock(realCell, rotation, R.mipmap.wall);
         }
     }
 

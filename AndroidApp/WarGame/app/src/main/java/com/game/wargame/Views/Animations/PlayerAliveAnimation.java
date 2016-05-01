@@ -23,9 +23,9 @@ public class PlayerAliveAnimation extends Animation {
             case 2:
                 return R.mipmap.profile_s;
             case 3:
-                return R.mipmap.player;
+                return R.mipmap.paulo;
             case 4:
-                return R.mipmap.marker_current;
+                return R.mipmap.jacqueline;
         }
         return 0;
     }

@@ -19,7 +19,7 @@ public class FragManager {
     }
 
     public void addPlayer(String playerId) {
-        mScoresByPlayerId.put(playerId, new GameScore());
+        mScoresByPlayerId.put(playerId, new GameScore(playerId));
     }
 
     public void addFrag(String id) {

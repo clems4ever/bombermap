@@ -70,7 +70,7 @@ public class LocalPlayerModel extends PlayerModel implements Updatable {
     public void shield(double time) {
         super.shield();
         if (isShielded())
-            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(false);
+            mAnimation = AnimationFactory.buildPlayerShieldedAnimation(1);
         else
             mAnimation = AnimationFactory.buildPlayerAliveAnimation(1);
         mPlayerSocket.shield(time, !isShielded());

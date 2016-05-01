@@ -1,11 +1,19 @@
 package com.game.wargame.Views.Views;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,15 +28,20 @@ import com.game.wargame.Model.GameContext.GameNotification;
 import com.game.wargame.R;
 import com.game.wargame.Views.Bitmaps.BitmapDescriptorDescriptorFactory;
 import com.game.wargame.Views.GoogleMap.IGoogleMapView;
+import com.game.wargame.Views.ScoreListViewAdapter;
 import com.game.wargame.Views.WeaponController.AbstractWeaponControllerView;
 import com.game.wargame.Views.WeaponController.RocketControllerView;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.Inflater;
 
 public class GameView implements AbstractWeaponControllerView.OnActionFinishedListener {
 
@@ -42,7 +55,8 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
     private ImageButton mGpsButton;
     private TextView mTimeText;
     private TextView[] mNotificationsBuffer;
-    private TextView[] mScoreBoard;
+    private ListView mScoreBoard;
+    private ArrayAdapter<GameScore> mScoresAdapter;
 
     private Map<String, Integer> mNamesToNum;
 
@@ -69,11 +83,9 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         mNotificationsBuffer[1] = (TextView) view.findViewById(R.id.game_notif_2);
         mNotificationsBuffer[2] = (TextView) view.findViewById(R.id.game_notif_3);
 
-        mScoreBoard = new TextView[4];
-        mScoreBoard [0] = (TextView) view.findViewById(R.id.score1);
-        mScoreBoard [1] = (TextView) view.findViewById(R.id.score2);
-        mScoreBoard [2] = (TextView) view.findViewById(R.id.score3);
-        mScoreBoard [3] = (TextView) view.findViewById(R.id.score4);
+        mScoreBoard = (ListView) view.findViewById(R.id.score_container);
+        mScoresAdapter = new ScoreListViewAdapter(activity, R.id.score_holder);
+        mScoreBoard.setAdapter(mScoresAdapter);
 
         if (AppConstant.DEMO) {
             mNamesToNum = new HashMap<>();
@@ -191,26 +203,23 @@ public class GameView implements AbstractWeaponControllerView.OnActionFinishedLi
         }
 
         java.util.Map<String, GameScore> scores = gameContext.getScores();
-        Set<String> playersId = scores.keySet();
-        int i = 0;
-        for (String playerId : playersId)
-        {
-            GameScore gameScore = scores.get(playerId);
-            
-            if (i<4)
-               mScoreBoard[i].setText(playerId + " " + gameScore.toString());
-            i++;
+        if (gameContext.isScoresDirty()) {
+            Set<String> playersId = scores.keySet();
+            List<GameScore> gameScores = new ArrayList<>();
+            for (String playerId : playersId) {
+                GameScore gameScore = scores.get(playerId);
+                gameScores.add(gameScore);
+                mScoresAdapter.clear();
+                mScoresAdapter.addAll(gameScores);
+                mScoresAdapter.notifyDataSetChanged();
+            }
+            gameContext.setScoresDirty(false);
         }
-
         mMapView.display(gameContext);
     }
 
     public void display(Player player) {
         mMapView.display(player);
-    }
-
-    public void addBlock(RealCell block) {
-        mMapView.addBlock(block, 0);
     }
 
     public void removeBlock(RealCell block) {

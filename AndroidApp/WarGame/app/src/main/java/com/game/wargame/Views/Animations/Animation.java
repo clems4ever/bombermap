@@ -29,6 +29,7 @@ public abstract class Animation {
         mDrawablesId = new LinkedList<>();
         mFrameRateMillis = DEFAULT_ANIMATION_FRAMERATE;
         mCounterMillis = 0;
+        mCurrentFrame = 0;
     }
 
     public int first() {

@@ -6,6 +6,7 @@ package com.game.wargame.Model.Entities.VirtualMap;
 public enum CellTypeEnum {
 
     EMPTY,
-    BLOCK
+    BREAKABLE_BLOCK,
+    UNBREAKABLE_BLOCK
 
 }

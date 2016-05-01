@@ -244,114 +244,16 @@
         </RelativeLayout>
 
 
-            <RelativeLayout android:layout_width="wrap_content"
+            <ListView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/score1_container"
-                android:layout_below="@+id/action_bar_container"
-                android:layout_marginTop="5px"
-                >
-                <ImageView android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/score1"
-                    android:layout_alignLeft="@+id/score1"
-                    android:layout_alignRight="@+id/score1"
-                    android:layout_alignTop="@+id/score1"
-                    android:src="@mipmap/notif_back"
-                    android:scaleType="fitXY"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text=" "
-                    android:id="@+id/score1"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="#FFFFFF" />
-            </RelativeLayout>
-
-            <RelativeLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/score2_container"
-                android:layout_below="@+id/score1_container"
-                android:layout_marginTop="5px"
-                >
-                <ImageView android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/score2"
-                    android:layout_alignLeft="@+id/score2"
-                    android:layout_alignRight="@+id/score2"
-                    android:layout_alignTop="@+id/score2"
-                    android:src="@mipmap/notif_back"
-                    android:scaleType="fitXY"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text=" "
-                    android:id="@+id/score2"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="#FFFFFF" />
-            </RelativeLayout>
-
-            <RelativeLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/score3_container"
-                android:layout_below="@+id/score2_container"
-                android:layout_marginTop="5px"
-                >
-                <ImageView android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/score3"
-                    android:layout_alignLeft="@+id/score3"
-                    android:layout_alignRight="@+id/score3"
-                    android:layout_alignTop="@+id/score3"
-                    android:src="@mipmap/notif_back"
-                    android:scaleType="fitXY"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text=" "
-                    android:id="@+id/score3"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="#FFFFFF" />
-            </RelativeLayout>
-
-            <RelativeLayout android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/score4_container"
-                android:layout_below="@+id/score3_container"
-                android:layout_marginTop="5px"
-                >
-                <ImageView android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignBottom="@+id/score4"
-                    android:layout_alignLeft="@+id/score4"
-                    android:layout_alignRight="@+id/score4"
-                    android:layout_alignTop="@+id/score4"
-                    android:src="@mipmap/notif_back"
-                    android:scaleType="fitXY"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text=" "
-                    android:id="@+id/score4"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:textColor="#FFFFFF" />
-            </RelativeLayout>
-
+                android:id="@+id/score_container"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/game_pad"
+                android:layout_toEndOf="@+id/game_pad"
+                android:layout_above="@+id/game_pad"
+                android:layout_below="@+id/action_bar_container" />
 
         </RelativeLayout>
 

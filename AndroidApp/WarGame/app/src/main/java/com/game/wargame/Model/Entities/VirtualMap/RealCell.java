@@ -13,10 +13,14 @@ public class RealCell extends Entity {
 
     private Cell mCell;
     private ArrayList<LatLng> mVertices;
+    private float mWidth;
+    private float mHeight;
 
     public RealCell(CellTypeEnum type, LatLng position, float width, float height) {
         mCell = new Cell(type);
         mPosition = position;
+        mWidth = width;
+        mHeight = height;
 
         LatLng p1 = Location.getDestinationPoint(position, 0, width / 2);
         LatLng v1 = Location.getDestinationPoint(p1, 90, height / 2);
@@ -42,5 +46,13 @@ public class RealCell extends Entity {
 
     public Cell cell() {
         return mCell;
+    }
+
+    public float width() {
+        return mWidth;
+    }
+
+    public float height() {
+        return mHeight;
     }
 }

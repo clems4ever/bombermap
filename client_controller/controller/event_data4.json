@@ -1,0 +1,3914 @@
+[
+    {
+        "ch": "player_join",
+        "co": {
+            "player_id": "Jose",
+            "time": 1000
+        }
+    },
+    {
+        "ch": "player_join",
+        "co": {
+            "player_id": "Serg",
+            "time": 1000
+        }
+    },
+    {
+        "ch": "player_join",
+        "co": {
+            "player_id": "Clem",
+            "time": 1000
+        }
+    },
+    {
+        "ch": "player_join",
+        "co": {
+            "player_id": "Elvis",
+            "time": 1000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88692352909617,
+            "long": 2.323032394051552,
+            "time": 5000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88771541472439,
+            "long": 2.318350598216057,
+            "time": 5000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.884232302892975,
+            "long": 2.3235031217336655,
+            "time": 5000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88745218910022,
+            "long": 2.3270728066563606,
+            "time": 5000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 1
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 2
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 3
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 4
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 5
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 6
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 7
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 8
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 9
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 10
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 11
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 12
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 13
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 14
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 15
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 16
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886875468818644,
+            "long": 2.3231420293450356,
+            "time": 16000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88764266406231,
+            "long": 2.3185383528470993,
+            "time": 16000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88425192487464,
+            "long": 2.3236315324902534,
+            "time": 16000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88744866177926,
+            "long": 2.3269708827137947,
+            "time": 16000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 17
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88748658046649,
+            "long": 2.326860912144184,
+            "time": 17000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.8874740143931,
+            "long": 2.325892299413681,
+            "time": 17000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88427176732019,
+            "long": 2.323824316263199,
+            "time": 17000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887374147065934,
+            "long": 2.31969203799963,
+            "time": 17000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886840195191084,
+            "long": 2.3232174664735794,
+            "time": 17000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 18
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88679632358209,
+            "long": 2.323264740407467,
+            "time": 18000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88760959554454,
+            "long": 2.3186030611395836,
+            "time": 18000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 19
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88429138928637,
+            "long": 2.3239225521683693,
+            "time": 19000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887520971809096,
+            "long": 2.3268139734864235,
+            "time": 19000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88748702138129,
+            "long": 2.318703308701515,
+            "time": 19000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88678353687472,
+            "long": 2.323284186422825,
+            "time": 19000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 20
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88759702950206,
+            "long": 2.3266983032226562,
+            "time": 20000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 21
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.8874729121058,
+            "long": 2.318803556263447,
+            "time": 21000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.8867636954258,
+            "long": 2.3232992738485336,
+            "time": 21000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887616870620306,
+            "long": 2.3266761749982834,
+            "time": 21000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 22
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.8843167435009,
+            "long": 2.324012406170368,
+            "time": 22000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88764222314889,
+            "long": 2.3266101256012917,
+            "time": 22000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 23
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.887217621714804,
+            "long": 2.320128232240677,
+            "time": 23000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88435598739028,
+            "long": 2.324063703417778,
+            "time": 23000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 24
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88729875040869,
+            "long": 2.320164777338505,
+            "time": 24000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 25
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887397515597456,
+            "long": 2.3189038038253784,
+            "time": 25000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887701746426266,
+            "long": 2.326541393995285,
+            "time": 25000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88786289983277,
+            "long": 2.3260431736707687,
+            "time": 25000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 26
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886803157855375,
+            "long": 2.323240265250206,
+            "time": 26000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88438420769617,
+            "long": 2.3241324350237846,
+            "time": 26000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 27
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.884403829618215,
+            "long": 2.324192114174366,
+            "time": 27000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887532876499115,
+            "long": 2.3203525319695473,
+            "time": 27000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88684835221968,
+            "long": 2.3232100903987885,
+            "time": 27000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 28
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88442367200349,
+            "long": 2.324252128601074,
+            "time": 28000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88688230308111,
+            "long": 2.323179915547371,
+            "time": 28000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 29
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.8878430588121,
+            "long": 2.32599925249815,
+            "time": 29000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 30
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88688803504246,
+            "long": 2.3231282830238342,
+            "time": 30000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 31
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88738693362227,
+            "long": 2.318955436348915,
+            "time": 31000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88445453792046,
+            "long": 2.324303425848484,
+            "time": 31000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 32
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887727098911775,
+            "long": 2.3265139013528824,
+            "time": 32000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886913387940545,
+            "long": 2.323106825351715,
+            "time": 32000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 33
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887353864935385,
+            "long": 2.3190701007843018,
+            "time": 33000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 34
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88450811228829,
+            "long": 2.324376180768013,
+            "time": 34000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 35
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88769821912291,
+            "long": 2.326541393995285,
+            "time": 35000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88701479940429,
+            "long": 2.323003225028515,
+            "time": 35000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88732101668476,
+            "long": 2.31914184987545,
+            "time": 35000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88698128955206,
+            "long": 2.3230163007974625,
+            "time": 35000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 36
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.887353864935385,
+            "long": 2.319762110710144,
+            "time": 36000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 37
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88454184426822,
+            "long": 2.3244231194257736,
+            "time": 37000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 38
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88806726188723,
+            "long": 2.325547970831394,
+            "time": 38000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 39
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887165593461425,
+            "long": 2.3192206397652626,
+            "time": 39000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 40
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88792859560046,
+            "long": 2.319793626666069,
+            "time": 40000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 41
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": false,
+            "time": 41000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88773261031997,
+            "long": 2.3264944553375244,
+            "time": 41000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88458682020605,
+            "long": 2.324466034770012,
+            "time": 41000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 42
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 43
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88461504038169,
+            "long": 2.3244747519493103,
+            "time": 43000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88780491993919,
+            "long": 2.3254765570163727,
+            "time": 43000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 44
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887220928593486,
+            "long": 2.319428510963917,
+            "time": 44000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886898176203246,
+            "long": 2.3229512572288513,
+            "time": 44000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 45
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88463466221318,
+            "long": 2.3245133087038994,
+            "time": 45000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 46
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88775796278983,
+            "long": 2.3264696449041367,
+            "time": 46000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.884679638067524,
+            "long": 2.3245944455266,
+            "time": 46000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 47
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88592637910511,
+            "long": 2.324684299528599,
+            "time": 47000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 48
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88470499208527,
+            "long": 2.324654459953308,
+            "time": 48000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88725642241089,
+            "long": 2.319539152085781,
+            "time": 48000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": true,
+            "time": 48000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886799189567775,
+            "long": 2.322847992181778,
+            "time": 48000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 49
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88474732224271,
+            "long": 2.3246970400214195,
+            "time": 49000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88780491993919,
+            "long": 2.3264119774103165,
+            "time": 49000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88780866769099,
+            "long": 2.3200926929712296,
+            "time": 49000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 50
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886745397193714,
+            "long": 2.3228178173303604,
+            "time": 50000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 51
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887830272372405,
+            "long": 2.3263459280133247,
+            "time": 51000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 52
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88743587523872,
+            "long": 2.3254571110010147,
+            "time": 52000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 53
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88729764811752,
+            "long": 2.319601848721504,
+            "time": 53000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886695573057935,
+            "long": 2.322760485112667,
+            "time": 53000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 54
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88667573157411,
+            "long": 2.3227132111787796,
+            "time": 54000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88731638706382,
+            "long": 2.319614253938198,
+            "time": 54000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88784658610523,
+            "long": 2.3263268172740936,
+            "time": 54000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 55
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88786289983277,
+            "long": 2.326302006840706,
+            "time": 55000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88733644875152,
+            "long": 2.319643087685108,
+            "time": 55000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886636269043976,
+            "long": 2.3226699605584145,
+            "time": 55000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 56
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88737238340274,
+            "long": 2.3196984082460403,
+            "time": 56000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886602318015505,
+            "long": 2.322661578655243,
+            "time": 56000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 57
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88786819077026,
+            "long": 2.326263450086117,
+            "time": 57000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 58
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887912281894394,
+            "long": 2.3261883482337,
+            "time": 58000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88658776756767,
+            "long": 2.32262771576643,
+            "time": 58000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.8860050847907,
+            "long": 2.324855625629425,
+            "time": 58000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 59
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.884786565794194,
+            "long": 2.324727214872837,
+            "time": 59000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88792154102552,
+            "long": 2.326139397919178,
+            "time": 59000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887393547357036,
+            "long": 2.3197091370821,
+            "time": 59000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88658247649465,
+            "long": 2.322639785706997,
+            "time": 59000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 60
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886554036967766,
+            "long": 2.322601228952408,
+            "time": 60000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88744998452465,
+            "long": 2.3198023438453674,
+            "time": 60000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88620636795532,
+            "long": 2.322177104651928,
+            "time": 60000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 61
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88481765195636,
+            "long": 2.3247868940234184,
+            "time": 61000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 62
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88793057969949,
+            "long": 2.326100841164589,
+            "time": 62000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 63
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88486549374266,
+            "long": 2.324834167957306,
+            "time": 63000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 64
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Clem",
+            "shielded": false,
+            "time": 64000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Clem",
+            "shielded": true,
+            "time": 64000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": false,
+            "time": 64000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886499582944744,
+            "long": 2.3225150629878044,
+            "time": 64000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88748305314797,
+            "long": 2.319902591407299,
+            "time": 64000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 65
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887492532815955,
+            "long": 2.319909632205963,
+            "time": 65000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.884930091105,
+            "long": 2.324906922876835,
+            "time": 65000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88792528876859,
+            "long": 2.326037473976612,
+            "time": 65000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 66
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88647048198504,
+            "long": 2.322462759912014,
+            "time": 66000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 67
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88640434337731,
+            "long": 2.3224064335227013,
+            "time": 67000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88752075135187,
+            "long": 2.3199525475502014,
+            "time": 67000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 68
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88794336611355,
+            "long": 2.3259908705949783,
+            "time": 68000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88653617958214,
+            "long": 2.322375923395157,
+            "time": 68000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 69
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887565504153514,
+            "long": 2.3200098797678947,
+            "time": 69000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 70
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 71
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.8863913361075,
+            "long": 2.322363518178463,
+            "time": 71000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 72
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887942704747374,
+            "long": 2.325940579175949,
+            "time": 72000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88623590999454,
+            "long": 2.324744313955307,
+            "time": 72000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 73
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": true,
+            "time": 73000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 74
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88642683051374,
+            "long": 2.322303168475628,
+            "time": 74000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88760452503656,
+            "long": 2.3202697187662125,
+            "time": 74000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 75
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88762039792942,
+            "long": 2.3201781883835793,
+            "time": 75000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 76
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88770284870851,
+            "long": 2.3202891647815704,
+            "time": 76000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88494993328145,
+            "long": 2.3250051587820053,
+            "time": 76000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88796078208602,
+            "long": 2.3258111625909805,
+            "time": 76000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 77
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 78
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88630337160077,
+            "long": 2.3247741535305977,
+            "time": 78000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 79
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88791735237118,
+            "long": 2.325720302760601,
+            "time": 79000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 80
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88775245138443,
+            "long": 2.3204075172543526,
+            "time": 80000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": false,
+            "time": 80000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88648415061972,
+            "long": 2.322251871228218,
+            "time": 80000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 81
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886520967730085,
+            "long": 2.3221764340996742,
+            "time": 81000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88778066977366,
+            "long": 2.3204467445611954,
+            "time": 81000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 82
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88782542234269,
+            "long": 2.320539951324463,
+            "time": 82000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": true,
+            "time": 82000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 83
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.886407429847615,
+            "long": 2.324705757200718,
+            "time": 83000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88786664758022,
+            "long": 2.325681746006012,
+            "time": 83000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 84
+        }
+    },
+    {
+        "ch": "died",
+        "co": {
+            "player_id": "Jose",
+            "killer_id": "Elvis",
+            "time": 84000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 85
+        }
+    },
+    {
+        "ch": "respawn",
+        "co": {
+            "player_id": "Jose",
+            "time": 85000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88783225647534,
+            "long": 2.3256294429302216,
+            "time": 85000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 86
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886550730044966,
+            "long": 2.322116084396839,
+            "time": 86000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 87
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887759505983226,
+            "long": 2.3204467445611954,
+            "time": 87000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 88
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887790590297364,
+            "long": 2.325637824833393,
+            "time": 88000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88500901882695,
+            "long": 2.3251251876354218,
+            "time": 88000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 89
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88766515064187,
+            "long": 2.3202532902359962,
+            "time": 89000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 90
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88765038004665,
+            "long": 2.3202750831842422,
+            "time": 90000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88654411619875,
+            "long": 2.32209462672472,
+            "time": 90000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 91
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": false,
+            "time": 91000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": false,
+            "time": 91000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 92
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 93
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 94
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88648062323049,
+            "long": 2.3247355967760086,
+            "time": 94000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88776523784402,
+            "long": 2.3256294429302216,
+            "time": 94000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 95
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88774010583413,
+            "long": 2.3256103321909904,
+            "time": 95000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 96
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887472250733424,
+            "long": 2.3254095017910004,
+            "time": 96000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887592179449726,
+            "long": 2.3202965408563614,
+            "time": 96000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886603420322,
+            "long": 2.3220517113804817,
+            "time": 96000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 97
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88768940086343,
+            "long": 2.3255855217576027,
+            "time": 97000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 98
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88766404835882,
+            "long": 2.325577139854431,
+            "time": 98000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 99
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88507648208831,
+            "long": 2.3252277821302414,
+            "time": 99000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88515188209623,
+            "long": 2.3253142833709717,
+            "time": 99000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 100
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": true,
+            "time": 100000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": true,
+            "time": 100000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886070562535565,
+            "long": 2.3214438557624817,
+            "time": 100000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885181424758414,
+            "long": 2.3253635689616203,
+            "time": 100000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 101
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88765500963665,
+            "long": 2.3255664110183716,
+            "time": 101000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 102
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887633184422775,
+            "long": 2.3255580291152,
+            "time": 102000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88640037505806,
+            "long": 2.321113273501396,
+            "time": 102000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.886405886612486,
+            "long": 2.320892997086048,
+            "time": 102000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 103
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88525461993575,
+            "long": 2.32532300055027,
+            "time": 103000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.886130087683775,
+            "long": 2.3243912681937218,
+            "time": 103000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 104
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887582699800646,
+            "long": 2.325475551187992,
+            "time": 104000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 105
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88761157965622,
+            "long": 2.3254473879933357,
+            "time": 105000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 106
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88753794701437,
+            "long": 2.320432662963867,
+            "time": 106000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88656043035118,
+            "long": 2.3220443353056908,
+            "time": 106000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88584127982111,
+            "long": 2.322128154337406,
+            "time": 106000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 107
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88746034602897,
+            "long": 2.3204970359802246,
+            "time": 107000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88761532742253,
+            "long": 2.3254141956567764,
+            "time": 107000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88632519739508,
+            "long": 2.324429154396057,
+            "time": 107000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 108
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88533310621173,
+            "long": 2.3252559453248978,
+            "time": 108000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 109
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": false,
+            "time": 109000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Elvis",
+            "shielded": true,
+            "time": 109000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": false,
+            "time": 109000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 110
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88654169112158,
+            "long": 2.322143241763115,
+            "time": 110000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88589507316771,
+            "long": 2.322068139910698,
+            "time": 110000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 111
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88652207003836,
+            "long": 2.3221583291888237,
+            "time": 111000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887488564583066,
+            "long": 2.320507764816284,
+            "time": 111000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 112
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88539505737064,
+            "long": 2.3251811787486076,
+            "time": 112000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 113
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.886572776192736,
+            "long": 2.3249243572354317,
+            "time": 113000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 114
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 115
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88742727739064,
+            "long": 2.3206009715795517,
+            "time": 115000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88546825223532,
+            "long": 2.32511680573225,
+            "time": 115000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88765677328989,
+            "long": 2.325355187058449,
+            "time": 115000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 116
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88549470818415,
+            "long": 2.325078584253788,
+            "time": 116000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88767308707931,
+            "long": 2.325327694416046,
+            "time": 116000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88734967623349,
+            "long": 2.3207082599401474,
+            "time": 116000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88646783644241,
+            "long": 2.322263941168785,
+            "time": 116000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 117
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.8864158074089,
+            "long": 2.3223350197076797,
+            "time": 117000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 118
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88769116451545,
+            "long": 2.3252975195646286,
+            "time": 118000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 119
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88727890916419,
+            "long": 2.3207763209939003,
+            "time": 119000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88632519739508,
+            "long": 2.3222964629530907,
+            "time": 119000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 120
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88651567665003,
+            "long": 2.3223812878131866,
+            "time": 120000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 121
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88626016090923,
+            "long": 2.3222146555781364,
+            "time": 121000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885560847994974,
+            "long": 2.325008176267147,
+            "time": 121000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.8865443366603,
+            "long": 2.3252542689442635,
+            "time": 121000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88616778690767,
+            "long": 2.324708439409733,
+            "time": 121000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 122
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88557076895904,
+            "long": 2.3249823600053787,
+            "time": 122000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 123
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885598327182244,
+            "long": 2.3249609023332596,
+            "time": 123000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 124
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88561375978064,
+            "long": 2.32496727257967,
+            "time": 124000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 125
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88620636795532,
+            "long": 2.322165034711361,
+            "time": 125000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 126
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Jose",
+            "shielded": true,
+            "time": 126000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 127
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88564749101477,
+            "long": 2.3249012231826782,
+            "time": 127000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 128
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88615676374573,
+            "long": 2.3221177607774734,
+            "time": 128000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 129
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887255320118804,
+            "long": 2.320883944630623,
+            "time": 129000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 130
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88608312896164,
+            "long": 2.3220379650592804,
+            "time": 130000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 131
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88718477337469,
+            "long": 2.32095904648304,
+            "time": 131000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887144649869576,
+            "long": 2.32095904648304,
+            "time": 131000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88718719842067,
+            "long": 2.3209556937217712,
+            "time": 131000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 132
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 133
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88771916248291,
+            "long": 2.3252301290631294,
+            "time": 133000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885716496671265,
+            "long": 2.3247919231653214,
+            "time": 133000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 134
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887111140104366,
+            "long": 2.32528243213892,
+            "time": 134000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 135
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.887128115448746,
+            "long": 2.3210452124476433,
+            "time": 135000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 136
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 137
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88576720364251,
+            "long": 2.3247352614998817,
+            "time": 137000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 138
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88707873261269,
+            "long": 2.3211203143000603,
+            "time": 138000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 139
+        }
+    },
+    {
+        "ch": "died",
+        "co": {
+            "player_id": "Elvis",
+            "killer_id": "Jose",
+            "time": 139000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 140
+        }
+    },
+    {
+        "ch": "respawn",
+        "co": {
+            "player_id": "Elvis",
+            "time": 140000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.8877317284947,
+            "long": 2.3251724615693092,
+            "time": 140000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 141
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88624979915621,
+            "long": 2.3240891844034195,
+            "time": 141000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 142
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88775708096501,
+            "long": 2.325120158493519,
+            "time": 142000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 143
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88701744491797,
+            "long": 2.321227602660656,
+            "time": 143000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.886101206972576,
+            "long": 2.322033606469631,
+            "time": 143000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 144
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88602646978749,
+            "long": 2.321959175169468,
+            "time": 144000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 145
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88610693902346,
+            "long": 2.32390109449625,
+            "time": 145000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 146
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885811737548735,
+            "long": 2.3246819525957108,
+            "time": 146000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 147
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88585671234449,
+            "long": 2.324615903198719,
+            "time": 147000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 148
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88696806197263,
+            "long": 2.321338914334774,
+            "time": 148000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 149
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 150
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.886015005666636,
+            "long": 2.321936711668968,
+            "time": 150000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 151
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88587942019168,
+            "long": 2.321636639535427,
+            "time": 151000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 152
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.8859755426151,
+            "long": 2.3219075426459312,
+            "time": 152000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 153
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885944457172705,
+            "long": 2.321866638958454,
+            "time": 153000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88592704049794,
+            "long": 2.324540801346302,
+            "time": 153000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 154
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88778243342248,
+            "long": 2.325012870132923,
+            "time": 154000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885914694496975,
+            "long": 2.3219196125864983,
+            "time": 154000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 155
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.885966503587746,
+            "long": 2.3244811221957207,
+            "time": 155000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88783931106287,
+            "long": 2.3250028118491173,
+            "time": 155000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 156
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88782035185659,
+            "long": 2.324974313378334,
+            "time": 156000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 157
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88589970292025,
+            "long": 2.3219528049230576,
+            "time": 157000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88690412862273,
+            "long": 2.3214760422706604,
+            "time": 157000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 158
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Serg",
+            "shielded": false,
+            "time": 158000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 159
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.886013021491614,
+            "long": 2.324390932917595,
+            "time": 159000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 160
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 161
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.886508621875734,
+            "long": 2.32554093003273,
+            "time": 161000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 162
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.886854745565465,
+            "long": 2.321540415287018,
+            "time": 162000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88587655415328,
+            "long": 2.321980632841587,
+            "time": 162000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 163
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88586376721074,
+            "long": 2.322005443274975,
+            "time": 163000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 164
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88788384312379,
+            "long": 2.324855960905552,
+            "time": 164000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 165
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88607783783527,
+            "long": 2.3243094608187675,
+            "time": 165000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 166
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88614529965475,
+            "long": 2.3242196068167686,
+            "time": 166000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 167
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88795615252431,
+            "long": 2.3247597366571426,
+            "time": 167000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 168
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88584172075041,
+            "long": 2.322033606469631,
+            "time": 168000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 169
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 170
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885818351491814,
+            "long": 2.3220667988061905,
+            "time": 170000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 171
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.886800512330346,
+            "long": 2.3216336220502853,
+            "time": 171000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 172
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88799054354397,
+            "long": 2.324676923453808,
+            "time": 172000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88622400499575,
+            "long": 2.3241468518972397,
+            "time": 172000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 173
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88578594316233,
+            "long": 2.3221197724342346,
+            "time": 173000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 174
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88794336611355,
+            "long": 2.324547842144966,
+            "time": 174000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 175
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885763896667676,
+            "long": 2.322155311703682,
+            "time": 175000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 176
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.886706155179404,
+            "long": 2.3217590153217316,
+            "time": 176000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88574405481419,
+            "long": 2.3221851512789726,
+            "time": 176000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 177
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88571936271883,
+            "long": 2.3221948742866516,
+            "time": 177000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 178
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887908975061436,
+            "long": 2.3244184255599976,
+            "time": 178000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88628882106596,
+            "long": 2.324056997895241,
+            "time": 178000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 179
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885704591548816,
+            "long": 2.32222069054842,
+            "time": 179000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 180
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.8866402373445,
+            "long": 2.3218629509210587,
+            "time": 180000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88588890016368,
+            "long": 2.322414480149746,
+            "time": 180000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 181
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88627162497388,
+            "long": 2.3240194469690323,
+            "time": 181000
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Serg",
+            "shielded": true,
+            "time": 181000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 182
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88632828387025,
+            "long": 2.3239758610725403,
+            "time": 182000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 183
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88636201462244,
+            "long": 2.3238860070705414,
+            "time": 183000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 184
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.885677694780306,
+            "long": 2.3222532123327255,
+            "time": 184000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 185
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88566270313254,
+            "long": 2.322279028594494,
+            "time": 185000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 186
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88566777383743,
+            "long": 2.3223112151026726,
+            "time": 186000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 187
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88565101846278,
+            "long": 2.3218699917197227,
+            "time": 187000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 188
+        }
+    },
+    {
+        "ch": "shield",
+        "co": {
+            "player_id": "Clem",
+            "shielded": false,
+            "time": 188000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 189
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88641536648466,
+            "long": 2.323808893561363,
+            "time": 189000
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88794623203348,
+            "long": 2.3243778571486473,
+            "time": 189000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 190
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88567967896863,
+            "long": 2.3223715648055077,
+            "time": 190000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88566909662995,
+            "long": 2.32234138995409,
+            "time": 190000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 191
+        }
+    },
+    {
+        "ch": "fire",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88641426417405,
+            "long": 2.3237327858805656,
+            "time": 191000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 192
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 193
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 194
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88785849071775,
+            "long": 2.3243798688054085,
+            "time": 194000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.886498921559465,
+            "long": 2.3237183690071106,
+            "time": 194000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 195
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88654411619875,
+            "long": 2.3236583545804024,
+            "time": 195000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.88781506091403,
+            "long": 2.324327565729618,
+            "time": 195000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 196
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Elvis",
+            "lat": 48.88660738862511,
+            "long": 2.3219702392816544,
+            "time": 196000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 197
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887811313162686,
+            "long": 2.32425045222044,
+            "time": 197000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 198
+        }
+    },
+    {
+        "ch": "died",
+        "co": {
+            "player_id": "Serg",
+            "killer_id": "Clem",
+            "time": 198000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Serg",
+            "lat": 48.887713651073234,
+            "long": 2.3241595923900604,
+            "time": 198000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 199
+        }
+    },
+    {
+        "ch": "respawn",
+        "co": {
+            "player_id": "Serg",
+            "time": 199000
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Clem",
+            "lat": 48.88646519089964,
+            "long": 2.3237183690071106,
+            "time": 199000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 200
+        }
+    },
+    {
+        "ch": "move",
+        "co": {
+            "player_id": "Jose",
+            "lat": 48.88569621386838,
+            "long": 2.3223943635821342,
+            "time": 200000
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 201
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 202
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 203
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 204
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 205
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 206
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 207
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 208
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 209
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 210
+        }
+    },
+    {
+        "ch": "clock_sync",
+        "co": {
+            "ticks": 211
+        }
+    }
+]

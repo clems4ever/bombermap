@@ -40,9 +40,11 @@ public class Repository {
     private void createMaps() {
         Map<Cell> mapExample0 = buildMapExample0();
         Map<Cell> mushroomMap = mMapBuilder.build(R.mipmap.mushroom);
+        Map<Cell> mushroomUnbreakableMap = mMapBuilder.build(R.mipmap.mushroom_unbreakable);
 
         mVirtualMapByMapId.put(0, mapExample0);
         mVirtualMapByMapId.put(1, mushroomMap);
+        mVirtualMapByMapId.put(2, mushroomUnbreakableMap);
     }
 
     private Map<Cell> buildMapExample0() {
@@ -51,15 +53,15 @@ public class Repository {
         for(int i=0; i<map0.width(); ++i) {
             for(int j=0; j<map0.height(); ++j) {
                 if(i == 0 || j== 0 || i==map0.width()-1 || j==map0.height()-1) {
-                    map0.set(i, j, new Cell(CellTypeEnum.BLOCK));
+                    map0.set(i, j, new Cell(CellTypeEnum.BREAKABLE_BLOCK));
                 }
 
                 if(i == j) {
-                    map0.set(i, j, new Cell(CellTypeEnum.BLOCK));
+                    map0.set(i, j, new Cell(CellTypeEnum.BREAKABLE_BLOCK));
                 }
             }
         }
-        map0.set(10, 4, new Cell(CellTypeEnum.BLOCK));
+        map0.set(10, 4, new Cell(CellTypeEnum.BREAKABLE_BLOCK));
 
         return map0;
     }
