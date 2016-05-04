@@ -55,7 +55,7 @@ var _bg_slideshow_image_amount =                  2; // slideshow image amount
 var _bg_slideshow_duration =                      9000; // millisecond
 
 // if _bg_style_desktop == 11 - 13 (youtube video)
-var _bg_video_youtube_url =                       'BIaBSGgCzCc'; // youtube video url id - https://www.youtube.com/watch?v=BIaBSGgCzCc
+var _bg_video_youtube_url =                       'jbghA1CQAF8'; // youtube video url id - https://www.youtube.com/watch?v=BIaBSGgCzCc
 var _bg_video_youtube_quality =                   'hightres'; // hightres, hd1080, hd720, default - youtube video quality
 var _bg_video_youtube_start =                     86; // seconds - video start time
 var _bg_video_youtube_end =                       274; // seconds - video end time, 0 to ignored
