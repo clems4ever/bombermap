@@ -40,7 +40,7 @@ var _bg_style_desktop =                           11;
                                                     // 13 = youtube video (youtube + mp3 audio) - audio place at /audio/audio.mp3
 
 // for mobile
-var _bg_style_mobile =                            0;
+var _bg_style_mobile =                            2;
                                                     // 0 = flat color
                                                     // 1 = flat color (mp3 audio) - audio place at /audio/audio.mp3
                                                     // 2 = image
